@@ -1,0 +1,53 @@
+# Claude Code ignore patterns
+# These files and directories will be excluded from Claude's context
+
+# Build outputs
+**/build/**
+**/release/**
+**/dist/**
+**/out/**
+
+# Dependencies
+**/node_modules/**
+**/vendor/**
+**/.venv/**
+**/venv/**
+
+# IDE and editor files
+**/.vscode/**
+**/.idea/**
+**/*.swp
+**/*.swo
+**/*~
+
+# Git
+**/.git/**
+
+# Compiled files
+**/*.pyc
+**/__pycache__/**
+**/*.class
+**/*.o
+**/*.obj
+**/*.exe
+**/*.dll
+**/*.so
+**/*.dylib
+
+# Log files
+**/*.log
+**/logs/**
+
+# Temporary files
+**/tmp/**
+**/temp/**
+**/.tmp/**
+
+# OS files
+**/.DS_Store
+**/Thumbs.db
+
+# Package manager lock files (usually too large)
+**/package-lock.json
+**/yarn.lock
+**/pnpm-lock.yaml

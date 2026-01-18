@@ -16,6 +16,15 @@ BigProjPOC/
 │   │   └── tester-agent.md      # Tester/QA agent
 │   ├── settings.json       # Project settings and preferences
 │   └── prompts/            # Custom prompts (if needed)
+├── common_infra/           # Common infrastructure (centralized)
+│   ├── thrift/             # Apache Thrift installation (local)
+│   │   ├── bin/            # Thrift compiler
+│   │   ├── include/        # C++ runtime headers
+│   │   └── lib/            # C++ runtime libraries
+│   ├── build_tools/        # Common build makefiles
+│   │   ├── common.mk       # Build variables and settings
+│   │   └── rules.mk        # Reusable build rules
+│   └── README.md           # Infrastructure documentation
 ├── BigModuleA/             # Module A
 │   ├── src/                # Source code
 │   │   └── ext/interfaces/ # External interfaces
@@ -95,6 +104,57 @@ Purpose: [To be documented]
 - Contains source code in `src/`
 - Build outputs go to `build/`
 - Release artifacts go to `release/`
+
+## Common Infrastructure
+
+The `common_infra/` directory contains centralized infrastructure and build tools used across all modules.
+
+### Apache Thrift (common_infra/thrift/)
+**Version**: 0.19.0
+**Type**: Local installation (not system-wide)
+
+**Components**:
+- `bin/` - Thrift compiler binary
+- `include/` - C++ runtime headers
+- `lib/` - C++ runtime libraries
+
+**Usage**:
+```bash
+# Invoke Thrift compiler
+./common_infra/thrift/bin/thrift --version
+./common_infra/thrift/bin/thrift --gen cpp -out gen-cpp service.thrift
+```
+
+**Why Centralized**:
+- Single Thrift version across all modules (0.19.0)
+- No system-wide installation required
+- Reproducible builds on any machine
+- Easier developer onboarding
+
+### Build Tools (common_infra/build_tools/)
+
+**common.mk** - Common build variables:
+- Repository paths and Thrift locations
+- Build directory conventions
+- Compiler flags and options
+- Include/library paths
+
+**rules.mk** - Reusable build rules:
+- Directory creation targets
+- Thrift code generation patterns
+- Clean targets (generated code, build, release)
+- Help documentation
+
+**Usage in Module Makefiles**:
+```make
+include $(REPO_ROOT)/common_infra/build_tools/rules.mk
+
+build: dirs
+	$(MSG_BUILD) Building module
+	# Module-specific build commands
+```
+
+See `common_infra/README.md` for detailed documentation.
 
 ## Agent System
 

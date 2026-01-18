@@ -39,3 +39,15 @@
 
 # debug information files
 *.dwo
+
+# Build directories
+**/build/
+**/release/
+
+# Generated code directories
+**/gen-cpp/
+**/gen-java/
+**/gen-py/
+
+# Thrift temporary files
+*.thrift~

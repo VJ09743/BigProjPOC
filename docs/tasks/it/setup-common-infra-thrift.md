@@ -1,6 +1,6 @@
 # Task: Setup Common Infrastructure with Apache Thrift
 
-**Status**: TODO
+**Status**: Completed
 <!-- Allowed values: TODO | Assigned | In-Progress | Blocked | Failed | Completed -->
 
 **Priority**: high

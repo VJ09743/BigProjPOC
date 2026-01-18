@@ -91,8 +91,8 @@ Create standardized Makefiles for each module (BigModuleA, BigModuleB, BigModule
 
 ### Build Flow
 1. Developer creates `.thrift` file in `src/ext/interface/`
-2. Developer creates C++ implementation in `src/int/impl/`
-3. `make generate` - Generates C++ from Thrift
+2. `make generate` - Generates C++ from Thrift
+3. Developer creates C++ implementation in `src/int/impl/` by extending/implementing the generated files
 4. `make build` - Compiles generated + implementation code
 5. `make install` - Installs built artifacts
 

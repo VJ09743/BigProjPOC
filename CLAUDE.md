@@ -332,9 +332,51 @@ The project follows a comprehensive testing strategy managed by the **Tester Age
 
 ### Building the Project
 Handled by **IT Agent**:
-- Build scripts located in each module
-- Documentation in `docs/it/build/`
-- Artifacts generated in `<module>/build/`
+- Each module has a Makefile with standardized build targets
+- Build system uses common infrastructure from `common_infra/build_tools/`
+- Detailed documentation in `docs/it/build/module-build-system.md`
+
+**Quick Start:**
+```bash
+# Navigate to any module
+cd BigModuleA
+
+# View available targets
+make help
+
+# Generate C++ from Thrift files
+make generate
+
+# Build debug and release versions
+make build
+
+# Clean build artifacts
+make clean
+
+# Install to system
+sudo make install
+```
+
+**Build Targets:**
+- `make all` - Generate and build everything (default)
+- `make generate` - Generate C++ code from Thrift interface files
+- `make build` - Build both debug and release versions
+- `make build-debug` - Build debug version only
+- `make build-release` - Build release version only
+- `make clean` - Remove all build artifacts
+- `make install` - Install built artifacts to system
+
+**Build Workflow:**
+1. Developer creates `.thrift` file in `src/ext/interfaces/`
+2. Run `make generate` to create C++ files in `src/int/generated/`
+3. Developer implements interfaces in `src/int/impl/`
+4. Run `make build` to compile everything
+5. Run `make install` to install artifacts
+
+**Build Outputs:**
+- Debug builds: `build/debug/libBigModuleX.a`
+- Release builds: `build/release/libBigModuleX.a`
+- Generated code: `src/int/generated/`
 
 ### Running Tests
 Handled by **Tester Agent**:

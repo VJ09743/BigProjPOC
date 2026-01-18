@@ -23,7 +23,9 @@ BigProjPOC/
 │   ├── src/                # Source code
 │   ├── build/              # Build artifacts (excluded from git)
 │   └── release/            # Release artifacts (excluded from git)
-└── docs/                   # Project documentation
+├── docs/                   # Project documentation
+├── release/                # Repository-level release artifacts
+└── CLAUDE.md               # This file - project guide for Claude Code
 
 ```
 
@@ -56,7 +58,8 @@ Purpose: [To be documented]
 
 ### Build Process
 - Build artifacts should be generated in module-specific `build/` directories
-- Release packages should be created in module-specific `release/` directories
+- Module-specific releases should be created in module-specific `release/` directories
+- Repository-level releases should be placed in the root `release/` directory
 
 ### Git Workflow
 - Main branch: `master`
@@ -65,10 +68,21 @@ Purpose: [To be documented]
 
 ## Claude Code Instructions
 
+### CRITICAL: Keeping This File Updated
+**ALWAYS update this CLAUDE.md file whenever:**
+- Project structure changes (new folders, renamed directories, reorganization)
+- New modules or components are added
+- Folders are renamed or moved
+- Build/release processes change
+- New conventions or patterns are established
+- Any explanations need to be added or clarified
+
+This file is the source of truth for the project structure and must stay current.
+
 ### When Creating New Features
 1. Analyze existing code structure before making changes
 2. Follow the established patterns in each module
-3. Update relevant documentation
+3. Update relevant documentation (especially this CLAUDE.md file if structure changes)
 4. Consider impacts across all three modules if making architectural changes
 
 ### When Debugging
@@ -104,5 +118,5 @@ Purpose: [To be documented]
 
 ---
 
-**Last Updated:** 2026-01-17
+**Last Updated:** 2026-01-18
 **Maintained By:** Project Team

@@ -42,16 +42,28 @@ See `.claude/hooks/post-commit-check-tasks.sh` (if available)
 ### 3. Task Lifecycle
 
 ```
-pending → in-progress → completed → archived
-              ↓
-           blocked (if issues found)
+TODO → Assigned → In-Progress → Completed → Archived
+                       ↓
+                   Blocked/Failed
 ```
 
-**Status Definitions**:
-- `pending`: Task created, waiting to be picked up
-- `in-progress`: Agent is currently working on it
-- `completed`: Task finished successfully
-- `blocked`: Task cannot proceed (needs resolution)
+**Status Values and Definitions**:
+- `TODO`: Task created, not yet assigned
+- `Assigned`: Task assigned to agent, not yet started
+- `In-Progress`: Agent is currently working on it
+- `Blocked`: Task cannot proceed (waiting for dependencies or resolution)
+- `Failed`: Task attempted but failed (requires retry or redesign)
+- `Completed`: Task finished successfully
+- `Archived`: Task moved to completed/ folder for history
+
+**Priority Values**:
+- `critical`: Urgent, must be done immediately (blocks other work)
+- `high`: Important, should be done soon
+- `medium`: Normal priority
+- `low`: Nice to have, can be done later
+
+**Other Field Values**:
+See individual agent TEMPLATE.md files for allowed values specific to each agent type.
 
 ### 4. Task Organization
 

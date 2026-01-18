@@ -1,9 +1,18 @@
 # Task: [Task Name - Replace with descriptive name]
 
-**Status**: pending
+**Status**: TODO
+<!-- Allowed values: TODO | Assigned | In-Progress | Blocked | Failed | Completed -->
+
 **Priority**: medium
+<!-- Allowed values: critical | high | medium | low -->
+
 **Created**: YYYY-MM-DD
+
 **Assigned To**: IT Agent
+<!-- Allowed values: IT Agent | Unassigned -->
+
+**Module**: All
+<!-- Allowed values: All | BigModuleA | BigModuleB | BigModuleC | N/A -->
 
 ## Objective
 Clear, concise description of what needs to be accomplished.

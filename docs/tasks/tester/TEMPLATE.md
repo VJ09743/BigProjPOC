@@ -1,10 +1,21 @@
 # Task: [Task Name - Replace with descriptive name]
 
-**Status**: pending
+**Status**: TODO
+<!-- Allowed values: TODO | Assigned | In-Progress | Blocked | Failed | Completed -->
+
 **Priority**: medium
+<!-- Allowed values: critical | high | medium | low -->
+
 **Created**: YYYY-MM-DD
+
 **Assigned To**: Tester Agent
-**Module**: BigModuleA | BigModuleB | BigModuleC | All
+<!-- Allowed values: Tester Agent | Unassigned -->
+
+**Module**: BigModuleA
+<!-- Allowed values: BigModuleA | BigModuleB | BigModuleC | All | Multiple -->
+
+**Test Type**: Component
+<!-- Allowed values: Component | Integration | System | Regression | Performance | Security -->
 
 ## Objective
 Clear description of what needs to be tested or validated.

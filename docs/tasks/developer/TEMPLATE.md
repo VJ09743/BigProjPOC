@@ -1,10 +1,21 @@
 # Task: [Task Name - Replace with descriptive name]
 
-**Status**: pending
+**Status**: TODO
+<!-- Allowed values: TODO | Assigned | In-Progress | Blocked | Failed | Completed -->
+
 **Priority**: medium
+<!-- Allowed values: critical | high | medium | low -->
+
 **Created**: YYYY-MM-DD
+
 **Assigned To**: Developer Agent
-**Module**: BigModuleA | BigModuleB | BigModuleC
+<!-- Allowed values: Developer Agent | Unassigned -->
+
+**Module**: BigModuleA
+<!-- Allowed values: BigModuleA | BigModuleB | BigModuleC | Multiple -->
+
+**Type**: Implementation
+<!-- Allowed values: Implementation | Bug Fix | Refactoring | Enhancement | Interface -->
 
 ## Objective
 Clear description of what needs to be implemented.

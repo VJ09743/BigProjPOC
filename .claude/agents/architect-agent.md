@@ -185,3 +185,28 @@ Technical approach
 ## Dependencies
 Other tasks or components
 ```
+
+## Creating Pull Requests
+
+When your design work is complete and ready for review, create a PR:
+
+1. **Authenticate with GitHub**:
+   ```bash
+   export GH_TOKEN=$(cat /home/user/BigProjPOC/.github_token)
+   ```
+
+2. **Create PR using gh CLI**:
+   ```bash
+   gh pr create --base master --head <branch-name> \
+     --title "Title" \
+     --body "Description"
+   ```
+
+3. **PR Guidelines**:
+   - Write clear, descriptive titles
+   - Include comprehensive summary of design changes
+   - List all specifications and documents created
+   - Reference requirements and design decisions
+   - Add links to related tasks
+
+**Note**: The `.github_token` file contains GitHub authentication token and should never be committed (it's in `.gitignore`).

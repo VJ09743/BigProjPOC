@@ -289,3 +289,29 @@ Before approving release:
 - [ ] Performance requirements met
 - [ ] Security checks pass
 - [ ] Documentation updated
+
+## Creating Pull Requests
+
+When your testing work is complete, create a PR:
+
+1. **Authenticate with GitHub**:
+   ```bash
+   export GH_TOKEN=$(cat /home/user/BigProjPOC/.github_token)
+   ```
+
+2. **Create PR using gh CLI**:
+   ```bash
+   gh pr create --base master --head <branch-name> \
+     --title "Title" \
+     --body "Description"
+   ```
+
+3. **PR Guidelines**:
+   - Write clear, descriptive titles
+   - Include comprehensive summary of test changes
+   - List test coverage and results
+   - Document bugs found and fixed
+   - Reference test plans and reports
+   - Include quality metrics
+
+**Note**: The `.github_token` file contains GitHub authentication token and should never be committed (it's in `.gitignore`).

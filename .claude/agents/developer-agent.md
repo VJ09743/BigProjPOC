@@ -171,3 +171,29 @@ For each task:
 - Consider performance implications
 - Ensure cross-platform compatibility if needed
 - Follow security best practices
+
+## Creating Pull Requests
+
+When your implementation is complete and tested, create a PR:
+
+1. **Authenticate with GitHub**:
+   ```bash
+   export GH_TOKEN=$(cat /home/user/BigProjPOC/.github_token)
+   ```
+
+2. **Create PR using gh CLI**:
+   ```bash
+   gh pr create --base master --head <branch-name> \
+     --title "Title" \
+     --body "Description"
+   ```
+
+3. **PR Guidelines**:
+   - Write clear, descriptive titles
+   - Include comprehensive summary of implementation
+   - List all files changed and their purpose
+   - Describe test coverage
+   - Reference task specifications
+   - Note any breaking changes or dependencies
+
+**Note**: The `.github_token` file contains GitHub authentication token and should never be committed (it's in `.gitignore`).

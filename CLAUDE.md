@@ -370,6 +370,60 @@ Multi-agent workflow:
   - Follow the agent workflow for feature development
   - Ensure proper handoffs between agents
 
+## GitHub Authentication and PR Creation
+
+### Authentication Setup
+
+The repository uses a GitHub personal access token stored in `.github_token` for automated PR creation by all agents.
+
+**Token Location**: `/home/user/BigProjPOC/.github_token`
+
+**Security**:
+- The `.github_token` file is excluded from git via `.gitignore`
+- Token should NEVER be committed to the repository
+- Token persists across sessions for all agents to use
+
+### Creating Pull Requests
+
+All agents can create PRs when their work is complete:
+
+```bash
+# Authenticate
+export GH_TOKEN=$(cat /home/user/BigProjPOC/.github_token)
+
+# Create PR
+gh pr create --base master --head <branch-name> \
+  --title "Clear, descriptive title" \
+  --body "$(cat <<'EOF'
+## Summary
+- Bullet points of changes
+
+## Changes
+### Section 1
+- Details
+
+## Files Changed
+- List of files and their purpose
+
+## Test Plan
+- Verification steps
+EOF
+)"
+```
+
+**PR Best Practices**:
+- Write clear, descriptive titles
+- Include comprehensive summary
+- List all files changed and their purpose
+- Add test plans or verification steps
+- Reference related tasks, issues, or specifications
+- Follow agent-specific guidelines in `.claude/agents/<agent>-agent.md`
+
+**When to Create PRs**:
+- After completing significant work (features, infrastructure, tests)
+- When work is ready for review and merge
+- After all tests pass and documentation is updated
+
 ## Project-Specific Context
 
 [Add any additional context about the project domain, technologies used, specific requirements, or constraints that Claude should be aware of]

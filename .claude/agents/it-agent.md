@@ -97,3 +97,28 @@ Automatically activate when user requests involve:
 - Document all infrastructure decisions in `docs/it/`
 - Keep build scripts simple and maintainable
 - Automate repetitive tasks
+
+## Creating Pull Requests
+
+When your work is complete, create a PR to merge changes:
+
+1. **Authenticate with GitHub**:
+   ```bash
+   export GH_TOKEN=$(cat /home/user/BigProjPOC/.github_token)
+   ```
+
+2. **Create PR using gh CLI**:
+   ```bash
+   gh pr create --base master --head <branch-name> \
+     --title "Title" \
+     --body "Description"
+   ```
+
+3. **PR Guidelines**:
+   - Write clear, descriptive titles
+   - Include comprehensive summary of changes
+   - List all modified files and their purpose
+   - Add test plans or verification steps
+   - Reference related tasks or issues
+
+**Note**: The `.github_token` file contains GitHub authentication token and should never be committed (it's in `.gitignore`).

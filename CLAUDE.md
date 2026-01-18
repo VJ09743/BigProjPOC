@@ -353,8 +353,8 @@ make build
 # Clean build artifacts
 make clean
 
-# Install to system
-sudo make install
+# Install to repository release/ folder
+make install
 ```
 
 **Build Targets:**
@@ -364,19 +364,24 @@ sudo make install
 - `make build-debug` - Build debug version only
 - `make build-release` - Build release version only
 - `make clean` - Remove all build artifacts
-- `make install` - Install built artifacts to system
+- `make install` - Install built artifacts to repository `release/` folder
 
 **Build Workflow:**
 1. Developer creates `.thrift` file in `src/ext/interfaces/`
 2. Run `make generate` to create C++ files in `src/int/generated/`
 3. Developer implements interfaces in `src/int/impl/`
 4. Run `make build` to compile everything
-5. Run `make install` to install artifacts
+5. Run `make install` to install artifacts to `release/`
 
 **Build Outputs:**
-- Debug builds: `build/debug/libBigModuleX.a`
-- Release builds: `build/release/libBigModuleX.a`
+- Debug builds:
+  - Executable: `build/debug/BigModuleX`
+  - Library: `build/debug/libBigModuleX.a`
+- Release builds:
+  - Executable: `build/release/BigModuleX`
+  - Library: `build/release/libBigModuleX.a`
 - Generated code: `src/int/generated/`
+- Installed artifacts: `release/bin/`, `release/lib/`, `release/include/`
 
 ### Running Tests
 Handled by **Tester Agent**:

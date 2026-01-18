@@ -87,6 +87,30 @@ Create standardized Makefiles for each module (BigModuleA, BigModuleB, BigModule
   - Verify: Build process documented in `docs/it/build/`
   - Verify: CLAUDE.md updated with build instructions
 
+## Final Acceptance Criteria
+
+The repository must:
+
+- **Build cleanly using Makefiles**
+  - All three modules (BigModuleA, BigModuleB, BigModuleC) build without errors
+  - `make all` completes successfully in each module
+
+- **Produce three executables (one per module)**
+  - Debug builds: `build/debug/BigModuleX`
+  - Release builds: `build/release/BigModuleX`
+  - Executables are functional and properly linked
+
+- **Install binaries into top-level `release/`**
+  - Executables installed to: `release/bin/BigModuleX`
+  - Libraries installed to: `release/lib/libBigModuleX.a`
+  - Headers installed to: `release/include/BigModuleX/`
+  - **NOT** to `/usr/local` - repository-level release only
+
+- **Clearly demonstrate:**
+  - **Interface-driven development**: Thrift `.thrift` files define interfaces, C++ generated, then implemented
+  - **Legacy build & release flow**: Traditional Makefile-based build system with generate → build → install workflow
+  - **Architectural reasoning potential for GenAI agents**: Well-documented build system that agents can understand and work with
+
 ## Notes
 
 ### Build Flow

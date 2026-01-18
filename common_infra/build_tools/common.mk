@@ -46,11 +46,11 @@ LIBS = -lthrift
 THRIFT_GEN = cpp
 THRIFT_FLAGS = --gen $(THRIFT_GEN)
 
-# Install directories
-INSTALL_PREFIX = /usr/local
-INSTALL_BIN_DIR = $(INSTALL_PREFIX)/bin
-INSTALL_LIB_DIR = $(INSTALL_PREFIX)/lib
-INSTALL_INCLUDE_DIR = $(INSTALL_PREFIX)/include
+# Install directories - repository-level release folder
+REPO_RELEASE_DIR = $(PROJECT_ROOT)/release
+INSTALL_BIN_DIR = $(REPO_RELEASE_DIR)/bin
+INSTALL_LIB_DIR = $(REPO_RELEASE_DIR)/lib
+INSTALL_INCLUDE_DIR = $(REPO_RELEASE_DIR)/include
 
 # Colors for output (optional, for prettier output)
 COLOR_RESET = \033[0m

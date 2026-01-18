@@ -39,6 +39,3 @@
 
 # debug information files
 *.dwo
-
-# GitHub token (sensitive)
-.github_token

@@ -47,11 +47,16 @@ BigProjPOC/
 │   ├── build/              # Build artifacts (excluded from git)
 │   └── release/            # Release artifacts (excluded from git)
 ├── docs/                   # Project documentation
+│   ├── tasks/              # Task management system
+│   │   ├── it/             # Tasks for IT Agent
+│   │   ├── architect/      # Tasks for Architect Agent
+│   │   ├── developer/      # Tasks for Developer Agent
+│   │   └── tester/         # Tasks for Tester Agent
 │   ├── architecture/       # Architecture docs (by Architect)
 │   │   ├── eps/            # External Product Specifications
 │   │   ├── eds/            # External Design Specifications
 │   │   ├── interfaces/     # Interface specifications
-│   │   ├── tasks/          # Development tasks
+│   │   ├── tasks/          # Development tasks (created by Architect)
 │   │   └── decisions/      # Architecture Decision Records
 │   ├── requirements/       # Requirements docs (by Architect)
 │   │   ├── functional/     # Functional requirements
@@ -206,6 +211,51 @@ Claude Code **automatically determines which agent role to use** based on your r
 - "Fix the build script" → Activates **IT Agent**
 - "Test the login functionality" → Activates **Tester Agent**
 - "Implement the IAuthService interface" → Activates **Developer Agent**
+
+### Task Management System
+
+The project uses a centralized task management system in `docs/tasks/` where you can create tasks for any agent.
+
+#### Task Folders
+
+- `docs/tasks/it/` - Tasks for IT Agent (build setup, releases, infrastructure)
+- `docs/tasks/architect/` - Tasks for Architect Agent (design, requirements, specifications)
+- `docs/tasks/developer/` - Tasks for Developer Agent (direct implementation tasks)
+- `docs/tasks/tester/` - Tasks for Tester Agent (testing, validation, QA)
+
+**Note**: Architect Agent also creates tasks for Developer in `docs/architecture/tasks/` as part of the design workflow.
+
+#### Creating Tasks
+
+1. Go to the appropriate agent's task folder
+2. Copy `TEMPLATE.md` to a new file with a descriptive name
+3. Fill in all sections (objective, requirements, deliverables, etc.)
+4. Set status to `pending` and priority (high/medium/low)
+5. Save the file
+
+#### Triggering Agents
+
+After creating a task, tell Claude:
+- `"Check for new tasks in docs/tasks/"`
+- `"Work on IT tasks"` or `"Process [agent-name] tasks"`
+- `"I've added a task in docs/tasks/it/setup-build.md"`
+
+Claude will automatically:
+1. Detect which agent the task is for
+2. Adopt that agent role
+3. Process the task
+4. Update status to `in-progress` → `completed`
+5. Complete the work and document results
+
+#### Task Lifecycle
+
+```
+pending → in-progress → completed → archived
+              ↓
+           blocked (if issues arise)
+```
+
+See `docs/tasks/README.md` for complete documentation on the task management system.
 
 ## Development Guidelines
 

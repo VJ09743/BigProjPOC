@@ -392,9 +392,51 @@ The project follows a comprehensive testing strategy managed by the **Tester Age
 
 ### Building the Project
 Handled by **IT Agent**:
-- Build scripts located in each module
-- Documentation in `docs/it/build/`
-- Artifacts generated in `<module>/build/`
+- Each module has a Makefile with standardized build targets
+- Build system uses common infrastructure from `common_infra/build_tools/`
+- Detailed documentation in `docs/it/build/module-build-system.md`
+
+**Quick Start:**
+```bash
+# Navigate to any module
+cd BigModuleA
+
+# View available targets
+make help
+
+# Generate C++ from Thrift files
+make generate
+
+# Build debug and release versions
+make build
+
+# Clean build artifacts
+make clean
+
+# Install to system
+sudo make install
+```
+
+**Build Targets:**
+- `make all` - Generate and build everything (default)
+- `make generate` - Generate C++ code from Thrift interface files
+- `make build` - Build both debug and release versions
+- `make build-debug` - Build debug version only
+- `make build-release` - Build release version only
+- `make clean` - Remove all build artifacts
+- `make install` - Install built artifacts to system
+
+**Build Workflow:**
+1. Developer creates `.thrift` file in `src/ext/interfaces/`
+2. Run `make generate` to create C++ files in `src/int/generated/`
+3. Developer implements interfaces in `src/int/impl/`
+4. Run `make build` to compile everything
+5. Run `make install` to install artifacts
+
+**Build Outputs:**
+- Debug builds: `build/debug/libBigModuleX.a`
+- Release builds: `build/release/libBigModuleX.a`
+- Generated code: `src/int/generated/`
 
 ### Running Tests
 Handled by **Tester Agent**:
@@ -429,6 +471,60 @@ Multi-agent workflow:
   - Switch between agent roles as needed during multi-step tasks
   - Follow the agent workflow for feature development
   - Ensure proper handoffs between agents
+
+## GitHub Authentication and PR Creation
+
+### Authentication Setup
+
+The repository uses a GitHub personal access token stored in `.github_token` for automated PR creation by all agents.
+
+**Token Location**: `/home/user/BigProjPOC/.github_token`
+
+**Security**:
+- The `.github_token` file is excluded from git via `.gitignore`
+- Token should NEVER be committed to the repository
+- Token persists across sessions for all agents to use
+
+### Creating Pull Requests
+
+All agents can create PRs when their work is complete:
+
+```bash
+# Authenticate
+export GH_TOKEN=$(cat /home/user/BigProjPOC/.github_token)
+
+# Create PR
+gh pr create --base master --head <branch-name> \
+  --title "Clear, descriptive title" \
+  --body "$(cat <<'EOF'
+## Summary
+- Bullet points of changes
+
+## Changes
+### Section 1
+- Details
+
+## Files Changed
+- List of files and their purpose
+
+## Test Plan
+- Verification steps
+EOF
+)"
+```
+
+**PR Best Practices**:
+- Write clear, descriptive titles
+- Include comprehensive summary
+- List all files changed and their purpose
+- Add test plans or verification steps
+- Reference related tasks, issues, or specifications
+- Follow agent-specific guidelines in `.claude/agents/<agent>-agent.md`
+
+**When to Create PRs**:
+- After completing significant work (features, infrastructure, tests)
+- When work is ready for review and merge
+- After all tests pass and documentation is updated
 
 ## Project-Specific Context
 

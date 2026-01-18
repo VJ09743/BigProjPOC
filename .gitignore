@@ -40,6 +40,8 @@
 # debug information files
 *.dwo
 
+# GitHub token (sensitive)
+.github_token
 # Build directories
 **/build/
 **/release/

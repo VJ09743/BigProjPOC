@@ -290,6 +290,287 @@ master (main branch)
 9. **IT Agent**: Create release in `release/v0.1.0/`
 10. **IT Agent**: Merge `project-feature-int/rtdcs` → `recommended-development` → `master`
 
+### Detailed Workflow with Peer Review
+
+#### Phase 1: Architect Design
+
+1. **Architect works in worktree** (`../worktree-architect`)
+   - Creates EPS in `docs/architecture/eps/rtdcs-eps.md`
+   - Creates EDS in `docs/architecture/eds/rtdcs-eds.md`
+   - Designs Thrift interfaces (marks **FICTIONAL** elements)
+   - Defines shared memory structure
+   - Creates development tasks
+   - Commits all work to `architect/rtdcs-design` branch
+
+2. **Architect requests peer review**
+   - Creates review request in `docs/team-leader/reviews/architect-rtdcs-review.md`
+   - Requests review from: **Developer Agent** and **IT Agent** (minimum 2)
+   - Team Leader facilitates the review process
+
+3. **Peer agents review Architect's work**
+   - **Developer Agent reviews**: Interface design, implementability, testability, OO design
+   - **IT Agent reviews**: Build system compatibility, Thrift interface structure, infrastructure concerns
+   - Each reviewer provides feedback in review document
+   - Reviewers approve or request changes
+
+4. **Architect addresses feedback** (if needed)
+   - Updates specs based on peer feedback
+   - Commits changes
+   - Requests re-review if significant changes
+
+5. **After 2+ approvals**
+   - Architect creates PR from `architect/rtdcs-design` → `project-feature-int/rtdcs`
+   - Includes peer review summary in PR description
+   - User reviews and merges PR
+
+#### Phase 2: Developer Implementation
+
+6. **Developer works in worktree** (`../worktree-developer`)
+   - Rebases on latest `project-feature-int/rtdcs` (includes Architect's specs)
+   - Implements BigModuleA (ThermalMonitor)
+   - Implements BigModuleB (DistortionPredictor with **FICTIONAL** Zeeman model)
+   - Implements BigModuleC (CompensationController)
+   - Writes unit tests for all modules
+   - Ensures **FICTIONAL** elements are clearly commented in code
+   - Commits all work to `developer/rtdcs-implementation` branch
+
+7. **Developer requests peer review**
+   - Creates review request in `docs/team-leader/reviews/developer-rtdcs-review.md`
+   - Requests review from: **Architect Agent** and **Tester Agent** (minimum 2)
+   - Team Leader facilitates the review process
+
+8. **Peer agents review Developer's work**
+   - **Architect Agent reviews**: Spec compliance, design patterns, SOLID principles, architecture alignment
+   - **Tester Agent reviews**: Testability, unit test coverage, code structure, **FICTIONAL** element marking
+   - Each reviewer provides feedback in review document
+   - Reviewers approve or request changes
+
+9. **Developer addresses feedback** (if needed)
+   - Refactors code based on peer feedback
+   - Adds missing tests
+   - Commits changes
+   - Requests re-review if significant changes
+
+10. **After 2+ approvals**
+    - Developer creates PR from `developer/rtdcs-implementation` → `project-feature-int/rtdcs`
+    - Includes peer review summary in PR description
+    - User reviews and merges PR
+
+#### Phase 3: Tester Validation
+
+11. **Tester works in worktree** (`../worktree-tester`)
+    - Rebases on latest `project-feature-int/rtdcs` (includes Developer's implementation)
+    - Creates test plan in `docs/tests/plans/rtdcs-test-plan.md`
+    - Writes component tests for each module
+    - Writes integration tests for inter-module communication
+    - Writes system test for end-to-end workflow
+    - Validates observable results
+    - Creates test report
+    - Commits all work to `tester/rtdcs-validation` branch
+
+12. **Tester requests peer review**
+    - Creates review request in `docs/team-leader/reviews/tester-rtdcs-review.md`
+    - Requests review from: **Developer Agent** and **Architect Agent** (minimum 2)
+    - Team Leader facilitates the review process
+
+13. **Peer agents review Tester's work**
+    - **Developer Agent reviews**: Test coverage, test quality, edge case handling
+    - **Architect Agent reviews**: Requirements coverage, test strategy, quality gates
+    - Each reviewer provides feedback in review document
+    - Reviewers approve or request changes
+
+14. **Tester addresses feedback** (if needed)
+    - Adds missing test cases
+    - Improves test quality
+    - Commits changes
+    - Requests re-review if significant changes
+
+15. **After 2+ approvals**
+    - Tester creates PR from `tester/rtdcs-validation` → `project-feature-int/rtdcs`
+    - Includes peer review summary and test report in PR description
+    - User reviews and merges PR
+
+#### Phase 4: IT Release
+
+16. **IT Agent works in worktree** (`../worktree-it`)
+    - Rebases on latest `project-feature-int/rtdcs` (includes all work)
+    - Validates Makefile builds for all modules
+    - Ensures Thrift code generation works
+    - Runs all tests to verify build quality
+    - Creates release package in `release/v0.1.0/`
+    - Packages binaries, libraries, headers
+    - Creates release notes
+    - Commits all work to `it/rtdcs-release` branch
+
+17. **IT Agent requests peer review**
+    - Creates review request in `docs/team-leader/reviews/it-rtdcs-review.md`
+    - Requests review from: **Tester Agent** and **Developer Agent** (minimum 2)
+    - Team Leader facilitates the review process
+
+18. **Peer agents review IT's work**
+    - **Tester Agent reviews**: Build quality, test pass rate, release readiness
+    - **Developer Agent reviews**: Build configuration, release artifacts, documentation
+    - Each reviewer provides feedback in review document
+    - Reviewers approve or request changes
+
+19. **IT Agent addresses feedback** (if needed)
+    - Fixes build issues
+    - Updates release notes
+    - Commits changes
+    - Requests re-review if significant changes
+
+20. **After 2+ approvals**
+    - IT Agent creates PR from `it/rtdcs-release` → `project-feature-int/rtdcs`
+    - Includes peer review summary and release notes in PR description
+    - User reviews and merges PR
+
+#### Phase 5: Final Integration
+
+21. **IT Agent executes branch merge workflow**
+    - Merges `project-feature-int/rtdcs` → `recommended-development`
+    - Merges `recommended-development` → `master`
+    - Tags release: `v0.1.0-rtdcs`
+    - Cleans up worktrees
+    - Documents lessons learned
+
+---
+
+## Peer Review Process Details
+
+### Review Request Template
+
+Location: `docs/team-leader/reviews/{agent}-rtdcs-review.md`
+
+```markdown
+# Peer Review Request: {Agent} - RTDCS
+
+**Agent**: {Architect/Developer/Tester/IT}
+**Branch**: {agent}/rtdcs-{phase}
+**Date**: YYYY-MM-DD
+**Reviewers Requested**: {Agent1}, {Agent2}
+
+## Work Completed
+
+- [ ] Item 1
+- [ ] Item 2
+- [ ] Item 3
+
+## Files Changed
+
+- `path/to/file1.ext` - Description
+- `path/to/file2.ext` - Description
+
+## Review Focus Areas
+
+1. {Specific area to review}
+2. {Specific area to review}
+3. {Specific area to review}
+
+## Review Checklist
+
+### Design & Architecture
+- [ ] Follows SOLID principles
+- [ ] Design patterns appropriately applied
+- [ ] Architecture alignment
+- [ ] Interface contracts clear
+
+### Code Quality (for implementation)
+- [ ] Clean code principles
+- [ ] Appropriate comments
+- [ ] Error handling
+- [ ] **FICTIONAL** elements clearly marked
+
+### Testing (for test work)
+- [ ] Test coverage adequate
+- [ ] Edge cases covered
+- [ ] Test quality high
+- [ ] Observable results validated
+
+### Documentation
+- [ ] Clear and complete
+- [ ] **FICTIONAL** elements marked
+- [ ] Follows templates
+
+## Reviewer 1: {Agent Name}
+
+**Status**: [ ] Approved / [ ] Changes Requested / [ ] Reviewing
+
+**Feedback**:
+- {Feedback item 1}
+- {Feedback item 2}
+
+**Approval**: [ ] YES / [ ] NO (pending changes)
+**Date**: YYYY-MM-DD
+
+---
+
+## Reviewer 2: {Agent Name}
+
+**Status**: [ ] Approved / [ ] Changes Requested / [ ] Reviewing
+
+**Feedback**:
+- {Feedback item 1}
+- {Feedback item 2}
+
+**Approval**: [ ] YES / [ ] NO (pending changes)
+**Date**: YYYY-MM-DD
+
+---
+
+## Resolution
+
+**Changes Made**:
+- {Change description}
+
+**Final Status**: [ ] APPROVED (2+ approvals) / [ ] PENDING
+
+**Ready for PR**: [ ] YES / [ ] NO
+```
+
+### Peer Review Matrix
+
+| Agent Working | Reviewer 1 | Reviewer 2 | Review Focus |
+|---------------|------------|------------|--------------|
+| **Architect** | Developer | IT | Interface design, implementability, build compatibility |
+| **Developer** | Architect | Tester | Spec compliance, testability, code quality |
+| **Tester** | Developer | Architect | Test coverage, requirements validation |
+| **IT** | Tester | Developer | Build quality, release readiness |
+
+### Review Criteria by Phase
+
+**Architect Review Criteria**:
+- Interface design follows SOLID principles
+- Thrift interfaces are well-defined
+- Shared memory structure is appropriate
+- **FICTIONAL** elements clearly documented
+- Design patterns appropriately selected
+- Specifications are complete and clear
+
+**Developer Review Criteria**:
+- Implementation matches specifications
+- SOLID principles applied in code
+- Clean Code principles followed
+- Unit tests comprehensive
+- **FICTIONAL** Zeeman model clearly marked in code
+- Error handling appropriate
+- Code is maintainable
+
+**Tester Review Criteria**:
+- Test plan covers all requirements
+- Component tests validate individual modules
+- Integration tests cover communication paths
+- System test validates end-to-end workflow
+- Observable results are verified
+- Test quality is high (no flaky tests)
+
+**IT Review Criteria**:
+- All modules build successfully
+- Thrift code generation works
+- All tests pass
+- Release artifacts are complete
+- Release notes are accurate
+- Build system is reproducible
+
 ---
 
 ## Agent Assignments

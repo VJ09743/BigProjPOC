@@ -195,3 +195,67 @@ When your work is complete, create a PR to merge changes:
    - Reference related tasks or issues
 
 **Note**: The `.github_token` file contains GitHub authentication token and should never be committed (it's in `.gitignore`).
+
+## Before Concluding Any Task
+
+**CRITICAL**: Before marking a task as complete or concluding your work, ALWAYS:
+
+### 1. Check for Existing Pull Requests
+```bash
+# Check for open PRs on your branch
+export GH_TOKEN=$(cat /home/user/BigProjPOC/.github_token)
+gh pr list --repo meenusinha/BigProjPOC --head $(git branch --show-current)
+
+# Check for all recent PRs (including merged)
+gh pr list --repo meenusinha/BigProjPOC --state all --limit 10
+```
+
+### 2. Determine PR Status
+
+**If NO PR exists:**
+- Create a new PR with comprehensive description
+- Include summary, changes, files changed, test plan, agent info
+
+**If OPEN PR exists:**
+- Check if your new commits are already in the PR
+- Update PR description if needed (not yet supported by gh CLI easily)
+- Inform user that PR is already open and ready for review
+
+**If MERGED PR exists:**
+- Check if there are new commits since the merge
+- If yes: Create a NEW PR for the new commits
+- If no: Inform user that work is already merged into master
+
+### 3. Final Checklist Before Concluding
+
+- [ ] All commits pushed to remote branch
+- [ ] PR created or updated
+- [ ] Task status updated to "Completed" in task file
+- [ ] Documentation updated
+- [ ] User informed of PR status and URL
+
+### Example Workflow
+
+```bash
+# 1. Check current branch
+CURRENT_BRANCH=$(git branch --show-current)
+
+# 2. Check for PR
+export GH_TOKEN=$(cat /home/user/BigProjPOC/.github_token)
+PR_STATUS=$(gh pr list --repo meenusinha/BigProjPOC --head $CURRENT_BRANCH --state all --json state,number,url)
+
+# 3. Decide action based on status
+# - If no PR: Create one
+# - If open PR: Inform user
+# - If merged PR with new commits: Create new PR
+
+# 4. Always inform user of PR URL and status
+```
+
+### Why This Matters
+
+- Ensures all work is properly tracked in PRs
+- Prevents duplicate PRs
+- Keeps user informed of review status
+- Maintains clean PR history
+- Enables proper code review workflow

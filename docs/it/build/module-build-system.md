@@ -125,7 +125,9 @@ make build
 ### `make build-debug`
 Builds debug version with debug symbols and no optimization.
 - Compiler flags: `-g -O0 -DDEBUG`
-- Output: `build/debug/libBigModuleX.a`
+- Outputs:
+  - Library: `build/debug/libBigModuleX.a`
+  - Executable: `build/debug/BigModuleX`
 - Includes: Generated code + implementation code
 
 **Example:**
@@ -137,7 +139,9 @@ make build-debug
 ### `make build-release`
 Builds release version with optimizations and no debug symbols.
 - Compiler flags: `-O3 -DNDEBUG`
-- Output: `build/release/libBigModuleX.a`
+- Outputs:
+  - Library: `build/release/libBigModuleX.a`
+  - Executable: `build/release/BigModuleX`
 - Includes: Generated code + implementation code
 
 **Example:**
@@ -159,15 +163,18 @@ make clean
 ```
 
 ### `make install`
-Installs built artifacts to system directories.
-- Installs library: `/usr/local/lib/libBigModuleX.a`
-- Installs headers: `/usr/local/include/BigModuleX/`
+Installs built artifacts to repository-level release directory.
+- Installs executable: `release/bin/BigModuleX`
+- Installs library: `release/lib/libBigModuleX.a`
+- Installs headers: `release/include/BigModuleX/`
 - Requires: Successful release build
+- **Note**: Installs to repository `release/`, NOT `/usr/local`
 
 **Example:**
 ```bash
 cd BigModuleA
-sudo make install
+make install
+# No sudo required - installs to repository release/ folder
 ```
 
 ### `make help`
@@ -202,10 +209,10 @@ Defined in `common_infra/build_tools/common.mk`:
 - `INT_IMPL_DIR` - Implementation code directory
 
 #### Install Directories
-- `INSTALL_PREFIX = /usr/local`
-- `INSTALL_BIN_DIR = /usr/local/bin`
-- `INSTALL_LIB_DIR = /usr/local/lib`
-- `INSTALL_INCLUDE_DIR = /usr/local/include`
+- `REPO_RELEASE_DIR` - Repository-level release directory
+- `INSTALL_BIN_DIR = release/bin` - Executable binaries
+- `INSTALL_LIB_DIR = release/lib` - Static libraries
+- `INSTALL_INCLUDE_DIR = release/include` - Header files
 
 ### Module-Specific Settings
 
@@ -357,17 +364,16 @@ Developer needs to create interface definitions and implementations.
 make V=1 build-debug
 ```
 
-### Permission Denied on Install
+### Install Directory Issues
 
-**Error:**
-```
-Permission denied
-```
+**Previous Issue (now resolved):**
+Earlier versions installed to `/usr/local` which required sudo. Current version installs to repository's `release/` folder.
 
-**Solution:**
-Install target requires root privileges:
+**Current Behavior:**
 ```bash
-sudo make install
+make install
+# No sudo required - installs to repository release/ folder
+# Artifacts appear in release/bin/, release/lib/, release/include/
 ```
 
 ## Best Practices

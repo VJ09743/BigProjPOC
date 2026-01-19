@@ -272,6 +272,80 @@ Claude Code **automatically determines which agent role to use** based on your r
 - "Test the login functionality" → Activates **Tester Agent**
 - "Implement the IAuthService interface" → Activates **Developer Agent**
 
+### Task Analysis & Collaboration Protocol
+
+**All agents follow a rigorous task analysis and collaboration protocol before executing work:**
+
+#### 1. Analyze & Clarify First
+Before starting any task, agents will:
+- **Ask Questions**: Clarify the what, why, how, scope, dependencies, and success criteria
+- **Document Understanding**: Record task interpretation, decisions, assumptions, and risks
+- **Think Like an Architect**: Identify flaws, suggest improvements, consider trade-offs and long-term impact
+
+#### 2. Propose Alternatives
+Agents will:
+- **Brainstorm Solutions**: Consider multiple approaches to solve the problem
+- **Suggest Improvements**: Propose better options, optimizations, or enhancements
+- **Identify Issues Early**: Flag potential problems, edge cases, or design flaws
+
+#### 3. Collaborate & Reach Consensus
+Before implementation:
+- **Share Analysis**: Agents document their findings and questions
+- **Request Input**: Seek perspective from other relevant agents:
+  - Architect for design implications
+  - Developer for implementation feasibility
+  - Tester for testability and quality
+  - IT for infrastructure and build system impacts
+- **Brainstorm Together**: Engage in collaborative problem-solving
+- **Reach Agreement**: All agents agree on the approach before proceeding
+- **Document Decisions**: Record the agreed-upon approach and rationale
+
+#### 4. Get Approval & Execute
+- Present the refined plan to the user
+- Confirm understanding and approach
+- Get explicit go-ahead
+- Execute with documentation
+- Update progress throughout
+
+#### Memory & Learning
+Agents maintain decision logs in their respective documentation folders:
+- **IT Agent**: `docs/it/decisions/`
+- **Architect Agent**: `docs/architecture/decisions/`
+- **Developer Agent**: `docs/architecture/tasks/` or code comments
+- **Tester Agent**: `docs/tests/documentation/`
+
+This ensures important context is preserved for future feature discussions and architectural reasoning.
+
+#### Protocol Workflow
+
+```
+Task Received
+    ↓
+Analyze & Ask Questions
+    ↓
+Document Understanding
+    ↓
+Think & Identify Issues
+    ↓
+Suggest Alternatives
+    ↓
+Collaborate with Agents
+    ↓
+Brainstorm & Refine
+    ↓
+Reach Agreement
+    ↓
+Document Plan
+    ↓
+Get User Approval
+    ↓
+Execute
+    ↓
+Document Results
+    ↓
+Complete
+```
+
 ### Task Management System
 
 The project uses a centralized task management system in `docs/tasks/` where you can create tasks for any agent.
@@ -413,8 +487,8 @@ make build
 # Clean build artifacts
 make clean
 
-# Install to system
-sudo make install
+# Install to repository release/ folder
+make install
 ```
 
 **Build Targets:**
@@ -424,19 +498,24 @@ sudo make install
 - `make build-debug` - Build debug version only
 - `make build-release` - Build release version only
 - `make clean` - Remove all build artifacts
-- `make install` - Install built artifacts to system
+- `make install` - Install built artifacts to repository `release/` folder
 
 **Build Workflow:**
 1. Developer creates `.thrift` file in `src/ext/interfaces/`
 2. Run `make generate` to create C++ files in `src/int/generated/`
 3. Developer implements interfaces in `src/int/impl/`
 4. Run `make build` to compile everything
-5. Run `make install` to install artifacts
+5. Run `make install` to install artifacts to `release/`
 
 **Build Outputs:**
-- Debug builds: `build/debug/libBigModuleX.a`
-- Release builds: `build/release/libBigModuleX.a`
+- Debug builds:
+  - Executable: `build/debug/BigModuleX`
+  - Library: `build/debug/libBigModuleX.a`
+- Release builds:
+  - Executable: `build/release/BigModuleX`
+  - Library: `build/release/libBigModuleX.a`
 - Generated code: `src/int/generated/`
+- Installed artifacts: `release/bin/`, `release/lib/`, `release/include/`
 
 ### Running Tests
 Handled by **Tester Agent**:

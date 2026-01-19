@@ -65,7 +65,9 @@ fi
 @if [ -n "$$(ls -A $(DEBUG_DIR)/*.o 2>/dev/null)" ]; then \
 	echo "Linking debug library..."; \
 	ar rcs $(DEBUG_DIR)/lib$(MODULE_NAME).a $(DEBUG_DIR)/*.o; \
-	echo "\033[32m[SUCCESS]\033[0m Debug build complete: $(DEBUG_DIR)/lib$(MODULE_NAME).a"; \
+	echo "Linking debug executable..."; \
+	$(CXX) $(CXXFLAGS_DEBUG) $(DEBUG_DIR)/*.o -o $(DEBUG_DIR)/$(MODULE_NAME) $(LDFLAGS) $(LIBS); \
+	echo "\033[32m[SUCCESS]\033[0m Debug build complete: $(DEBUG_DIR)/lib$(MODULE_NAME).a and $(DEBUG_DIR)/$(MODULE_NAME)"; \
 else \
 	echo "No source files to compile. Skipping debug build."; \
 fi
@@ -92,7 +94,9 @@ fi
 @if [ -n "$$(ls -A $(RELEASE_DIR)/*.o 2>/dev/null)" ]; then \
 	echo "Linking release library..."; \
 	ar rcs $(RELEASE_DIR)/lib$(MODULE_NAME).a $(RELEASE_DIR)/*.o; \
-	echo "\033[32m[SUCCESS]\033[0m Release build complete: $(RELEASE_DIR)/lib$(MODULE_NAME).a"; \
+	echo "Linking release executable..."; \
+	$(CXX) $(CXXFLAGS_RELEASE) $(RELEASE_DIR)/*.o -o $(RELEASE_DIR)/$(MODULE_NAME) $(LDFLAGS) $(LIBS); \
+	echo "\033[32m[SUCCESS]\033[0m Release build complete: $(RELEASE_DIR)/lib$(MODULE_NAME).a and $(RELEASE_DIR)/$(MODULE_NAME)"; \
 else \
 	echo "No source files to compile. Skipping release build."; \
 fi
@@ -108,23 +112,28 @@ endef
 
 # Rule to install built artifacts
 define INSTALL_RULE
-@echo "\033[34m[INFO]\033[0m Installing built artifacts..."
+@echo "\033[34m[INFO]\033[0m Installing built artifacts to repository release/..."
+@mkdir -p $(INSTALL_BIN_DIR) $(INSTALL_LIB_DIR) $(INSTALL_INCLUDE_DIR)
+@if [ -f "$(RELEASE_DIR)/$(MODULE_NAME)" ]; then \
+	cp $(RELEASE_DIR)/$(MODULE_NAME) $(INSTALL_BIN_DIR)/; \
+	chmod +x $(INSTALL_BIN_DIR)/$(MODULE_NAME); \
+	echo "Installed executable to $(INSTALL_BIN_DIR)/$(MODULE_NAME)"; \
+fi
 @if [ -f "$(RELEASE_DIR)/lib$(MODULE_NAME).a" ]; then \
-	mkdir -p $(INSTALL_LIB_DIR); \
 	cp $(RELEASE_DIR)/lib$(MODULE_NAME).a $(INSTALL_LIB_DIR)/; \
 	echo "Installed library to $(INSTALL_LIB_DIR)/lib$(MODULE_NAME).a"; \
 fi
 @if [ -d "$(INT_GENERATED_DIR)" ] && [ -n "$$(ls -A $(INT_GENERATED_DIR)/*.h 2>/dev/null)" ]; then \
 	mkdir -p $(INSTALL_INCLUDE_DIR)/$(MODULE_NAME); \
 	cp $(INT_GENERATED_DIR)/*.h $(INSTALL_INCLUDE_DIR)/$(MODULE_NAME)/; \
-	echo "Installed headers to $(INSTALL_INCLUDE_DIR)/$(MODULE_NAME)/"; \
+	echo "Installed generated headers to $(INSTALL_INCLUDE_DIR)/$(MODULE_NAME)/"; \
 fi
 @if [ -d "$(INT_IMPL_DIR)" ] && [ -n "$$(ls -A $(INT_IMPL_DIR)/*.h 2>/dev/null)" ]; then \
 	mkdir -p $(INSTALL_INCLUDE_DIR)/$(MODULE_NAME); \
 	cp $(INT_IMPL_DIR)/*.h $(INSTALL_INCLUDE_DIR)/$(MODULE_NAME)/; \
-	echo "Installed headers to $(INSTALL_INCLUDE_DIR)/$(MODULE_NAME)/"; \
+	echo "Installed implementation headers to $(INSTALL_INCLUDE_DIR)/$(MODULE_NAME)/"; \
 fi
-@echo "\033[32m[SUCCESS]\033[0m Install complete"
+@echo "\033[32m[SUCCESS]\033[0m Install complete - artifacts in $(REPO_RELEASE_DIR)/"
 endef
 # Reusable Build Rules
 # This makefile contains common build patterns used across all modules

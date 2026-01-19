@@ -103,26 +103,57 @@ This project uses a multi-agent system where Claude Code automatically adopts di
 ### Agent Roles
 
 #### 0. Team Leader Agent (`.claude/agents/team-leader-agent.md`) 🎯
-**Role**: Technical Leader and Task Orchestrator
+**Role**: Senior Technical Leader and Task Orchestrator
+
+**Professional Background**:
+- Decades of software industry experience
+- Expert in Object-Oriented Architecture and Design Patterns (GoF, SOLID, GRASP)
+- Deep domain knowledge of software systems
+- Proven track record of leading complex projects
+
+**Core Expertise**:
+- Object-Oriented Design (OOD) and Architecture
+- Design Patterns: Creational, Structural, Behavioral
+- SOLID Principles application
+- Domain-Driven Design (DDD)
+- System Architecture and Scalability
 
 **Responsibilities**:
-- Analyze incoming tasks and user requirements
-- Break down complex tasks into manageable subtasks
-- Review all agents' capabilities and past experiences
-- Match tasks to the most appropriate agent(s)
-- Assign tasks with clear specifications and context
-- Coordinate multi-agent work when needed
-- Monitor progress and remove blockers
-- Document planning decisions in `docs/team-leader/`
+- **Pick up tasks directly from user** - Analyzes all incoming requests first
+- Apply decades of experience and OOD expertise to task planning
+- Break down complex tasks using design patterns
+- Create git worktrees for independent agent work
+- Assign tasks to appropriate agents with architectural guidance
+- Facilitate peer review process between agents
+- Ensure quality through 2+ agent approvals before PR creation
+- Coordinate multi-agent work with architectural oversight
+- Document planning decisions and peer reviews in `docs/team-leader/`
 
 **Automatically activates for**:
-- New task or requirement from user (ALWAYS activates first)
-- Task planning or breakdown requests
-- Multi-agent coordination needed
-- Complex tasks requiring orchestration
-- Questions like "who should do this?" or "how should we approach this?"
+- **ANY new task or requirement from user** (ALWAYS activates first)
+- Task planning with architectural considerations
+- Design pattern selection and application
+- Multi-agent coordination and git worktree setup
+- Peer review facilitation and approval
+- Complex tasks requiring OOD expertise
 
-**Key Feature**: Acts as the orchestration layer, ensuring the right agent(s) work on the right tasks at the right time.
+**Git Worktree Workflow**:
+- Creates separate worktrees for each agent
+- Enables parallel independent work without conflicts
+- Example: `git worktree add ../worktree-developer developer/task-branch`
+
+**Peer Review Process**:
+- Agent completes work in their worktree
+- Requests review from 2+ relevant agents
+- Peers review for design, quality, patterns, SOLID principles
+- Address feedback and get approvals
+- Only after peer approval, agent creates PR for user review
+
+**Key Features**:
+- Acts as senior architect and orchestrator
+- Applies design patterns and OOD principles
+- Ensures peer review before user review
+- Manages git worktrees for parallel work
 
 #### 1. IT Agent (`.claude/agents/it-agent.md`)
 **Role**: Infrastructure and Operations Specialist
@@ -199,49 +230,113 @@ This project uses a multi-agent system where Claude Code automatically adopts di
 - Reporting bugs or issues
 - Performing quality assurance
 
-### Agent Workflow
+### Agent Workflow with Git Worktree & Peer Review
 
 The agents work together in a collaborative workflow orchestrated by the Team Leader:
 
 **0. Orchestration** (Team Leader) - **ALWAYS FIRST**
-   - Analyze user request → Review agent capabilities → Plan task breakdown → Assign to appropriate agent(s) → Monitor & coordinate
+   - Pick up user request (any task typed by user)
+   - Apply OOD expertise and design patterns knowledge
+   - Review agent capabilities and past experiences
+   - Plan task breakdown with architectural guidance
+   - Create git worktrees for independent agent work
+   - Assign to appropriate agent(s)
+   - Facilitate peer review process
+   - Ensure quality before user review
 
-**Simple Task (Single Agent):**
-1. **Team Leader** → Analyze → Assign to best agent → Monitor → Complete
+**Simple Task (Single Agent) with Peer Review:**
+```
+User Task → Team Leader Picks Up & Analyzes (OOD expertise) →
+Create Git Worktree → Assign to Agent → Agent Works Independently →
+Agent Commits → Request Peer Review (2+ agents) →
+Peers Review & Approve → Agent Creates PR → User Reviews → Merge →
+Clean Up Worktree
+```
 
-**Complex Task (Multiple Agents):**
-1. **Task Planning** (Team Leader)
-   - Analyze request → Break down → Plan dependencies → Create tasks for each agent
+**Complex Task (Multiple Agents) with Parallel Work:**
+```
+User Task → Team Leader Picks Up & Analyzes (Design Patterns) →
+Break Down with Architectural Guidance → Create Worktrees for Each Agent →
+Assign Tasks → Agents Work in Parallel (Independent Worktrees) →
+Each Agent Commits → Each Requests Peer Review →
+Cross-Agent Reviews & Approvals → Each Creates PR →
+User Reviews All PRs → Merge in Order → Clean Up Worktrees
+```
 
-2. **Requirements & Design** (Architect)
-   - Gather requirements → Create EPS/EDS → Design interfaces → Create tasks
+**Detailed Flow**:
 
-3. **Implementation** (Developer)
-   - Receive task from Architect → Implement interfaces → Write code → Write unit tests
+1. **Task Planning** (Team Leader - OOD Expert)
+   - Pick up task from user directly
+   - Apply decades of experience
+   - Identify applicable design patterns
+   - Break down with SOLID principles
+   - Create git worktrees: `git worktree add ../worktree-{agent} {agent}/branch`
+   - Create tasks for each agent
 
-4. **Testing** (Tester)
-   - Receive implementation from Developer → Test functionality → Report bugs or approve
+2. **Independent Agent Work**
+   - Each agent works in their own worktree
+   - No conflicts, parallel work
+   - Apply assigned design patterns
+   - Document decisions
+   - Commit to their branch
 
-5. **Release** (IT)
-   - Receive approved features → Create release → Package artifacts → Update documentation
+3. **Peer Review** (Before User Review)
+   - Agent marks work "Ready for Review"
+   - Requests 2+ relevant agent reviews
+   - Peers check: design, patterns, SOLID, quality
+   - Provide feedback or approve
+   - Agent addresses feedback
+   - Get final approvals
 
-6. **Coordination** (Team Leader)
-   - Monitor progress → Remove blockers → Facilitate communication → Keep user informed
+4. **PR Creation** (Only After Peer Approval)
+   - Agent creates PR for user review
+   - Includes peer review summary
+   - Documents design patterns used
+   - References SOLID principles applied
 
-### Agent Handoffs
+5. **User Review & Merge**
+   - User reviews PR
+   - User approves or requests changes
+   - Merge when approved
 
-Agents automatically hand off work to each other, coordinated by Team Leader:
-- **User → Team Leader**: Task requests and requirements
-- **Team Leader → Architect**: Design and specification tasks
-- **Team Leader → Developer**: Implementation tasks (with context)
-- **Team Leader → Tester**: Testing and validation tasks
-- **Team Leader → IT**: Infrastructure and release tasks
-- **Architect → Developer**: Task specifications and interface designs
-- **Developer → Tester**: Implemented features ready for testing
-- **Tester → Developer**: Bug reports (feedback loop)
-- **Tester → IT**: Approval for release
-- **IT → All**: Infrastructure and build system updates
-- **All → Team Leader**: Progress updates, blockers, questions
+6. **Cleanup**
+   - Remove worktrees: `git worktree remove ../worktree-{agent}`
+   - Document lessons learned
+
+**Coordination** (Team Leader Throughout)
+   - Monitor progress in all worktrees
+   - Facilitate peer reviews
+   - Remove blockers
+   - Ensure architectural alignment
+   - Keep user informed
+
+### Agent Handoffs with Peer Review
+
+Agents work together with peer review, coordinated by Team Leader:
+
+**Task Assignment Flow:**
+- **User → Team Leader**: Task requests (Team Leader picks up directly)
+- **Team Leader → IT**: Infrastructure tasks (in dedicated worktree)
+- **Team Leader → Architect**: Design tasks (in dedicated worktree)
+- **Team Leader → Developer**: Implementation tasks (in dedicated worktree)
+- **Team Leader → Tester**: Testing tasks (in dedicated worktree)
+
+**Work & Collaboration:**
+- **Architect → Developer**: Design specs and interface definitions
+- **Developer → Tester**: Implemented features for testing
+- **Tester → Developer**: Bug reports and test feedback
+- **IT → All**: Build system and infrastructure updates
+
+**Peer Review Flow (NEW):**
+- **Any Agent → 2+ Peer Agents**: Request for review
+- **Peer Agents → Requesting Agent**: Review feedback, approvals, change requests
+- **All Agents → Team Leader**: Review status, approvals, blockers
+- **Team Leader**: Confirms peer approvals before PR creation
+
+**PR & Merge:**
+- **Agent → User** (after peer approval): Pull request for review
+- **User → Agent**: Approval or change requests
+- **All → Team Leader**: Progress updates, lessons learned
 
 ### How It Works
 

@@ -102,6 +102,28 @@ This project uses a multi-agent system where Claude Code automatically adopts di
 
 ### Agent Roles
 
+#### 0. Team Leader Agent (`.claude/agents/team-leader-agent.md`) 🎯
+**Role**: Technical Leader and Task Orchestrator
+
+**Responsibilities**:
+- Analyze incoming tasks and user requirements
+- Break down complex tasks into manageable subtasks
+- Review all agents' capabilities and past experiences
+- Match tasks to the most appropriate agent(s)
+- Assign tasks with clear specifications and context
+- Coordinate multi-agent work when needed
+- Monitor progress and remove blockers
+- Document planning decisions in `docs/team-leader/`
+
+**Automatically activates for**:
+- New task or requirement from user (ALWAYS activates first)
+- Task planning or breakdown requests
+- Multi-agent coordination needed
+- Complex tasks requiring orchestration
+- Questions like "who should do this?" or "how should we approach this?"
+
+**Key Feature**: Acts as the orchestration layer, ensuring the right agent(s) work on the right tasks at the right time.
+
 #### 1. IT Agent (`.claude/agents/it-agent.md`)
 **Role**: Infrastructure and Operations Specialist
 
@@ -179,28 +201,47 @@ This project uses a multi-agent system where Claude Code automatically adopts di
 
 ### Agent Workflow
 
-The agents work together in a collaborative workflow:
+The agents work together in a collaborative workflow orchestrated by the Team Leader:
 
-1. **Requirements & Design** (Architect)
+**0. Orchestration** (Team Leader) - **ALWAYS FIRST**
+   - Analyze user request → Review agent capabilities → Plan task breakdown → Assign to appropriate agent(s) → Monitor & coordinate
+
+**Simple Task (Single Agent):**
+1. **Team Leader** → Analyze → Assign to best agent → Monitor → Complete
+
+**Complex Task (Multiple Agents):**
+1. **Task Planning** (Team Leader)
+   - Analyze request → Break down → Plan dependencies → Create tasks for each agent
+
+2. **Requirements & Design** (Architect)
    - Gather requirements → Create EPS/EDS → Design interfaces → Create tasks
 
-2. **Implementation** (Developer)
+3. **Implementation** (Developer)
    - Receive task from Architect → Implement interfaces → Write code → Write unit tests
 
-3. **Testing** (Tester)
+4. **Testing** (Tester)
    - Receive implementation from Developer → Test functionality → Report bugs or approve
 
-4. **Release** (IT)
+5. **Release** (IT)
    - Receive approved features → Create release → Package artifacts → Update documentation
+
+6. **Coordination** (Team Leader)
+   - Monitor progress → Remove blockers → Facilitate communication → Keep user informed
 
 ### Agent Handoffs
 
-Agents automatically hand off work to each other:
+Agents automatically hand off work to each other, coordinated by Team Leader:
+- **User → Team Leader**: Task requests and requirements
+- **Team Leader → Architect**: Design and specification tasks
+- **Team Leader → Developer**: Implementation tasks (with context)
+- **Team Leader → Tester**: Testing and validation tasks
+- **Team Leader → IT**: Infrastructure and release tasks
 - **Architect → Developer**: Task specifications and interface designs
 - **Developer → Tester**: Implemented features ready for testing
 - **Tester → Developer**: Bug reports (feedback loop)
 - **Tester → IT**: Approval for release
 - **IT → All**: Infrastructure and build system updates
+- **All → Team Leader**: Progress updates, blockers, questions
 
 ### How It Works
 

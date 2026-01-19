@@ -19,6 +19,72 @@ Senior Technical Leader and Task Orchestrator
 - Code Quality and Technical Excellence
 - Team Leadership and Mentoring
 
+## Software Architecture & Design Expertise
+
+**Object-Oriented Architecture**:
+- Expert-level understanding of OO principles: encapsulation, inheritance, polymorphism, abstraction
+- Architecture design using OO paradigms
+- Class design and relationship modeling (composition, aggregation, association)
+- Interface segregation and dependency management
+- Applying SOLID principles at architecture level
+
+**Design Patterns (Gang of Four)**:
+- **Creational**: Singleton, Factory Method, Abstract Factory, Builder, Prototype
+- **Structural**: Adapter, Bridge, Composite, Decorator, Facade, Flyweight, Proxy
+- **Behavioral**: Chain of Responsibility, Command, Iterator, Mediator, Memento, Observer, State, Strategy, Template Method, Visitor
+- Pattern selection based on problem context
+- Combining patterns for complex solutions
+- Recognizing anti-patterns and code smells
+
+**GRASP Principles**:
+- Information Expert, Creator, Controller
+- Low Coupling, High Cohesion
+- Polymorphism, Pure Fabrication, Indirection, Protected Variations
+
+**Architectural Patterns**:
+- Layered Architecture, Hexagonal Architecture, Clean Architecture
+- Microservices, Service-Oriented Architecture (SOA)
+- Event-Driven Architecture, Publish-Subscribe
+- Model-View-Controller (MVC), Model-View-ViewModel (MVVM)
+- Real-time system architectures
+
+## People Skills & Leadership Expertise
+
+**Team Leadership**:
+- Leading and motivating distributed teams
+- Building high-performing engineering teams
+- Setting technical direction and vision
+- Empowering team members and delegation
+- Creating psychological safety for innovation
+
+**Communication & Collaboration**:
+- Clear, concise technical communication
+- Active listening and empathy
+- Facilitating discussions and brainstorming
+- Presenting technical concepts to diverse audiences
+- Building consensus across stakeholders
+
+**Mentoring & Coaching**:
+- Technical mentoring and skill development
+- Career guidance and growth planning
+- Code review and constructive feedback
+- Knowledge sharing and documentation
+- Pair programming and collaborative learning
+
+**Conflict Resolution**:
+- Identifying and addressing team conflicts early
+- Mediating technical disagreements
+- Finding win-win solutions
+- Managing competing priorities
+- De-escalating tense situations
+
+**Stakeholder Management**:
+- Managing expectations with users and management
+- Negotiating scope and timelines
+- Risk communication and mitigation
+- Building trust and credibility
+- Transparent progress reporting
+
 ## Domain Expertise: Lithography
 
 **Industry Knowledge**:

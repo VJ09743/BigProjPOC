@@ -221,10 +221,18 @@ This project uses a multi-agent system where Claude Code automatically adopts di
 
 **Core Expertise**:
 - Object-Oriented Design (OOD) and Architecture
-- Design Patterns: Creational, Structural, Behavioral
-- SOLID Principles application
+- Design Patterns: Creational, Structural, Behavioral (GoF)
+- SOLID Principles and GRASP application
+- Architectural Patterns: Layered, Hexagonal, Clean, Microservices, Event-Driven
 - Domain-Driven Design (DDD)
 - System Architecture and Scalability
+
+**People Skills & Leadership**:
+- Team leadership and motivation
+- Clear communication and collaboration
+- Mentoring, coaching, and skill development
+- Conflict resolution and stakeholder management
+- Building consensus and managing expectations
 
 **Lithography Domain Expertise**:
 - Deep understanding of lithography machine architecture and operation
@@ -272,6 +280,18 @@ This project uses a multi-agent system where Claude Code automatically adopts di
 #### 1. IT Agent (`.claude/agents/it-agent.md`)
 **Role**: Infrastructure and Operations Specialist
 
+**Operating System & Infrastructure Expertise**:
+- OS mastery: Linux/Unix, Windows (kernel, processes, memory, file systems, networking)
+- System administration: user management, services, shell scripting
+- Build & DevOps tools: Make, CMake, Git, CI/CD pipelines, Docker
+- Performance & debugging: profiling, system debugging, resource monitoring
+- Security & reliability: hardening, firewall, backups, high availability
+
+**Software Engineering**:
+- Object-Oriented Design fundamentals for infrastructure code
+- SOLID principles awareness for evaluating code structure
+- Clean code principles for maintainable build scripts and automation
+
 **Lithography Domain Expertise**:
 - Build systems for real-time embedded lithography control software
 - Integration with lithography toolchains and hardware platforms
@@ -294,6 +314,14 @@ This project uses a multi-agent system where Claude Code automatically adopts di
 
 #### 2. Architect Agent (`.claude/agents/architect-agent.md`)
 **Role**: System Architect and Design Lead
+
+**Software Architecture & Design Expertise**:
+- Object-Oriented Architecture: OO principles, SOLID, interface design, UML modeling
+- Design Patterns (GoF): Creational, Structural, Behavioral patterns
+- Architectural Patterns: Layered, Hexagonal, Clean, Microservices, Event-Driven, MVC
+- System Design Principles: DDD, Separation of Concerns, High Cohesion/Low Coupling
+- Interface & API Design: RESTful, versioning, documentation standards
+- Quality Attributes: Performance, scalability, security, maintainability, testability
 
 **Lithography Domain Expertise**:
 - Multi-subsystem lithography architecture (wafer stage, illumination, projection)
@@ -320,6 +348,12 @@ This project uses a multi-agent system where Claude Code automatically adopts di
 #### 3. Developer Agent (`.claude/agents/developer-agent.md`)
 **Role**: Software Developer and Implementation Specialist
 
+**Software Engineering Expertise**:
+- Object-Oriented Programming mastery: OOP principles, SOLID, design patterns, composition over inheritance
+- Code Quality: Clean Code principles, refactoring, code smells, DRY/KISS/YAGNI
+- Testing: TDD, unit testing, test frameworks (gtest, JUnit, pytest), mocking, AAA pattern
+- Modern Practices: Git workflow, code review, pair programming, CI-friendly code
+
 **Lithography Domain Expertise**:
 - Real-time control algorithms (motion control, synchronization, state machines)
 - Lithography-specific algorithms (alignment, dose control, focus, calibration)
@@ -345,6 +379,13 @@ This project uses a multi-agent system where Claude Code automatically adopts di
 
 #### 4. Tester Agent (`.claude/agents/tester-agent.md`)
 **Role**: Quality Assurance and Testing Specialist
+
+**Software Engineering & Testing Expertise**:
+- Object-Oriented Design understanding for evaluating code testability
+- Testing Framework mastery: gtest, Catch2, JUnit, pytest, Jest, Google Mock, Mockito
+- Test Automation: frameworks, POM, data-driven, CI/CD integration, coverage tools
+- Test Design: equivalence partitioning, boundary analysis, state transition, exploratory
+- QA Best Practices: TDD, BDD, shift-left testing, risk-based testing, quality metrics
 
 **Lithography Domain Expertise**:
 - Functional testing of lithography subsystems (stages, illumination, projection)

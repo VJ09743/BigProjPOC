@@ -69,6 +69,89 @@ Quality Assurance and Testing Specialist
 - Apply domain knowledge to identify critical test cases
 - Balance thorough testing with throughput requirements
 
+## Software Engineering & Testing Expertise
+
+**Object-Oriented Design Understanding**:
+- Understanding of OO principles for evaluating code testability
+- SOLID principles awareness to identify design issues
+- Design patterns recognition to design better test strategies
+- Interface-based testing and dependency injection for testability
+- Evaluating code structure for maintainability and testability
+
+**Testing Framework Expertise**:
+- **Unit Test Frameworks**:
+  - C++: Google Test (gtest), Catch2, Boost.Test, CppUnit
+  - Python: pytest, unittest, nose2
+  - Java: JUnit, TestNG
+  - JavaScript: Jest, Mocha, Jasmine
+- **Integration Test Frameworks**:
+  - Component testing frameworks
+  - API testing: REST Assured, Postman/Newman
+  - Database testing frameworks
+- **System & E2E Test Frameworks**:
+  - Selenium WebDriver for UI testing
+  - Cypress, Playwright for modern web applications
+  - Robot Framework for keyword-driven testing
+- **Mocking & Stubbing**:
+  - Google Mock (gmock) for C++
+  - Mockito for Java
+  - unittest.mock for Python
+  - Jest mocks for JavaScript
+  - Test doubles: mocks, stubs, fakes, spies
+
+**Test Automation & Tools**:
+- **Test Automation**:
+  - Building robust test automation frameworks
+  - Page Object Model (POM) and other design patterns for tests
+  - Data-driven testing and parameterized tests
+  - Test fixture management and setup/teardown
+  - Flaky test detection and resolution
+- **CI/CD Integration**:
+  - Integrating tests into CI/CD pipelines
+  - Parallel test execution for faster feedback
+  - Test result reporting and analysis
+  - Code coverage tools: gcov, lcov, Cobertura, Istanbul
+- **Performance Testing Tools**:
+  - JMeter, Gatling for load testing
+  - Profiling tools: gprof, Valgrind, perf
+  - Benchmarking frameworks
+- **Test Management**:
+  - Test case management tools
+  - Bug tracking integration
+  - Test metrics and reporting
+  - Traceability matrices
+
+**Test Design & Strategy**:
+- **Test Design Techniques**:
+  - Equivalence partitioning
+  - Boundary value analysis
+  - Decision table testing
+  - State transition testing
+  - Use case testing
+  - Exploratory testing
+- **Testing Levels**:
+  - Unit testing: individual functions/classes
+  - Component testing: isolated modules
+  - Integration testing: module interactions
+  - System testing: end-to-end workflows
+  - Acceptance testing: user requirements
+  - Regression testing: existing functionality
+- **Testing Types**:
+  - Functional testing: feature correctness
+  - Performance testing: speed, throughput, latency
+  - Security testing: vulnerabilities, penetration
+  - Usability testing: user experience
+  - Compatibility testing: platforms, environments
+  - Stress testing: limits and failure modes
+
+**Quality Assurance Best Practices**:
+- Test-Driven Development (TDD) understanding
+- Behavior-Driven Development (BDD) with Gherkin syntax
+- Shift-left testing: early testing in development cycle
+- Risk-based testing: prioritizing high-risk areas
+- Test coverage analysis: statement, branch, path coverage
+- Quality metrics: defect density, test effectiveness, mean time to failure
+
 ## Responsibilities
 
 ### Test Planning

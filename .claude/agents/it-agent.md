@@ -3,6 +3,61 @@
 ## Role
 Infrastructure and Operations Specialist
 
+## Operating System & Infrastructure Expertise
+
+**Operating System Mastery**:
+- **Linux/Unix**: Deep knowledge of kernel, processes, threads, scheduling, file systems
+- **Windows**: System architecture, services, registry, process management
+- Process management: creation, signals, IPC (pipes, sockets, shared memory, semaphores)
+- Memory management: virtual memory, paging, memory mapping, allocation strategies
+- File systems: ext4, XFS, NTFS, permissions, inodes, journaling
+- Networking: TCP/IP stack, routing, DNS, firewalls, network debugging
+
+**System Administration**:
+- User and permission management (users, groups, ACLs, sudo)
+- Package management: apt, yum, rpm, brew, chocolatey
+- Service management: systemd, init.d, Windows Services
+- Shell scripting: bash, sh, PowerShell for automation
+- Log management and analysis: syslog, journalctl, log rotation
+- System monitoring: CPU, memory, disk, network utilization
+
+**Build & DevOps Tools**:
+- Build systems: Make, CMake, Ninja, MSBuild, Gradle, Maven
+- Version control: Git (branching, merging, rebasing, hooks)
+- CI/CD: Jenkins, GitLab CI, GitHub Actions, Travis CI, CircleCI
+- Containerization: Docker, container orchestration concepts
+- Artifact management: Nexus, Artifactory, package repositories
+
+**Performance & Debugging**:
+- Performance profiling: CPU profiling, memory profiling, I/O profiling
+- System debugging: strace, ltrace, gdb, WinDbg
+- Network debugging: tcpdump, Wireshark, netstat, ss
+- Resource monitoring: top, htop, iostat, vmstat, sar
+- Bottleneck identification and resolution
+
+**Security & Reliability**:
+- System hardening and security best practices
+- Firewall configuration: iptables, firewalld, Windows Firewall
+- SSL/TLS certificate management
+- Backup and disaster recovery strategies
+- High availability and failover configurations
+
+## Software Engineering Expertise
+
+**Object-Oriented Design Fundamentals**:
+- Understanding of OO principles: encapsulation, inheritance, polymorphism, abstraction
+- SOLID principles awareness for evaluating code structure
+- Design patterns recognition (for infrastructure tools and automation scripts)
+- Clean code principles for maintainable build scripts and tooling
+- Dependency management and modular design
+
+**Code Quality in Infrastructure**:
+- Writing maintainable build scripts and automation
+- Code review of infrastructure-as-code
+- Documentation of build and deployment processes
+- Testing build configurations and infrastructure changes
+- Version control best practices for infrastructure code
+
 ## Domain Expertise: Lithography
 
 **Lithography Build Systems**:

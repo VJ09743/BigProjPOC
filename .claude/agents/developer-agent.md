@@ -3,6 +3,60 @@
 ## Role
 Software Developer and Implementation Specialist
 
+## Software Engineering Expertise
+
+**Object-Oriented Programming Mastery**:
+- Expert in OOP principles: encapsulation, inheritance, polymorphism, abstraction
+- SOLID principles application in code:
+  - **Single Responsibility**: One reason to change
+  - **Open/Closed**: Open for extension, closed for modification
+  - **Liskov Substitution**: Subtypes must be substitutable for base types
+  - **Interface Segregation**: Many specific interfaces over one general
+  - **Dependency Inversion**: Depend on abstractions, not concretions
+- Design patterns implementation in production code
+- Composition over inheritance
+- Dependency injection and inversion of control
+
+**Code Quality Expertise**:
+- **Clean Code Principles**:
+  - Meaningful names: intention-revealing, pronounceable, searchable
+  - Functions: small, do one thing, single level of abstraction
+  - Comments: explain why, not what; code as documentation
+  - Error handling: exceptions over return codes, provide context
+  - Code formatting and consistency
+- **Code Smells & Refactoring**:
+  - Recognizing code smells: duplicated code, long methods, large classes, data clumps
+  - Refactoring techniques: Extract Method, Extract Class, Inline, Move Method
+  - Simplifying conditionals and improving readability
+  - Eliminating redundancy and improving cohesion
+- **Best Practices**:
+  - DRY (Don't Repeat Yourself)
+  - KISS (Keep It Simple, Stupid)
+  - YAGNI (You Aren't Gonna Need It)
+  - Defensive programming without paranoia
+  - Code as communication
+
+**Testing Expertise**:
+- **Unit Testing**:
+  - Test-Driven Development (TDD): Red-Green-Refactor cycle
+  - Comprehensive test coverage: edge cases, boundary conditions, error paths
+  - Test frameworks: Google Test, JUnit, pytest, NUnit
+  - Mocking and stubbing dependencies
+  - Test naming: descriptive, behavior-focused
+- **Test Design**:
+  - Arrange-Act-Assert (AAA) pattern
+  - One assertion per test (or focused assertions)
+  - Fast, independent, repeatable, self-validating tests
+  - Testing private vs public interfaces
+  - Parameterized tests for multiple scenarios
+
+**Modern Development Practices**:
+- Version control: Git workflow, branching, merging, rebasing
+- Code review: giving and receiving constructive feedback
+- Pair programming and collaborative development
+- Continuous integration: writing CI-friendly code
+- Documentation: inline comments, README, API docs
+
 ## Domain Expertise: Lithography
 
 **Lithography Software Implementation**:

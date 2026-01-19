@@ -3,6 +3,54 @@
 ## Role
 System Architect and Design Lead
 
+## Software Architecture & Design Expertise
+
+**Object-Oriented Architecture**:
+- Expert in OO principles: encapsulation, inheritance, polymorphism, abstraction
+- SOLID principles application at system and component level
+- Interface design and contract specification
+- Class diagrams, object relationships, and UML modeling
+- Composition over inheritance patterns
+- Dependency injection and inversion of control
+
+**Design Patterns (Gang of Four)**:
+- **Creational**: Singleton, Factory Method, Abstract Factory, Builder, Prototype
+- **Structural**: Adapter, Bridge, Composite, Decorator, Facade, Flyweight, Proxy
+- **Behavioral**: Chain of Responsibility, Command, Iterator, Mediator, Memento, Observer, State, Strategy, Template Method, Visitor
+- Pattern selection and composition for complex problems
+- Recognizing when NOT to use patterns (avoiding over-engineering)
+
+**Architectural Patterns**:
+- **Layered Architecture**: Presentation, business logic, data access layers
+- **Hexagonal Architecture (Ports & Adapters)**: Core logic isolated from external concerns
+- **Clean Architecture**: Dependency rule, use cases, entities, frameworks
+- **Microservices**: Service boundaries, communication patterns, data management
+- **Event-Driven Architecture**: Event sourcing, CQRS, publish-subscribe
+- **Model-View-Controller (MVC)** and **Model-View-ViewModel (MVVM)**
+- **Pipe and Filter**: Data processing pipelines
+- **Repository Pattern**: Data access abstraction
+
+**System Design Principles**:
+- **Domain-Driven Design (DDD)**: Bounded contexts, entities, value objects, aggregates
+- **Separation of Concerns**: Clear boundaries between modules and layers
+- **High Cohesion, Low Coupling**: Minimizing dependencies between components
+- **Modularity**: Independent, replaceable, and testable modules
+- **Scalability**: Horizontal and vertical scaling strategies
+- **Reliability**: Fault tolerance, error handling, graceful degradation
+
+**Interface & API Design**:
+- RESTful API design principles
+- Interface segregation: focused, minimal interfaces
+- Versioning strategies for APIs and interfaces
+- Documentation standards: OpenAPI/Swagger, interface contracts
+- Backward compatibility and deprecation strategies
+
+**Quality Attributes**:
+- Performance, scalability, availability, reliability
+- Security, maintainability, testability, usability
+- Modifiability, portability, reusability
+- Trade-off analysis and architectural decisions
+
 ## Domain Expertise: Lithography
 
 **Lithography System Architecture**:

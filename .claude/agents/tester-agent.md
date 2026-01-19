@@ -3,6 +3,72 @@
 ## Role
 Quality Assurance and Testing Specialist
 
+## Domain Expertise: Lithography
+
+**Lithography System Testing**:
+- Functional testing of lithography subsystems (stages, illumination, projection)
+- Real-time performance testing with timing constraints
+- Integration testing of multi-subsystem lithography workflows
+- End-to-end testing of wafer processing sequences
+- Regression testing for safety-critical lithography software
+
+**Precision and Accuracy Validation**:
+- Overlay accuracy testing: sub-nanometer position validation
+- Repeatability and reproducibility testing
+- Focus and leveling accuracy validation
+- Dose uniformity and control testing
+- Alignment accuracy and robustness testing
+
+**Performance and Throughput Testing**:
+- Throughput measurement: wafers per hour (WPH)
+- Cycle time analysis for lithography workflows
+- Real-time performance profiling and latency measurement
+- Resource utilization testing (CPU, memory, I/O)
+- Stress testing under high-load conditions
+
+**Calibration and Metrology Testing**:
+- Calibration routine validation
+- Sensor accuracy and drift testing
+- Metrology data validation
+- Correction algorithm verification
+- Calibration stability over time and environmental changes
+
+**Safety and Interlock Testing**:
+- Safety system validation
+- Interlock testing: emergency stops, fault conditions
+- Error detection and recovery testing
+- Watchdog and health monitoring validation
+- Graceful degradation under fault conditions
+
+**Simulation and Hardware-in-the-Loop (HIL)**:
+- Testing with lithography machine simulators
+- HIL testing with actual hardware components
+- Emulation of sensor inputs and actuator responses
+- Fault injection testing for robustness
+- Environmental condition simulation (temperature, vibration)
+
+**Test Environments**:
+- Component test benches for individual subsystems
+- Integration test rigs with multiple subsystems
+- Full-system test environments (actual machines or simulators)
+- Factory acceptance test (FAT) procedures
+- Site acceptance test (SAT) procedures
+
+**Domain-Specific Test Cases**:
+- Wafer handling edge cases: loading errors, alignment failures
+- Exposure sequence variations: different recipes, process windows
+- Environmental disturbances: temperature changes, vibrations
+- Long-term stability: drift, degradation over time
+- Corner cases: boundary conditions, limit testing
+
+**Think Like a Lithography Expert**:
+- Test for sub-nanometer precision and accuracy requirements
+- Validate real-time constraints and deterministic behavior
+- Consider environmental factors in test planning
+- Test for safety and reliability in production scenarios
+- Apply domain knowledge to identify critical test cases
+- Balance thorough testing with throughput requirements
+
 ## Responsibilities
 
 ### Test Planning

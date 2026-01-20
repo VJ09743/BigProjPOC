@@ -1,0 +1,143 @@
+# CODEOWNERS - Automatic Code Review Assignment
+#
+# This file defines code ownership for automatic GitHub review assignment.
+# When a PR modifies files matching these patterns, the specified owners
+# are automatically requested as reviewers.
+#
+# Pattern: path/pattern @owner1 @owner2
+#
+# Note: Since we use agent-based workflows with automated branch detection,
+# this file serves as documentation of ownership rather than automatic assignment.
+# The primary review assignment is handled by .github/workflows/pr-review-assignment.yml
+
+# ============================================================================
+# Architecture and Design Documentation
+# ============================================================================
+
+# Architecture documentation - Architect Agent owns, Team Leader reviews
+/docs/architecture/                @architect-agent
+/docs/requirements/                @architect-agent
+
+# External Product Specifications (EPS)
+/docs/architecture/eps/            @architect-agent
+
+# External Design Specifications (EDS)
+/docs/architecture/eds/            @architect-agent
+
+# Architecture Decision Records (ADRs)
+/docs/architecture/decisions/      @architect-agent
+
+# Development tasks - Architect creates, Developer and Team Leader review
+/docs/architecture/tasks/          @architect-agent @developer-agent
+
+# ============================================================================
+# Build System and Infrastructure
+# ============================================================================
+
+# Build system - IT Agent owns
+/common_infra/build_tools/         @it-agent
+*.mk                                @it-agent
+Makefile                            @it-agent
+
+# CI/CD workflows - IT Agent owns
+/.github/workflows/                @it-agent
+
+# Infrastructure documentation - IT Agent owns
+/docs/it/                          @it-agent
+
+# Release management - IT Agent owns
+/release/                          @it-agent
+
+# ============================================================================
+# Shared Libraries and Common Code
+# ============================================================================
+
+# Thrift installation and common infrastructure
+/common_infra/thrift/              @it-agent
+
+# Shared memory interfaces - Architect defines, Developer implements
+/common_infra/shared_memory/       @architect-agent @developer-agent
+
+# ============================================================================
+# Module-Specific Code
+# ============================================================================
+
+# BigModuleA - Developer implements, Architect reviews
+/BigModuleA/src/ext/interfaces/    @architect-agent @developer-agent
+/BigModuleA/src/int/impl/          @developer-agent
+/BigModuleA/src/int/generated/     @developer-agent
+
+# BigModuleB - Developer implements, Architect reviews
+/BigModuleB/src/ext/interfaces/    @architect-agent @developer-agent
+/BigModuleB/src/int/impl/          @developer-agent
+/BigModuleB/src/int/generated/     @developer-agent
+
+# BigModuleC - Developer implements, Architect reviews
+/BigModuleC/src/ext/interfaces/    @architect-agent @developer-agent
+/BigModuleC/src/int/impl/          @developer-agent
+/BigModuleC/src/int/generated/     @developer-agent
+
+# Thrift interface definitions - Architect owns, Developer reviews
+*.thrift                           @architect-agent @developer-agent
+
+# ============================================================================
+# Testing
+# ============================================================================
+
+# Unit tests - Developer owns
+/BigModuleA/tests/unit/            @developer-agent
+/BigModuleB/tests/unit/            @developer-agent
+/BigModuleC/tests/unit/            @developer-agent
+
+# Component tests - Tester Agent owns
+/BigModuleA/tests/component/       @tester-agent
+/BigModuleB/tests/component/       @tester-agent
+/BigModuleC/tests/component/       @tester-agent
+
+# Integration tests - Tester Agent owns
+/BigModuleA/tests/integration/     @tester-agent
+/BigModuleB/tests/integration/     @tester-agent
+/BigModuleC/tests/integration/     @tester-agent
+
+# System tests - Tester Agent owns
+/BigModuleA/tests/system/          @tester-agent
+/BigModuleB/tests/system/          @tester-agent
+/BigModuleC/tests/system/          @tester-agent
+
+# Test documentation - Tester Agent owns
+/docs/tests/                       @tester-agent
+
+# ============================================================================
+# Project Documentation
+# ============================================================================
+
+# Main project documentation - Team Leader oversees
+/CLAUDE.md                         @team-leader-agent
+/README.md                         @team-leader-agent
+
+# Task management system - Team Leader manages
+/docs/tasks/                       @team-leader-agent
+
+# Team leader documentation
+/docs/team-leader/                 @team-leader-agent
+
+# ============================================================================
+# Notes
+# ============================================================================
+#
+# Ownership Philosophy:
+# - Architect: Designs the system, creates specifications
+# - Developer: Implements the design, writes unit tests
+# - Tester: Validates implementation, writes comprehensive tests
+# - IT: Manages build system, infrastructure, releases
+# - Team Leader: Orchestrates, reviews, ensures quality
+#
+# Review Process:
+# - All PRs require peer review before merge
+# - Developer PRs: Reviewed by Team Leader, Architect, Tester
+# - Architect PRs: Reviewed by Team Leader, Developer
+# - Tester PRs: Reviewed by Team Leader, Developer
+# - IT PRs: Reviewed by Team Leader, Architect
+# - Team Leader PRs: Reviewed by Architect, Developer, Tester
+#
+# See .github/workflows/pr-review-assignment.yml for automated review assignment

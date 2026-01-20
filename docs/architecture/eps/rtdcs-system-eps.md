@@ -191,9 +191,26 @@ See individual module EPS documents for detailed requirements.
 **Priority**: High
 
 ### NFR-SYS-04: Portability
-**Description**: The system SHALL build and run on Linux (Ubuntu 20.04+).
+**Description**: The system SHALL build and run on Linux (Ubuntu 20.04+) and macOS (11.0+).
 **Priority**: Medium
-**Note**: POC targets Linux only; production would require broader platform support.
+
+**Platform Support**:
+- **Linux (Ubuntu 20.04+)**: Primary target platform
+  - Matches production lithography system environments
+  - Full support for real-time features
+- **macOS (11.0+)**: Development platform support
+  - Enables developers to build and test natively on macOS
+  - Platform abstraction for OS-specific APIs (timing, shared memory limits)
+
+**Platform-Specific Considerations**:
+- **Compiler**: GCC (Linux) or Clang (macOS)
+- **Shared Memory**: POSIX API on both, but macOS has smaller default limits
+- **Timing**: `clock_nanosleep()` (Linux) vs. `nanosleep()` (macOS fallback)
+- **Dependencies**: Package manager differences (apt vs. Homebrew)
+
+**Build System**: Makefiles SHALL automatically detect platform and apply appropriate settings.
+
+**Note**: Production lithography systems run on Linux; macOS support is for POC development convenience.
 
 ### NFR-SYS-05: Code Quality
 **Description**: All modules SHALL follow:

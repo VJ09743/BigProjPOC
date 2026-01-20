@@ -332,15 +332,27 @@ Output: offset_x = -5.7 nm, offset_y = -4.6 nm
 **Verification**: Code review, static analysis, coverage reports.
 
 ### NFR-C-07: Portability
-**Description**: BigModuleC SHALL build and run on Linux (Ubuntu 20.04+).
+**Description**: BigModuleC SHALL build and run on Linux (Ubuntu 20.04+) and macOS (11.0+).
+
 **Dependencies**:
 - Apache Thrift C++ library (0.19.0)
+  - Linux: Install via `apt install libthrift-dev` or build from source
+  - macOS: Install via `brew install thrift`
 - POSIX shared memory (`shm_open`, `mmap`)
+  - Linux: Full support
+  - macOS: Supported with same API
 - Standard C++ (C++14 or later)
+  - Linux: GCC 7+ or Clang 6+
+  - macOS: Clang (Xcode Command Line Tools)
+
+**Platform-Specific Notes**:
+- Thrift library paths differ between platforms (Makefile auto-detection)
+- TCP socket API is portable (BSD sockets on both platforms)
+- No platform-specific code needed
 
 **Priority**: Medium
 
-**Verification**: Build and run on target platform.
+**Verification**: Build and run on both Linux (Ubuntu 20.04+) and macOS (11.0+).
 
 ---
 

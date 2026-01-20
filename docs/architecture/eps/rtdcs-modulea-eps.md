@@ -282,15 +282,26 @@
 **Verification**: Code review, static analysis, unit test coverage reports.
 
 ### NFR-A-06: Portability
-**Description**: BigModuleA SHALL build and run on Linux (Ubuntu 20.04+).
+**Description**: BigModuleA SHALL build and run on Linux (Ubuntu 20.04+) and macOS (11.0+).
+
 **Dependencies**:
 - POSIX shared memory (`shm_open`, `mmap`)
-- POSIX real-time timers (`clock_nanosleep`)
+  - Linux: Full support, `/dev/shm/` filesystem
+  - macOS: Supported, but smaller default limits (use `sysctl kern.sysv.shmmax` to check)
+- POSIX real-time timers
+  - Linux: `clock_nanosleep()` with `CLOCK_MONOTONIC`
+  - macOS: `nanosleep()` fallback (no CLOCK_MONOTONIC support)
 - Standard C++ (C++14 or later)
+  - Linux: GCC 7+ or Clang 6+
+  - macOS: Clang (Xcode Command Line Tools)
+
+**Platform-Specific Implementations**:
+- **Timing**: Preprocessor directives to select `clock_nanosleep()` (Linux) or `nanosleep()` (macOS)
+- **Shared Memory**: Same API, but macOS may require `sudo sysctl -w kern.sysv.shmmax=8388608` for larger segments
 
 **Priority**: Medium
 
-**Verification**: Build and run on target platform.
+**Verification**: Build and run on both Linux (Ubuntu 20.04+) and macOS (11.0+).
 
 ---
 

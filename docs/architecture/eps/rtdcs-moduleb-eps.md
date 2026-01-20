@@ -444,6 +444,28 @@ TEST(DistortionPredictorTest, FictionalZeemanModelCalculation) { ... }
 
 **Verification**: Code review checklist, grep for unmarked Zeeman references.
 
+### NFR-B-08: Portability
+**Description**: BigModuleB SHALL build and run on Linux (Ubuntu 20.04+) and macOS (11.0+).
+
+**Dependencies**:
+- POSIX shared memory (`shm_open`, `mmap`)
+  - Linux: Full support
+  - macOS: Supported with same API
+- Apache Thrift C++ library (0.19.0)
+  - Linux: Install via `apt install libthrift-dev` or build from source
+  - macOS: Install via `brew install thrift`
+- Standard C++ (C++14 or later)
+  - Linux: GCC 7+ or Clang 6+
+  - macOS: Clang (Xcode Command Line Tools)
+
+**Platform-Specific Notes**:
+- Thrift library paths differ between platforms (handled by Makefile detection)
+- No platform-specific code needed (Thrift and POSIX APIs are portable)
+
+**Priority**: Medium
+
+**Verification**: Build and run on both Linux and macOS.
+
 ---
 
 ## 6. External Interfaces

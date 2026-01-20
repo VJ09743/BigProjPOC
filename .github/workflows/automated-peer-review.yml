@@ -1,0 +1,298 @@
+name: Automated Multi-Agent Peer Review
+
+# This workflow implements automated sequential peer review by Team Leader,
+# Architect, and Tester agents using Claude API.
+#
+# Flow:
+# 1. PR created/updated → Workflow triggers
+# 2. Team Leader reviews (using Claude API) → Posts comment
+# 3. Architect reviews (using Claude API) → Posts comment
+# 4. Tester reviews (using Claude API) → Posts comment
+# 5. If 2+ approvals → Mark PR as peer-review:approved
+# 6. If changes requested → Developer fixes and pushes
+# 7. Repeat review cycle until approved
+#
+# Requirements:
+# - ANTHROPIC_API_KEY secret must be configured in repository
+# - Claude API access
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+    branches:
+      - master
+      - main
+
+permissions:
+  pull-requests: write
+  issues: write
+  contents: read
+
+jobs:
+  sequential-peer-review:
+    name: Sequential Multi-Agent Review
+    runs-on: ubuntu-latest
+
+    # Only run for agent PRs (branch pattern: claude/{agent}-{project}-{sessionID})
+    if: startsWith(github.event.pull_request.head.ref, 'claude/')
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install dependencies
+        run: |
+          npm install -g @anthropic-ai/sdk
+          npm install octokit
+
+      - name: Determine Reviewers
+        id: reviewers
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const branchName = context.payload.pull_request.head.ref;
+            const branchPattern = /^claude\/([a-z-]+)-([a-z-]+)-([a-zA-Z0-9]+)$/;
+            const match = branchName.match(branchPattern);
+
+            if (!match) {
+              console.log('Branch does not match expected pattern. Skipping.');
+              return { skip: true };
+            }
+
+            const agentType = match[1];
+
+            // Define review assignment rules
+            const reviewRules = {
+              'developer': ['team-leader', 'architect', 'tester'],
+              'architect': ['team-leader', 'developer'],
+              'tester': ['team-leader', 'developer'],
+              'it': ['team-leader', 'architect'],
+              'team-leader': ['architect', 'developer', 'tester']
+            };
+
+            const reviewers = reviewRules[agentType] || [];
+            console.log(`Agent: ${agentType}, Reviewers: ${reviewers.join(', ')}`);
+
+            core.setOutput('agent_type', agentType);
+            core.setOutput('reviewers', JSON.stringify(reviewers));
+            core.setOutput('skip', 'false');
+
+      - name: Get PR Details
+        id: pr_details
+        if: steps.reviewers.outputs.skip != 'true'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const pr = context.payload.pull_request;
+
+            // Get PR diff
+            const diff = await github.rest.pulls.get({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              pull_number: pr.number,
+              mediaType: {
+                format: 'diff'
+              }
+            });
+
+            // Get changed files
+            const files = await github.rest.pulls.listFiles({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              pull_number: pr.number
+            });
+
+            // Store PR details
+            const prDetails = {
+              number: pr.number,
+              title: pr.title,
+              body: pr.body || '',
+              diff: diff.data,
+              files: files.data.map(f => ({
+                filename: f.filename,
+                status: f.status,
+                additions: f.additions,
+                deletions: f.deletions,
+                changes: f.changes,
+                patch: f.patch || ''
+              }))
+            };
+
+            // Write to file for next step
+            const fs = require('fs');
+            fs.writeFileSync('pr_details.json', JSON.stringify(prDetails, null, 2));
+
+            return prDetails;
+
+      - name: Review as Team Leader
+        id: review_team_leader
+        if: steps.reviewers.outputs.skip != 'true' && contains(fromJSON(steps.reviewers.outputs.reviewers), 'team-leader')
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          node .github/scripts/automated-review.js \
+            --agent "team-leader" \
+            --pr-number "${{ github.event.pull_request.number }}" \
+            --repo "${{ github.repository }}" \
+            --pr-details-file "pr_details.json"
+
+      - name: Review as Architect
+        id: review_architect
+        if: steps.reviewers.outputs.skip != 'true' && contains(fromJSON(steps.reviewers.outputs.reviewers), 'architect')
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          node .github/scripts/automated-review.js \
+            --agent "architect" \
+            --pr-number "${{ github.event.pull_request.number }}" \
+            --repo "${{ github.repository }}" \
+            --pr-details-file "pr_details.json"
+
+      - name: Review as Tester
+        id: review_tester
+        if: steps.reviewers.outputs.skip != 'true' && contains(fromJSON(steps.reviewers.outputs.reviewers), 'tester')
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          node .github/scripts/automated-review.js \
+            --agent "tester" \
+            --pr-number "${{ github.event.pull_request.number }}" \
+            --repo "${{ github.repository }}" \
+            --pr-details-file "pr_details.json"
+
+      - name: Review as Developer (if assigned)
+        id: review_developer
+        if: steps.reviewers.outputs.skip != 'true' && contains(fromJSON(steps.reviewers.outputs.reviewers), 'developer')
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          node .github/scripts/automated-review.js \
+            --agent "developer" \
+            --pr-number "${{ github.event.pull_request.number }}" \
+            --repo "${{ github.repository }}" \
+            --pr-details-file "pr_details.json"
+
+      - name: Check Approval Status
+        id: approval_status
+        if: steps.reviewers.outputs.skip != 'true'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const prNumber = context.payload.pull_request.number;
+
+            // Get all review comments with "APPROVE" or "REQUEST_CHANGES" markers
+            const comments = await github.rest.issues.listComments({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: prNumber
+            });
+
+            // Count approvals from this workflow run
+            let approvals = 0;
+            let changesRequested = 0;
+
+            const agentMarkers = [
+              '**Team Leader Agent Review**',
+              '**Architect Agent Review**',
+              '**Tester Agent Review**',
+              '**Developer Agent Review**'
+            ];
+
+            for (const comment of comments.data) {
+              const body = comment.body;
+
+              // Check if this is an agent review comment
+              const isAgentReview = agentMarkers.some(marker => body.includes(marker));
+
+              if (isAgentReview) {
+                if (body.includes('✅ **APPROVED**')) {
+                  approvals++;
+                } else if (body.includes('🔴 **CHANGES REQUESTED**')) {
+                  changesRequested++;
+                }
+              }
+            }
+
+            console.log(`Approvals: ${approvals}, Changes Requested: ${changesRequested}`);
+
+            // Update labels based on approval status
+            const requiredApprovals = 2; // Configurable threshold
+
+            if (approvals >= requiredApprovals && changesRequested === 0) {
+              // Mark as peer-review approved
+              await github.rest.issues.addLabels({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: prNumber,
+                labels: ['peer-review:approved', 'ready-for-user-review']
+              });
+
+              // Remove awaiting-review labels
+              const currentLabels = await github.rest.issues.listLabelsOnIssue({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: prNumber
+              });
+
+              for (const label of currentLabels.data) {
+                if (label.name.startsWith('awaiting-')) {
+                  await github.rest.issues.removeLabel({
+                    owner: context.repo.owner,
+                    repo: context.repo.repo,
+                    issue_number: prNumber,
+                    name: label.name
+                  }).catch(() => {}); // Ignore errors
+                }
+              }
+
+              // Post approval summary comment
+              await github.rest.issues.createComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: prNumber,
+                body: `## ✅ Peer Review Approved\n\n**${approvals}/${requiredApprovals}** required approvals obtained!\n\n✨ This PR has passed all peer reviews and is **ready for user review and merge**.\n\n---\n*Automated peer review by Team Leader, Architect, and Tester agents*`
+              });
+
+              console.log('✅ PR approved by peers!');
+
+            } else if (changesRequested > 0) {
+              // Mark as changes requested
+              await github.rest.issues.addLabels({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: prNumber,
+                labels: ['peer-review:changes-requested']
+              });
+
+              console.log('🔴 Changes requested by reviewers');
+
+            } else {
+              console.log(`⏳ Waiting for approvals: ${approvals}/${requiredApprovals}`);
+            }
+
+            return {
+              approvals,
+              changesRequested,
+              approved: approvals >= requiredApprovals && changesRequested === 0
+            };
+
+      - name: Summary
+        if: steps.reviewers.outputs.skip != 'true'
+        run: |
+          echo "## 🤖 Automated Peer Review Complete" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "Sequential reviews completed by:" >> $GITHUB_STEP_SUMMARY
+          echo "${{ steps.reviewers.outputs.reviewers }}" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "Check PR comments for detailed review feedback from each agent." >> $GITHUB_STEP_SUMMARY

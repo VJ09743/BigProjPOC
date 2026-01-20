@@ -1,0 +1,22 @@
+{
+  "name": "automated-peer-review",
+  "version": "1.0.0",
+  "description": "Automated multi-agent peer review for BigProjPOC",
+  "main": "automated-review.js",
+  "scripts": {
+    "review": "node automated-review.js"
+  },
+  "dependencies": {
+    "@anthropic-ai/sdk": "^0.30.0",
+    "octokit": "^4.0.0"
+  },
+  "keywords": [
+    "github",
+    "review",
+    "automation",
+    "claude",
+    "ai"
+  ],
+  "author": "IT Agent",
+  "license": "MIT"
+}

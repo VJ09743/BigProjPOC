@@ -387,7 +387,7 @@ ${inlineComments.length > 0 ? `\n**${inlineComments.length} inline comment(s)** 
       comments: inlineComments.map(comment => ({
         path: comment.path,
         line: comment.line,
-        body: comment.body
+        body: `**🤖 ${agent.role}**\n\n${comment.body}`
       }))
     });
 

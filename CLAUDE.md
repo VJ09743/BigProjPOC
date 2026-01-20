@@ -262,7 +262,8 @@ This project uses a multi-agent system where Claude Code automatically adopts di
 **Git Worktree Workflow**:
 - Creates separate worktrees for each agent
 - Enables parallel independent work without conflicts
-- Example: `git worktree add ../worktree-developer developer/task-branch`
+- Example: `git worktree add ../worktree-developer claude/developer-rtdcs-{sessionID}`
+- **Branch Naming**: All worktree branches must use `claude/{agent}-{project}-{sessionID}` format for remote push
 
 **Peer Review Process**:
 - Agent completes work in their worktree
@@ -666,6 +667,13 @@ See `docs/tasks/README.md` for complete documentation on the task management sys
 ### Git Workflow
 - Main branch: `master`
 - Feature branches: Use `claude/` prefix for Claude-generated work
+- **CRITICAL: Branch Naming Convention for Remote Pushes**:
+  - All agent work branches MUST start with `claude/` prefix
+  - All agent work branches MUST end with the session ID (e.g., `-pbCFa`)
+  - Format: `claude/{agent}-{project}-{sessionID}`
+  - Example: `claude/architect-rtdcs-pbCFa`
+  - This naming convention is REQUIRED for remote pushes to GitHub to succeed
+  - Branches without the correct format will fail with HTTP 403 error
 - Always test changes before committing
 
 ## Claude Code Instructions

@@ -1,27 +1,26 @@
 name: Automated Multi-Agent Peer Review
 
-# This workflow implements automated sequential peer review by Team Leader,
-# Architect, and Tester agents using Claude API.
+# This workflow implements automated sequential peer review using Claude API.
+#
+# MANUAL TRIGGER ONLY - Saves API costs by running only when you click "Run workflow"
 #
 # Flow:
-# 1. PR created/updated → Workflow triggers
-# 2. Team Leader reviews (using Claude API) → Posts comment
-# 3. Architect reviews (using Claude API) → Posts comment
-# 4. Tester reviews (using Claude API) → Posts comment
-# 5. If 2+ approvals → Mark PR as peer-review:approved
-# 6. If changes requested → Developer fixes and pushes
-# 7. Repeat review cycle until approved
+# 1. Manually trigger workflow and enter PR number
+# 2. Agents review sequentially based on PR author
+# 3. Reviews posted with inline comments
+# 4. If 2+ approvals → Mark PR as peer-review:approved
 #
 # Requirements:
 # - ANTHROPIC_API_KEY secret must be configured in repository
 # - Claude API access
 
 on:
-  pull_request:
-    types: [opened, synchronize, reopened]
-    branches:
-      - master
-      - main
+  workflow_dispatch:
+    inputs:
+      pr_number:
+        description: 'PR number to review'
+        required: true
+        type: number
 
 permissions:
   pull-requests: write
@@ -32,9 +31,6 @@ jobs:
   sequential-peer-review:
     name: Sequential Multi-Agent Review
     runs-on: ubuntu-latest
-
-    # Only run for agent PRs (branch pattern: claude/{agent}-{project}-{sessionID})
-    if: startsWith(github.event.pull_request.head.ref, 'claude/')
 
     steps:
       - name: Checkout repository
@@ -57,24 +53,34 @@ jobs:
         uses: actions/github-script@v7
         with:
           script: |
-            const branchName = context.payload.pull_request.head.ref;
+            const prNumber = ${{ inputs.pr_number }};
+
+            // Get PR details
+            const pr = await github.rest.pulls.get({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              pull_number: prNumber
+            });
+
+            const branchName = pr.data.head.ref;
             const branchPattern = /^claude\/([a-z-]+)-([a-z-]+)-([a-zA-Z0-9]+)$/;
             const match = branchName.match(branchPattern);
 
             if (!match) {
               console.log('Branch does not match expected pattern. Skipping.');
-              return { skip: true };
+              core.setOutput('skip', 'true');
+              return;
             }
 
             const agentType = match[1];
 
-            // Define review assignment rules
+            // Define review assignment rules (reduced reviewers to save costs)
             const reviewRules = {
-              'developer': ['team-leader', 'architect', 'tester'],
-              'architect': ['team-leader', 'developer'],
-              'tester': ['team-leader', 'developer'],
-              'it': ['team-leader', 'architect'],
-              'team-leader': ['architect', 'developer', 'tester']
+              'developer': ['architect', 'tester'],           // 2 reviewers
+              'architect': ['developer', 'tester'],           // 2 reviewers
+              'tester': ['developer', 'team-leader'],         // 2 reviewers
+              'it': ['architect'],                             // 1 reviewer
+              'team-leader': ['architect']                     // 1 reviewer
             };
 
             const reviewers = reviewRules[agentType] || [];
@@ -83,6 +89,7 @@ jobs:
             core.setOutput('agent_type', agentType);
             core.setOutput('reviewers', JSON.stringify(reviewers));
             core.setOutput('skip', 'false');
+            core.setOutput('pr_number', prNumber);
 
       - name: Get PR Details
         id: pr_details
@@ -90,13 +97,13 @@ jobs:
         uses: actions/github-script@v7
         with:
           script: |
-            const pr = context.payload.pull_request;
+            const prNumber = ${{ inputs.pr_number }};
 
             // Get PR diff
             const diff = await github.rest.pulls.get({
               owner: context.repo.owner,
               repo: context.repo.repo,
-              pull_number: pr.number,
+              pull_number: prNumber,
               mediaType: {
                 format: 'diff'
               }
@@ -106,14 +113,21 @@ jobs:
             const files = await github.rest.pulls.listFiles({
               owner: context.repo.owner,
               repo: context.repo.repo,
-              pull_number: pr.number
+              pull_number: prNumber
+            });
+
+            // Get PR info
+            const pr = await github.rest.pulls.get({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              pull_number: prNumber
             });
 
             // Store PR details
             const prDetails = {
-              number: pr.number,
-              title: pr.title,
-              body: pr.body || '',
+              number: prNumber,
+              title: pr.data.title,
+              body: pr.data.body || '',
               diff: diff.data,
               files: files.data.map(f => ({
                 filename: f.filename,
@@ -140,7 +154,7 @@ jobs:
         run: |
           node .github/scripts/automated-review.js \
             --agent "team-leader" \
-            --pr-number "${{ github.event.pull_request.number }}" \
+            --pr-number "${{ inputs.pr_number }}" \
             --repo "${{ github.repository }}" \
             --pr-details-file "pr_details.json"
 
@@ -153,7 +167,7 @@ jobs:
         run: |
           node .github/scripts/automated-review.js \
             --agent "architect" \
-            --pr-number "${{ github.event.pull_request.number }}" \
+            --pr-number "${{ inputs.pr_number }}" \
             --repo "${{ github.repository }}" \
             --pr-details-file "pr_details.json"
 
@@ -166,7 +180,7 @@ jobs:
         run: |
           node .github/scripts/automated-review.js \
             --agent "tester" \
-            --pr-number "${{ github.event.pull_request.number }}" \
+            --pr-number "${{ inputs.pr_number }}" \
             --repo "${{ github.repository }}" \
             --pr-details-file "pr_details.json"
 
@@ -179,7 +193,7 @@ jobs:
         run: |
           node .github/scripts/automated-review.js \
             --agent "developer" \
-            --pr-number "${{ github.event.pull_request.number }}" \
+            --pr-number "${{ inputs.pr_number }}" \
             --repo "${{ github.repository }}" \
             --pr-details-file "pr_details.json"
 
@@ -189,7 +203,7 @@ jobs:
         uses: actions/github-script@v7
         with:
           script: |
-            const prNumber = context.payload.pull_request.number;
+            const prNumber = ${{ inputs.pr_number }};
 
             // Get all review comments with "APPROVE" or "REQUEST_CHANGES" markers
             const comments = await github.rest.issues.listComments({
@@ -226,8 +240,12 @@ jobs:
 
             console.log(`Approvals: ${approvals}, Changes Requested: ${changesRequested}`);
 
-            // Update labels based on approval status
-            const requiredApprovals = 2; // Configurable threshold
+            // Get number of reviewers assigned to determine required approvals
+            const agentType = '${{ steps.reviewers.outputs.agent_type }}';
+            const reviewers = JSON.parse('${{ steps.reviewers.outputs.reviewers }}');
+            const requiredApprovals = reviewers.length; // All reviewers must approve
+
+            console.log(`Required approvals: ${requiredApprovals} (all ${reviewers.length} reviewers)`);
 
             if (approvals >= requiredApprovals && changesRequested === 0) {
               // Mark as peer-review approved

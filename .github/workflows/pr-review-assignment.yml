@@ -1,24 +1,25 @@
-name: Automatic PR Review Assignment
+name: PR Review Assignment (Manual)
 
-# This workflow automatically assigns reviewers to pull requests based on the
-# branch naming convention: claude/{agent}-{project}-{sessionID}
+# This workflow assigns reviewers and adds labels to pull requests.
 #
-# Review Assignment Rules:
-# - Developer PRs: Reviewed by Team Leader, Architect, and Tester
-# - Architect PRs: Reviewed by Team Leader and Developer
-# - Tester PRs: Reviewed by Team Leader and Developer
-# - IT PRs: Reviewed by Team Leader and Architect
-# - Team Leader PRs: Reviewed by Architect, Developer, and Tester
+# MANUAL TRIGGER ONLY - No cost, but kept manual for consistency
 #
-# The workflow adds labels and creates a comment requesting reviews from
-# the appropriate agents.
+# Review Assignment Rules (updated to reduce reviewers):
+# - Developer PRs: Architect and Tester (2 reviewers)
+# - Architect PRs: Developer and Tester (2 reviewers)
+# - Tester PRs: Developer and Team Leader (2 reviewers)
+# - IT PRs: Architect (1 reviewer)
+# - Team Leader PRs: Architect (1 reviewer)
+#
+# The workflow adds labels and creates a comment with review checklist.
 
 on:
-  pull_request:
-    types: [opened, reopened, ready_for_review]
-    branches:
-      - master
-      - main
+  workflow_dispatch:
+    inputs:
+      pr_number:
+        description: 'PR number to add labels and reviewers'
+        required: true
+        type: number
 
 permissions:
   pull-requests: write
@@ -39,10 +40,18 @@ jobs:
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           script: |
-            const prNumber = context.payload.pull_request.number;
-            const branchName = context.payload.pull_request.head.ref;
-            const prAuthor = context.payload.pull_request.user.login;
-            const prTitle = context.payload.pull_request.title;
+            const prNumber = ${{ inputs.pr_number }};
+
+            // Get PR details
+            const pr = await github.rest.pulls.get({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              pull_number: prNumber
+            });
+
+            const branchName = pr.data.head.ref;
+            const prAuthor = pr.data.user.login;
+            const prTitle = pr.data.title;
 
             console.log(`Processing PR #${prNumber}: ${prTitle}`);
             console.log(`Branch: ${branchName}`);
@@ -65,32 +74,32 @@ jobs:
             console.log(`Project: ${projectName}`);
             console.log(`Session ID: ${sessionId}`);
 
-            // Define review assignment rules
+            // Define review assignment rules (reduced reviewers to save API costs)
             const reviewRules = {
               'developer': {
-                reviewers: ['Team Leader', 'Architect', 'Tester'],
-                labels: ['peer-review:developer', 'awaiting-team-leader-review', 'awaiting-architect-review', 'awaiting-tester-review'],
-                description: 'Developer implementation PRs must be reviewed by Team Leader, Architect, and Tester before merge.'
+                reviewers: ['Architect', 'Tester'],
+                labels: ['peer-review:developer', 'awaiting-architect-review', 'awaiting-tester-review'],
+                description: 'Developer implementation PRs must be reviewed by Architect and Tester before merge.'
               },
               'architect': {
-                reviewers: ['Team Leader', 'Developer'],
-                labels: ['peer-review:architect', 'awaiting-team-leader-review', 'awaiting-developer-review'],
-                description: 'Architect design PRs must be reviewed by Team Leader and Developer before merge.'
+                reviewers: ['Developer', 'Tester'],
+                labels: ['peer-review:architect', 'awaiting-developer-review', 'awaiting-tester-review'],
+                description: 'Architect design PRs must be reviewed by Developer and Tester before merge.'
               },
               'tester': {
-                reviewers: ['Team Leader', 'Developer'],
-                labels: ['peer-review:tester', 'awaiting-team-leader-review', 'awaiting-developer-review'],
-                description: 'Tester QA PRs must be reviewed by Team Leader and Developer before merge.'
+                reviewers: ['Developer', 'Team Leader'],
+                labels: ['peer-review:tester', 'awaiting-developer-review', 'awaiting-team-leader-review'],
+                description: 'Tester QA PRs must be reviewed by Developer and Team Leader before merge.'
               },
               'it': {
-                reviewers: ['Team Leader', 'Architect'],
-                labels: ['peer-review:it', 'awaiting-team-leader-review', 'awaiting-architect-review'],
-                description: 'IT infrastructure PRs must be reviewed by Team Leader and Architect before merge.'
+                reviewers: ['Architect'],
+                labels: ['peer-review:it', 'awaiting-architect-review'],
+                description: 'IT infrastructure PRs must be reviewed by Architect before merge.'
               },
               'team-leader': {
-                reviewers: ['Architect', 'Developer', 'Tester'],
-                labels: ['peer-review:team-leader', 'awaiting-architect-review', 'awaiting-developer-review', 'awaiting-tester-review'],
-                description: 'Team Leader PRs must be reviewed by Architect, Developer, and Tester before merge.'
+                reviewers: ['Architect'],
+                labels: ['peer-review:team-leader', 'awaiting-architect-review'],
+                description: 'Team Leader PRs must be reviewed by Architect before merge.'
               }
             };
 

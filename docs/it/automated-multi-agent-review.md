@@ -31,6 +31,7 @@ The **Automated Multi-Agent Peer Review System** uses Claude API to automaticall
 ✅ **Fully Automated**: No manual review needed - agents review automatically
 ✅ **Sequential Reviews**: Team Leader → Architect → Tester (or Developer) review one after another
 ✅ **Intelligent Feedback**: Each agent applies their expertise and detailed checklist
+✅ **Inline Comments**: Issues appear directly on specific lines in "Files changed" tab
 ✅ **Approval Tracking**: Automatically tracks approvals and marks PR when threshold met
 ✅ **Iteration Support**: Reviewers re-review after Developer pushes changes
 ✅ **Single Session**: All reviews happen in one workflow run
@@ -40,8 +41,9 @@ The **Automated Multi-Agent Peer Review System** uses Claude API to automaticall
 - **Quality Assurance**: Multiple expert perspectives on every PR
 - **Consistency**: Same rigorous standards applied every time
 - **Speed**: Automated reviews complete in minutes
+- **Precision**: Inline comments point to exact lines of code with issues
 - **Learning**: Detailed feedback helps improve code quality
-- **Transparency**: All review comments visible in PR
+- **Transparency**: All review comments visible in PR (Conversation + Files changed tabs)
 
 ---
 
@@ -329,22 +331,55 @@ if (approvals >= 2 && changesRequested === 0) {
 
 ## 8. Examples
 
-### 8.1 Example Review Comment (Team Leader)
+### 8.1 Where to Find Reviews
 
+Reviews appear in **two locations**:
+
+1. **Conversation Tab**: Overall summary and decision
+   - Agent's overall assessment
+   - List of positive aspects
+   - Final decision (APPROVED or CHANGES REQUESTED)
+
+2. **Files Changed Tab**: Inline comments on specific lines ⭐ **NEW**
+   - Click "Files changed" tab
+   - Scroll to files with issues
+   - See comments directly on problematic lines
+   - Each comment shows severity and recommendation
+
+### 8.2 Example Review Comment (Team Leader)
+
+**In Conversation Tab**:
 ```markdown
 ## 🤖 **Team Leader Agent Review**
 
 ### Summary
 This PR implements BigModuleA (ThermalMonitor) with good adherence to design patterns and standards. The Singleton pattern for SharedMemoryManager and Strategy pattern for temperature patterns are correctly applied. However, there are some documentation gaps and a few minor convention issues.
 
-### Issues Found
+### Positive Aspects
+- Correct application of Singleton and Strategy patterns
+- Clean code structure with good separation of concerns
+- Comprehensive unit tests included
 
-- **[Severity: Major]** Missing CLAUDE.md update
-  - File: (repository root)
-  - Problem: CLAUDE.md not updated to reflect new BigModuleA implementation
-  - Recommendation: Update CLAUDE.md with build instructions and module status
+### Decision
+🔴 **CHANGES REQUESTED** - This PR requires changes before approval.
 
-- **[Severity: Minor]** Inconsistent naming in Logger
+**3 inline comment(s)** posted on specific lines in the "Files changed" tab.
+```
+
+**In Files Changed Tab** (inline comments on specific lines):
+```
+src/ThermalMonitor.cpp:45
+┌─────────────────────────────────────────────
+│ 🤖 Team Leader Agent
+│
+│ **[Severity: Major]** Missing error handling
+│
+│ The shared memory initialization lacks error handling.
+│ If shm_open fails, the program will crash.
+│
+│ Recommendation: Add proper error checking and
+│ return a status code or throw an exception.
+└─────────────────────────────────────────────
   - File: src/int/impl/Logger.cpp:45
   - Problem: Variable `ts` should be `timestamp` for clarity
   - Recommendation: Rename to `timestamp` for better readability

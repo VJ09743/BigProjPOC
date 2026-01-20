@@ -189,12 +189,16 @@ Provide your review in this exact format:
 ### Summary
 [1-2 sentences: overall assessment]
 
-### Issues Found
-[List specific issues, or write "None" if no issues]
-- **[Severity: Critical/Major/Minor]** [Issue description]
-  - File: [filename:line]
-  - Problem: [what's wrong]
-  - Recommendation: [how to fix]
+### Inline Comments
+[For each specific issue, provide a structured comment that will appear on the code]
+[Format: Each comment MUST start with "INLINE_COMMENT:" followed by file path and line number]
+[If no inline comments, write "None"]
+
+INLINE_COMMENT: path/to/file.ext:123
+**[Severity: Critical/Major/Minor]** [Issue title]
+[Detailed explanation of the problem and recommendation for fixing it]
+
+[Repeat for each issue found in the code]
 
 ### Positive Aspects
 [List good practices observed, or write "None notable" if basic]
@@ -211,6 +215,8 @@ Provide your review in this exact format:
 - If there are any Critical or Major issues, you MUST request changes
 - Minor issues alone can be approved with suggestions
 - Apply SOLID principles and design pattern knowledge rigorously
+- For inline comments, always specify the exact file path and line number where the issue exists
+- Line numbers should reference the new file content (after changes), not the diff
 `;
 
   return prompt;
@@ -245,40 +251,173 @@ async function callClaudeForReview(agentType, prDetails) {
   return review;
 }
 
+// Parse inline comments from review text
+function parseInlineComments(reviewText) {
+  const comments = [];
+  const lines = reviewText.split('\n');
+
+  for (let i = 0; i < lines.length; i++) {
+    const line = lines[i];
+
+    // Look for INLINE_COMMENT: path/to/file:line
+    const match = line.match(/^INLINE_COMMENT:\s*(.+):(\d+)\s*$/);
+
+    if (match) {
+      const path = match[1].trim();
+      const lineNum = parseInt(match[2]);
+
+      // Collect the comment body (lines after INLINE_COMMENT: until next section or empty line)
+      let commentBody = '';
+      let j = i + 1;
+
+      while (j < lines.length) {
+        const nextLine = lines[j];
+
+        // Stop at next INLINE_COMMENT or section header
+        if (nextLine.startsWith('INLINE_COMMENT:') ||
+            nextLine.startsWith('###') ||
+            (nextLine.trim() === '' && lines[j + 1]?.startsWith('INLINE_COMMENT:'))) {
+          break;
+        }
+
+        commentBody += nextLine + '\n';
+        j++;
+      }
+
+      commentBody = commentBody.trim();
+
+      if (commentBody && path && lineNum > 0) {
+        comments.push({
+          path: path,
+          line: lineNum,
+          body: commentBody
+        });
+
+        console.log(`  Parsed inline comment: ${path}:${lineNum}`);
+      }
+
+      i = j - 1; // Skip to after this comment
+    }
+  }
+
+  return comments;
+}
+
+// Extract summary from review text (everything before Inline Comments section)
+function extractSummary(reviewText) {
+  // Get everything from Summary to before Inline Comments section
+  const summaryMatch = reviewText.match(/### Summary\s*([\s\S]*?)(?=### Inline Comments|### Positive Aspects|### Decision|$)/);
+  const positiveMatch = reviewText.match(/### Positive Aspects\s*([\s\S]*?)(?=### Decision|$)/);
+  const decisionMatch = reviewText.match(/### Decision\s*([\s\S]*?)$/);
+
+  let summary = '';
+
+  if (summaryMatch) {
+    summary += '### Summary\n' + summaryMatch[1].trim() + '\n\n';
+  }
+
+  if (positiveMatch) {
+    summary += '### Positive Aspects\n' + positiveMatch[1].trim() + '\n\n';
+  }
+
+  if (decisionMatch) {
+    summary += '### Decision\n' + decisionMatch[1].trim();
+  }
+
+  return summary.trim();
+}
+
 // Parse review decision (APPROVED or CHANGES REQUESTED)
 function parseReviewDecision(reviewText) {
   if (reviewText.includes('✅ **APPROVED**')) {
-    return 'APPROVED';
+    return 'APPROVE';
   } else if (reviewText.includes('🔴 **CHANGES REQUESTED**')) {
-    return 'CHANGES_REQUESTED';
+    return 'REQUEST_CHANGES';
   } else {
     console.warn('Could not parse decision, defaulting to COMMENT');
     return 'COMMENT';
   }
 }
 
-// Post review comment on GitHub PR
-async function postReviewComment(octokit, repo, prNumber, agentType, reviewText, decision) {
+// Post review with inline comments using GitHub Pull Request Review API
+async function postPullRequestReview(octokit, repo, prNumber, prDetails, agentType, reviewText, decision) {
   const [owner, repoName] = repo.split('/');
   const agent = AGENT_PROMPTS[agentType];
 
-  const comment = `## 🤖 **${agent.role} Review**
+  // Parse inline comments from review text
+  const inlineComments = parseInlineComments(reviewText);
 
-${reviewText}
+  // Extract summary (without inline comments section)
+  const summary = extractSummary(reviewText);
+
+  // Construct review body
+  const reviewBody = `## 🤖 **${agent.role} Review**
+
+${summary}
+
+${inlineComments.length > 0 ? `\n**${inlineComments.length} inline comment(s)** posted on specific lines in the "Files changed" tab.\n` : ''}
 
 ---
 
 *Automated review by ${agent.role} | Agent expertise: ${agent.focus}*
 `;
 
-  await octokit.rest.issues.createComment({
+  console.log(`  Summary: ${summary.substring(0, 100)}...`);
+  console.log(`  Inline comments: ${inlineComments.length}`);
+  console.log(`  Decision: ${decision}`);
+
+  // Get the commit SHA for the review
+  const prData = await octokit.rest.pulls.get({
     owner,
     repo: repoName,
-    issue_number: prNumber,
-    body: comment
+    pull_number: prNumber
   });
 
-  console.log(`✅ Posted review comment as ${agent.role}`);
+  const commitId = prData.data.head.sha;
+
+  // Post the review with inline comments
+  try {
+    await octokit.rest.pulls.createReview({
+      owner,
+      repo: repoName,
+      pull_number: prNumber,
+      commit_id: commitId,
+      event: decision, // 'APPROVE', 'REQUEST_CHANGES', or 'COMMENT'
+      body: reviewBody,
+      comments: inlineComments.map(comment => ({
+        path: comment.path,
+        line: comment.line,
+        body: comment.body
+      }))
+    });
+
+    console.log(`✅ Posted review as ${agent.role} with ${inlineComments.length} inline comments`);
+  } catch (error) {
+    console.error(`Error posting review: ${error.message}`);
+
+    // Fallback: Post as regular comment if review API fails
+    console.log('Falling back to regular comment...');
+
+    const fallbackComment = `## 🤖 **${agent.role} Review**
+
+${reviewText}
+
+---
+
+*Automated review by ${agent.role} | Agent expertise: ${agent.focus}*
+
+⚠️ Note: Inline comments could not be posted. Issues are listed above.
+`;
+
+    await octokit.rest.issues.createComment({
+      owner,
+      repo: repoName,
+      issue_number: prNumber,
+      body: fallbackComment
+    });
+
+    console.log(`✅ Posted fallback comment as ${agent.role}`);
+  }
 }
 
 // Main function
@@ -332,8 +471,8 @@ async function main() {
 
   console.log(`Decision: ${decision}`);
 
-  // Post review comment
-  await postReviewComment(octokit, repo, prNumber, agentType, reviewText, decision);
+  // Post review with inline comments
+  await postPullRequestReview(octokit, repo, prNumber, prDetails, agentType, reviewText, decision);
 
   console.log(`\n✅ Review complete!`);
 }

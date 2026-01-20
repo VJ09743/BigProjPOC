@@ -49,8 +49,8 @@ jobs:
 
       - name: Install dependencies
         run: |
-          npm install -g @anthropic-ai/sdk
-          npm install octokit
+          cd .github/scripts
+          npm install
 
       - name: Determine Reviewers
         id: reviewers

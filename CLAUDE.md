@@ -64,6 +64,15 @@ BigProjPOC/
 │   │   └── tester-agent.md      # Tester/QA agent
 │   ├── settings.json       # Project settings and preferences
 │   └── prompts/            # Custom prompts (if needed)
+├── common_infra/           # Common infrastructure (centralized)
+│   ├── thrift/             # Apache Thrift installation (local)
+│   │   ├── bin/            # Thrift compiler
+│   │   ├── include/        # C++ runtime headers
+│   │   └── lib/            # C++ runtime libraries
+│   ├── build_tools/        # Common build makefiles
+│   │   ├── common.mk       # Build variables and settings
+│   │   └── rules.mk        # Reusable build rules
+│   └── README.md           # Infrastructure documentation
 ├── BigModuleA/             # Module A
 │   ├── src/                # Source code
 │   │   └── ext/interfaces/ # External interfaces
@@ -144,6 +153,57 @@ Purpose: [To be documented]
 - Build outputs go to `build/`
 - Release artifacts go to `release/`
 
+## Common Infrastructure
+
+The `common_infra/` directory contains centralized infrastructure and build tools used across all modules.
+
+### Apache Thrift (common_infra/thrift/)
+**Version**: 0.19.0
+**Type**: Local installation (not system-wide)
+
+**Components**:
+- `bin/` - Thrift compiler binary
+- `include/` - C++ runtime headers
+- `lib/` - C++ runtime libraries
+
+**Usage**:
+```bash
+# Invoke Thrift compiler
+./common_infra/thrift/bin/thrift --version
+./common_infra/thrift/bin/thrift --gen cpp -out gen-cpp service.thrift
+```
+
+**Why Centralized**:
+- Single Thrift version across all modules (0.19.0)
+- No system-wide installation required
+- Reproducible builds on any machine
+- Easier developer onboarding
+
+### Build Tools (common_infra/build_tools/)
+
+**common.mk** - Common build variables:
+- Repository paths and Thrift locations
+- Build directory conventions
+- Compiler flags and options
+- Include/library paths
+
+**rules.mk** - Reusable build rules:
+- Directory creation targets
+- Thrift code generation patterns
+- Clean targets (generated code, build, release)
+- Help documentation
+
+**Usage in Module Makefiles**:
+```make
+include $(REPO_ROOT)/common_infra/build_tools/rules.mk
+
+build: dirs
+	$(MSG_BUILD) Building module
+	# Module-specific build commands
+```
+
+See `common_infra/README.md` for detailed documentation.
+
 ## Agent System
 
 This project uses a multi-agent system where Claude Code automatically adopts different specialized roles based on the task at hand. The agent configurations are located in `.claude/agents/`.
@@ -202,7 +262,8 @@ This project uses a multi-agent system where Claude Code automatically adopts di
 **Git Worktree Workflow**:
 - Creates separate worktrees for each agent
 - Enables parallel independent work without conflicts
-- Example: `git worktree add ../worktree-developer developer/task-branch`
+- Example: `git worktree add ../worktree-developer claude/developer-rtdcs-{sessionID}`
+- **Branch Naming**: All worktree branches must use `claude/{agent}-{project}-{sessionID}` format for remote push
 
 **Peer Review Process**:
 - Agent completes work in their worktree
@@ -606,6 +667,13 @@ See `docs/tasks/README.md` for complete documentation on the task management sys
 ### Git Workflow
 - Main branch: `master`
 - Feature branches: Use `claude/` prefix for Claude-generated work
+- **CRITICAL: Branch Naming Convention for Remote Pushes**:
+  - All agent work branches MUST start with `claude/` prefix
+  - All agent work branches MUST end with the session ID (e.g., `-pbCFa`)
+  - Format: `claude/{agent}-{project}-{sessionID}`
+  - Example: `claude/architect-rtdcs-pbCFa`
+  - This naming convention is REQUIRED for remote pushes to GitHub to succeed
+  - Branches without the correct format will fail with HTTP 403 error
 - Always test changes before committing
 
 ## Claude Code Instructions

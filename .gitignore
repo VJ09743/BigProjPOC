@@ -42,3 +42,14 @@
 
 # GitHub token (sensitive)
 .github_token
+# Build directories
+**/build/
+**/release/
+
+# Generated code directories
+**/gen-cpp/
+**/gen-java/
+**/gen-py/
+
+# Thrift temporary files
+*.thrift~

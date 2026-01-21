@@ -253,33 +253,42 @@ The system will demonstrate observability through:
 
 ### Git Branch Strategy
 
+**IMPORTANT: Branch Naming Convention**
+- All agent work branches MUST start with `claude/` prefix
+- All agent work branches MUST end with the session ID (e.g., `-pbCFa`)
+- Format: `claude/{agent}-{project}-{sessionID}`
+- Example: `claude/architect-rtdcs-pbCFa`
+- This naming convention is REQUIRED for remote pushes to GitHub
+
 ```
 master (main branch)
   │
-  ├─ recommended-development (development branch)
+  ├─ recommended-development (development branch, local only)
   │    │
-  │    └─ project-feature-int/rtdcs (feature integration branch)
+  │    └─ project-feature-int/rtdcs (feature integration branch, local only)
   │         │
-  │         ├─ architect/rtdcs-design (Architect's work)
+  │         ├─ claude/architect-rtdcs-{sessionID} (Architect's work)
   │         │
-  │         ├─ developer/rtdcs-implementation (Developer's work)
+  │         ├─ claude/developer-rtdcs-{sessionID} (Developer's work)
   │         │
-  │         ├─ tester/rtdcs-validation (Tester's work)
+  │         ├─ claude/tester-rtdcs-{sessionID} (Tester's work)
   │         │
-  │         └─ it/rtdcs-release (IT's work)
+  │         └─ claude/it-rtdcs-{sessionID} (IT's work)
   │
   └─ [Merge project-feature-int/rtdcs after release]
 ```
+
+**Note**: The `recommended-development` and `project-feature-int/rtdcs` branches are local-only because they don't follow the `claude/*` naming convention required for remote pushes.
 
 ### Workflow Steps
 
 1. **Team Leader**: Create `recommended-development` from `master`
 2. **Team Leader**: Create `project-feature-int/rtdcs` from `recommended-development`
 3. **Team Leader**: Set up git worktrees for each agent:
-   - `../worktree-architect` → `architect/rtdcs-design`
-   - `../worktree-developer` → `developer/rtdcs-implementation`
-   - `../worktree-tester` → `tester/rtdcs-validation`
-   - `../worktree-it` → `it/rtdcs-release`
+   - `../worktree-architect` → `claude/architect-rtdcs-{sessionID}`
+   - `../worktree-developer` → `claude/developer-rtdcs-{sessionID}`
+   - `../worktree-tester` → `claude/tester-rtdcs-{sessionID}`
+   - `../worktree-it` → `claude/it-rtdcs-{sessionID}`
 
 4. **Architect**: Design in worktree, commit, request peer review
 5. **Developer**: Implement in worktree, commit, request peer review
@@ -300,7 +309,7 @@ master (main branch)
    - Designs Thrift interfaces (marks **FICTIONAL** elements)
    - Defines shared memory structure
    - Creates development tasks
-   - Commits all work to `architect/rtdcs-design` branch
+   - Commits all work to `claude/architect-rtdcs-{sessionID}` branch
 
 2. **Architect requests peer review**
    - Creates review request in `docs/team-leader/reviews/architect-rtdcs-review.md`
@@ -319,7 +328,7 @@ master (main branch)
    - Requests re-review if significant changes
 
 5. **After 2+ approvals**
-   - Architect creates PR from `architect/rtdcs-design` → `project-feature-int/rtdcs`
+   - Architect creates PR from `claude/architect-rtdcs-{sessionID}` → `project-feature-int/rtdcs`
    - Includes peer review summary in PR description
    - User reviews and merges PR
 
@@ -332,7 +341,7 @@ master (main branch)
    - Implements BigModuleC (CompensationController)
    - Writes unit tests for all modules
    - Ensures **FICTIONAL** elements are clearly commented in code
-   - Commits all work to `developer/rtdcs-implementation` branch
+   - Commits all work to `claude/developer-rtdcs-{sessionID}` branch
 
 7. **Developer requests peer review**
    - Creates review request in `docs/team-leader/reviews/developer-rtdcs-review.md`
@@ -352,7 +361,7 @@ master (main branch)
    - Requests re-review if significant changes
 
 10. **After 2+ approvals**
-    - Developer creates PR from `developer/rtdcs-implementation` → `project-feature-int/rtdcs`
+    - Developer creates PR from `claude/developer-rtdcs-{sessionID}` → `project-feature-int/rtdcs`
     - Includes peer review summary in PR description
     - User reviews and merges PR
 
@@ -366,7 +375,7 @@ master (main branch)
     - Writes system test for end-to-end workflow
     - Validates observable results
     - Creates test report
-    - Commits all work to `tester/rtdcs-validation` branch
+    - Commits all work to `claude/tester-rtdcs-{sessionID}` branch
 
 12. **Tester requests peer review**
     - Creates review request in `docs/team-leader/reviews/tester-rtdcs-review.md`
@@ -386,7 +395,7 @@ master (main branch)
     - Requests re-review if significant changes
 
 15. **After 2+ approvals**
-    - Tester creates PR from `tester/rtdcs-validation` → `project-feature-int/rtdcs`
+    - Tester creates PR from `claude/tester-rtdcs-{sessionID}` → `project-feature-int/rtdcs`
     - Includes peer review summary and test report in PR description
     - User reviews and merges PR
 
@@ -400,7 +409,7 @@ master (main branch)
     - Creates release package in `release/v0.1.0/`
     - Packages binaries, libraries, headers
     - Creates release notes
-    - Commits all work to `it/rtdcs-release` branch
+    - Commits all work to `claude/it-rtdcs-{sessionID}` branch
 
 17. **IT Agent requests peer review**
     - Creates review request in `docs/team-leader/reviews/it-rtdcs-review.md`
@@ -420,7 +429,7 @@ master (main branch)
     - Requests re-review if significant changes
 
 20. **After 2+ approvals**
-    - IT Agent creates PR from `it/rtdcs-release` → `project-feature-int/rtdcs`
+    - IT Agent creates PR from `claude/it-rtdcs-{sessionID}` → `project-feature-int/rtdcs`
     - Includes peer review summary and release notes in PR description
     - User reviews and merges PR
 

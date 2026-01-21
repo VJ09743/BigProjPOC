@@ -379,18 +379,20 @@ struct SharedLithoState {
      * - Reserve space for future fields without breaking ABI
      * - Prevent accidental access beyond structure bounds
      *
-     * Current Structure Size:
-     * - magic: 4 bytes
-     * - current_temp_C: 8 bytes
-     * - timestamp_s: 8 bytes
-     * - sample_count: 4 bytes
-     * - compensation_x_nm: 8 bytes
-     * - compensation_y_nm: 8 bytes
-     * - compensation_timestamp_s: 8 bytes
-     * - Total: 48 bytes
+     * Current Structure Size (with compiler alignment):
+     * - magic: 4 bytes (offset 0)
+     * - [padding]: 4 bytes (alignment padding for next double)
+     * - current_temp_C: 8 bytes (offset 8, aligned to 8-byte boundary)
+     * - timestamp_s: 8 bytes (offset 16)
+     * - sample_count: 4 bytes (offset 24)
+     * - [padding]: 4 bytes (alignment padding for next double)
+     * - compensation_x_nm: 8 bytes (offset 32, aligned to 8-byte boundary)
+     * - compensation_y_nm: 8 bytes (offset 40)
+     * - compensation_timestamp_s: 8 bytes (offset 48)
+     * - Total used: 56 bytes
      *
      * Padding Size:
-     * - 4096 - 48 = 4048 bytes
+     * - 4096 - 56 = 4040 bytes
      *
      * Future Extensions (Examples):
      * - Add more temperature sensors (multi-zone monitoring)
@@ -399,7 +401,7 @@ struct SharedLithoState {
      * - Add calibration coefficients
      * - Add diagnostic counters (errors, warnings)
      */
-    char padding[4048];
+    char padding[4040];
 
     // ========================================================================
     // Constructor and Initialization

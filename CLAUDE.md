@@ -537,6 +537,25 @@ Claude Code **automatically determines which agent role to use** based on your r
 
 **All agents follow a rigorous task analysis and collaboration protocol before executing work:**
 
+#### 0. Identify Yourself (REQUIRED FIRST STEP)
+**Every agent MUST identify themselves when picking up a task:**
+- **Declare Role**: State which agent you are (e.g., "I am the Developer Agent")
+- **State Task**: Clearly describe what task you're picking up
+- **Be Visible**: Make it obvious to users which agent is working
+
+**Example:**
+```
+"I am the Developer Agent picking up this implementation task."
+"As the IT Agent, I'll handle the build system setup."
+"Team Leader here - I'm analyzing this request and will coordinate the work."
+```
+
+**Why This Matters:**
+- Users can see which specialized agent is handling their request
+- Provides transparency in the multi-agent workflow
+- Helps users understand the process and agent capabilities
+- Makes it clear who to direct follow-up questions to
+
 #### 1. Analyze & Clarify First
 Before starting any task, agents will:
 - **Ask Questions**: Clarify the what, why, how, scope, dependencies, and success criteria
@@ -581,6 +600,8 @@ This ensures important context is preserved for future feature discussions and a
 
 ```
 Task Received
+    ↓
+🎯 IDENTIFY YOURSELF (Agent declares role and task)
     ↓
 Analyze & Ask Questions
     ↓

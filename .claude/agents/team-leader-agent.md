@@ -310,6 +310,124 @@ git worktree remove ../worktree-architect
 git worktree remove ../worktree-developer
 ```
 
+## Continuation Session Protocol
+
+**CRITICAL**: When resuming work in a continuation session (user says "carry on", "continue", "resume", "work"), follow this protocol:
+
+### Problem: Session IDs Change
+- Each continuation session gets a NEW session ID
+- Old branches become invalid (HTTP 403 on push)
+- Generic branches (like `claude/create-pull-request-*`) break automated peer review
+
+### Solution: Update Branches with Current Session ID
+
+**Before handing off to any agent, Team Leader must:**
+
+1. **Get Current Session ID**:
+```bash
+SESSION_ID="${CLAUDE_CODE_REMOTE_SESSION_ID: -5}"
+echo "Current session ID: $SESSION_ID"
+```
+
+2. **Run Continuation Setup Script**:
+```bash
+# Automatically creates correct branches for all worktrees
+bash docs/team-leader/scripts/setup-continuation-branches.sh rtdcs
+```
+
+Or **manually set up each worktree**:
+
+```bash
+PROJECT="rtdcs"  # or current project name
+SESSION_ID="${CLAUDE_CODE_REMOTE_SESSION_ID: -5}"
+
+for AGENT in architect developer tester it; do
+    WORKTREE="/home/user/worktree-${AGENT}"
+    if [ -d "$WORKTREE" ]; then
+        cd "$WORKTREE"
+        LATEST_COMMIT=$(git rev-parse HEAD)
+        NEW_BRANCH="claude/${AGENT}-${PROJECT}-${SESSION_ID}"
+
+        # Create new branch with current session ID
+        git checkout -b "$NEW_BRANCH" "$LATEST_COMMIT" 2>/dev/null || git checkout "$NEW_BRANCH"
+        echo "✅ $AGENT: $NEW_BRANCH"
+    fi
+done
+```
+
+3. **Verify Branch Names**:
+```bash
+# Each branch MUST match pattern: claude/{agent}-{project}-{sessionID}
+# Example: claude/developer-rtdcs-NxeRq
+for AGENT in architect developer tester it; do
+    cd /home/user/worktree-${AGENT} 2>/dev/null || continue
+    BRANCH=$(git branch --show-current)
+    if [[ "$BRANCH" =~ ^claude/${AGENT}-[a-z]+-[a-zA-Z0-9]+$ ]]; then
+        echo "✅ $AGENT: $BRANCH (VALID)"
+    else
+        echo "❌ $AGENT: $BRANCH (INVALID - will break automated peer review!)"
+    fi
+done
+```
+
+4. **Then Hand Off to Agent**:
+- Agent will have correct branch ready
+- Push will succeed (session ID matches)
+- Automated peer review will work (agent type detected from branch)
+
+### What NOT To Do
+
+❌ **DON'T** use generic branches:
+- `claude/create-pull-request-pbCFa` ← WRONG (breaks peer review)
+- `claude/feature-name-xyz` ← WRONG (no agent type)
+
+✅ **DO** use agent-specific branches:
+- `claude/developer-rtdcs-NxeRq` ← CORRECT
+- `claude/architect-rtdcs-NxeRq` ← CORRECT
+
+### Why This Matters
+
+The automated peer review workflow (`.github/workflows/automated-peer-review.yml`) parses branch names to determine which agent created the PR:
+
+```javascript
+// From workflow: Determine Reviewers step
+const branchPattern = /^claude\/([a-z-]+)-([a-z-]+)-([a-zA-Z0-9]+)$/;
+const match = branchName.match(branchPattern);
+const agentType = match[1];  // e.g., "developer"
+
+// Then assigns reviewers based on agent type
+const reviewRules = {
+  'developer': ['architect', 'tester'],  // Developer PRs reviewed by these agents
+  'architect': ['developer', 'tester'],
+  'tester': ['developer', 'team-leader'],
+  'it': ['architect'],
+  'team-leader': ['architect']
+};
+```
+
+Without correct branch naming:
+- ❌ Agent type cannot be determined
+- ❌ No reviewers assigned
+- ❌ All review steps skipped
+- ❌ PR has no peer reviews
+
+### Automation Tool
+
+Use the provided script for automatic setup:
+
+```bash
+# Script: docs/team-leader/scripts/setup-continuation-branches.sh
+# Usage: ./setup-continuation-branches.sh [project-name]
+
+bash docs/team-leader/scripts/setup-continuation-branches.sh rtdcs
+```
+
+This script:
+- ✅ Detects current session ID automatically
+- ✅ Updates all worktree branches with current session ID
+- ✅ Preserves work (creates branches from latest commits)
+- ✅ Validates branch names match required pattern
+
 ## Peer Review Process
 
 **CRITICAL**: Before creating PR for user review, agents must go through peer review:

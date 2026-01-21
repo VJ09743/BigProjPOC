@@ -62,9 +62,21 @@ void printUsage(const char* programName) {
               << "  --samples <count>      Number of samples to generate (0 = infinite) [default: 0]\n"
               << "  --help                 Show this help message\n"
               << "\n"
+              << "⚠️  IMPORTANT: Sample Count Warning\n"
+              << "  If you specify --samples with a finite value, BigModuleA will exit after\n"
+              << "  generating that many samples and DESTROY the shared memory.\n"
+              << "\n"
+              << "  This will cause BigModuleB and BigModuleC to fail with:\n"
+              << "    \"Failed to open shared memory\"\n"
+              << "\n"
+              << "  For testing all three modules together:\n"
+              << "    • Use --samples 0 (infinite) and stop with Ctrl+C, OR\n"
+              << "    • Coordinate sample counts: Run BigModuleB/C with shorter durations\n"
+              << "\n"
               << "Examples:\n"
-              << "  " << programName << " --pattern sine --base-temp 25.0 --amplitude 5.0 --frequency 0.1\n"
-              << "  " << programName << " --pattern step --base-temp 25.0 --step-delta 5.0 --interval 3.0 --samples 100\n"
+              << "  " << programName << " --pattern sine                                      # Run indefinitely\n"
+              << "  " << programName << " --pattern sine --samples 0                          # Same (infinite)\n"
+              << "  " << programName << " --pattern step --base-temp 25.0 --step-delta 5.0    # Run indefinitely\n"
               << std::endl;
 }
 

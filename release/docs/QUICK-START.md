@@ -47,8 +47,8 @@ xcode-select --install
 # Install Homebrew
 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
 
-# Install Thrift and GoogleTest
-brew install thrift googletest
+# Install Thrift, GoogleTest, and Boost
+brew install thrift googletest boost
 ```
 
 ### 2. Clone and Build

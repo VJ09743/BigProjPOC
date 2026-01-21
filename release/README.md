@@ -46,7 +46,7 @@ make -C BigModuleA build && make -C BigModuleB build && make -C BigModuleC build
 #### macOS
 ```bash
 # Install dependencies
-brew install thrift googletest
+brew install thrift googletest boost
 
 # Build
 make -C BigModuleA build && make -C BigModuleB build && make -C BigModuleC build

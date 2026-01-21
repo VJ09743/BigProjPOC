@@ -48,6 +48,11 @@
 # Module-level release directories (build artifacts)
 BigModule*/release/
 
+# Root-level release artifacts (executables and libraries)
+release/bin/
+release/lib/
+release/include/
+
 # Generated code directories
 **/gen-cpp/
 **/gen-java/

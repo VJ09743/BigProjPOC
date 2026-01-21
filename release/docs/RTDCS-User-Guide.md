@@ -67,7 +67,7 @@ xcode-select --install
 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
 
 # Install dependencies
-brew install thrift googletest
+brew install thrift googletest boost
 ```
 
 **Required versions:**

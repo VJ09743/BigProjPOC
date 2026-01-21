@@ -44,7 +44,9 @@
 .github_token
 # Build directories
 **/build/
-**/release/
+
+# Module-level release directories (build artifacts)
+BigModule*/release/
 
 # Generated code directories
 **/gen-cpp/

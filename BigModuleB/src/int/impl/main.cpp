@@ -143,8 +143,8 @@ bool parseArguments(int argc, char* argv[], std::string& host, int& port, int& m
             if (i + 1 < argc) {
                 try {
                     max_samples = std::stoi(argv[++i]);
-                    if (max_samples < 1) {
-                        std::cerr << "Error: Invalid sample count (must be >= 1): " << max_samples << std::endl;
+                    if (max_samples < 0) {
+                        std::cerr << "Error: Invalid sample count (must be >= 0, 0 = infinite): " << max_samples << std::endl;
                         return false;
                     }
                 } catch (const std::exception&) {

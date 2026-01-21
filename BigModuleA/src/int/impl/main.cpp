@@ -54,7 +54,7 @@ void printUsage(const char* programName) {
               << "\n"
               << "Options:\n"
               << "  --pattern <type>       Temperature pattern type (sine|step) [default: sine]\n"
-              << "  --base-temp <value>    Base temperature in °C [default: 25.0]\n"
+              << "  --base-temp <value>    Base temperature in °C [default: 20.0]\n"
               << "  --amplitude <value>    Temperature variation amplitude in °C [default: 5.0]\n"
               << "  --frequency <value>    Frequency in Hz (sine pattern only) [default: 0.1]\n"
               << "  --step-delta <value>   Step delta in °C (step pattern only) [default: 5.0]\n"
@@ -76,7 +76,7 @@ void printUsage(const char* programName) {
               << "Examples:\n"
               << "  " << programName << " --pattern sine                                      # Run indefinitely\n"
               << "  " << programName << " --pattern sine --samples 0                          # Same (infinite)\n"
-              << "  " << programName << " --pattern step --base-temp 25.0 --step-delta 5.0    # Run indefinitely\n"
+              << "  " << programName << " --pattern step --base-temp 20.0 --step-delta 5.0    # Run indefinitely\n"
               << std::endl;
 }
 
@@ -85,7 +85,7 @@ void printUsage(const char* programName) {
  */
 struct Config {
     std::string pattern = "sine";
-    double baseTemp = 25.0;
+    double baseTemp = 20.0;
     double amplitude = 5.0;
     double frequency = 0.1;
     double stepDelta = 5.0;

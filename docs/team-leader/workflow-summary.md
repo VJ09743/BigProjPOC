@@ -130,6 +130,15 @@ Implementation follows design patterns well, but found 3 SOLID violations.
 - Pushes new commits to same branch
 - You re-run the peer review workflow (Step 5)
 
+**🔄 RE-REVIEW MODE** (Automatic):
+When you re-trigger the workflow on a PR that already has reviews:
+- Agents automatically detect they've reviewed before
+- They check ONLY if their previous concerns were addressed
+- If addressed: They **resolve the conversation threads** and approve
+- If not addressed: They explain why and keep requesting changes
+- **No new comprehensive reviews** - focused re-review only
+- More efficient iteration cycle
+
 ### Step 10: Final User Review
 
 **You (User)**:
@@ -148,6 +157,7 @@ Implementation follows design patterns well, but found 3 SOLID violations.
 ✅ **Limited comments**: Maximum 10 per reviewer - prioritizes most important issues
 ✅ **Sequential review**: Agents review one after another (not truly parallel, but automated)
 ✅ **2 reviewers minimum**: Most PRs get 2 agent reviews for thorough quality check
+✅ **Re-review mode**: Agents automatically check only previous concerns and resolve threads when addressed
 
 ## Workflow Diagram
 

@@ -132,8 +132,53 @@ const AGENT_PROMPTS = {
   }
 };
 
+// Check if this agent has previously reviewed this PR
+async function getPreviousReview(octokit, repo, prNumber, agentType) {
+  const [owner, repoName] = repo.split('/');
+  const agent = AGENT_PROMPTS[agentType];
+
+  try {
+    // Get all reviews for this PR
+    const { data: reviews } = await octokit.rest.pulls.listReviews({
+      owner,
+      repo: repoName,
+      pull_number: prNumber
+    });
+
+    // Find reviews from this agent (by checking review body for agent marker)
+    const agentMarker = `**${agent.role} Review**`;
+    const previousReviews = reviews.filter(review =>
+      review.body && review.body.includes(agentMarker)
+    );
+
+    if (previousReviews.length === 0) {
+      return null;
+    }
+
+    // Get the most recent review from this agent
+    const latestReview = previousReviews[previousReviews.length - 1];
+
+    // Get review comments (inline comments)
+    const { data: comments } = await octokit.rest.pulls.listReviewComments({
+      owner,
+      repo: repoName,
+      pull_number: prNumber,
+      review_id: latestReview.id
+    });
+
+    return {
+      review: latestReview,
+      comments: comments,
+      state: latestReview.state
+    };
+  } catch (error) {
+    console.error('Error fetching previous review:', error.message);
+    return null;
+  }
+}
+
 // Construct review prompt for Claude
-function constructReviewPrompt(agentType, prDetails) {
+function constructReviewPrompt(agentType, prDetails, previousReview = null) {
   const agent = AGENT_PROMPTS[agentType];
 
   const prompt = `You are the ${agent.title} reviewing a pull request in the BigProjPOC repository.
@@ -155,9 +200,45 @@ ${prDetails.body}
 **Changed Files** (${prDetails.files.length} files):
 ${prDetails.files.map(f => `- ${f.filename} (+${f.additions}/-${f.deletions})`).join('\n')}
 
+${previousReview ? `
+## 🔄 RE-REVIEW MODE
+
+**IMPORTANT**: You have previously reviewed this PR and requested changes. The developer has pushed new commits to address your feedback.
+
+**Your Previous Review** (${previousReview.state}):
+${previousReview.comments.length > 0 ? previousReview.comments.map((c, i) => `
+${i + 1}. **${c.path}:${c.line}**
+   ${c.body.replace(/\*\*🤖.*?\*\*\n\n/, '')}
+`).join('\n') : '(No inline comments in previous review)'}
+
+**Your Task for Re-Review**:
+1. Check if the new commits address each of your previous concerns
+2. For each previous comment:
+   - If ADDRESSED: Mark as resolved (mention "RESOLVED" in response)
+   - If NOT ADDRESSED: Explain why and keep requesting changes
+3. Do NOT post new comprehensive reviews or new issues
+4. Focus ONLY on verifying your previous feedback was addressed
+
+**Response Format for Re-Review**:
+
+### Re-Review Summary
+[Brief statement: "All concerns addressed" OR "Some concerns remain"]
+
+### Previous Issues Status
+[For each previous issue:]
+Issue #1 (${previousReview.comments[0]?.path || 'file'}:${previousReview.comments[0]?.line || 'line'}):
+- Status: ✅ RESOLVED / ❌ NOT RESOLVED
+- Verification: [How you verified it was fixed / Why it's not fixed]
+
+### Decision
+[Write EXACTLY one of these:]
+✅ **APPROVED** - All previous concerns have been addressed.
+🔴 **CHANGES REQUESTED** - Some concerns remain unaddressed.
+
+` : `
 ## Your Task
 
-Review this pull request thoroughly using your expertise and the following checklist:
+Review this pull request thoroughly using your expertise and the following checklist:`}
 
 **Review Checklist**:
 ${agent.checklist.map((item, i) => `${i + 1}. ${item}`).join('\n')}
@@ -246,12 +327,12 @@ INLINE_COMMENT: path/to/file.ext:123
 }
 
 // Call Claude API for review
-async function callClaudeForReview(agentType, prDetails) {
+async function callClaudeForReview(agentType, prDetails, previousReview = null) {
   const anthropic = new Anthropic({
     apiKey: process.env.ANTHROPIC_API_KEY
   });
 
-  const prompt = constructReviewPrompt(agentType, prDetails);
+  const prompt = constructReviewPrompt(agentType, prDetails, previousReview);
 
   console.log(`\nCalling Claude API as ${agentType}...`);
 
@@ -348,6 +429,41 @@ function extractSummary(reviewText) {
   }
 
   return summary.trim();
+}
+
+// Resolve review threads for addressed issues
+async function resolveReviewThreads(octokit, repo, prNumber, reviewText, previousReview) {
+  if (!previousReview || !previousReview.comments || previousReview.comments.length === 0) {
+    return;
+  }
+
+  const [owner, repoName] = repo.split('/');
+
+  // Check if review text indicates issues were resolved
+  const resolvedPattern = /Status:\s*✅\s*RESOLVED/gi;
+  const matches = reviewText.matchAll(resolvedPattern);
+  const resolvedCount = Array.from(matches).length;
+
+  console.log(`  Found ${resolvedCount} issues marked as RESOLVED in re-review`);
+
+  // If all issues resolved, resolve all previous comment threads
+  if (resolvedCount > 0 || reviewText.includes('All previous concerns have been addressed')) {
+    for (const comment of previousReview.comments) {
+      try {
+        // Resolve the review comment thread
+        await octokit.rest.pulls.updateReviewComment({
+          owner,
+          repo: repoName,
+          comment_id: comment.id,
+          body: comment.body + '\n\n---\n✅ **RESOLVED** - Issue addressed in latest commits.'
+        });
+
+        console.log(`  ✅ Resolved thread for comment ${comment.id} (${comment.path}:${comment.line})`);
+      } catch (error) {
+        console.error(`  ⚠️  Could not resolve thread ${comment.id}:`, error.message);
+      }
+    }
+  }
 }
 
 // Parse review decision (APPROVED or CHANGES REQUESTED)
@@ -486,13 +602,30 @@ async function main() {
     auth: process.env.GITHUB_TOKEN
   });
 
+  // Check for previous review from this agent
+  console.log('Checking for previous review from this agent...');
+  const previousReview = await getPreviousReview(octokit, repo, prNumber, agentType);
+
+  if (previousReview) {
+    console.log(`📋 Found previous review (${previousReview.state}) with ${previousReview.comments.length} comments`);
+    console.log('🔄 Entering RE-REVIEW MODE');
+  } else {
+    console.log('✨ First-time review for this agent');
+  }
+
   // Call Claude API for review
-  const reviewText = await callClaudeForReview(agentType, prDetails);
+  const reviewText = await callClaudeForReview(agentType, prDetails, previousReview);
 
   // Parse decision
   const decision = parseReviewDecision(reviewText);
 
   console.log(`Decision: ${decision}`);
+
+  // Resolve threads if this is a re-review and issues were addressed
+  if (previousReview && decision === 'APPROVE') {
+    console.log('Resolving previous review threads...');
+    await resolveReviewThreads(octokit, repo, prNumber, reviewText, previousReview);
+  }
 
   // Post review with inline comments
   await postPullRequestReview(octokit, repo, prNumber, prDetails, agentType, reviewText, decision);

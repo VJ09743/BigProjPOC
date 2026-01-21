@@ -182,6 +182,25 @@ ${f.patch || '(Binary file or no patch available)'}
 4. **Be fair**: Acknowledge good work, but don't lower standards
 5. **Focus on your expertise**: Apply your domain knowledge
 
+## CRITICAL CONSTRAINTS
+
+**Comment Prioritization** - Focus ONLY on these critical areas:
+1. **Design Issues**: Architecture violations, design pattern misuse, SOLID violations, poor abstractions
+2. **Functionality Issues**: Logic errors, incorrect implementations, broken features, edge case failures
+3. **Consistency Issues**: Inconsistent with project standards, naming conventions, code style, patterns
+4. **Clean Code Issues**: Code smells, hard-to-maintain code, duplication, excessive complexity
+
+**Comment Limit**: Maximum **10 inline comments** per review
+- Prioritize the MOST critical issues first
+- Focus on issues that have the biggest impact on code quality
+- Skip minor formatting or trivial issues if limit is reached
+- Every comment must be actionable and important
+
+**Severity Guidelines**:
+- **Critical**: Breaks functionality, major design flaw, security issue, violates core principles
+- **Major**: Significant code quality issue, maintainability problem, important best practice violation
+- **Minor**: Small improvement, stylistic preference, minor inconsistency
+
 ## Response Format
 
 Provide your review in this exact format:
@@ -190,7 +209,8 @@ Provide your review in this exact format:
 [1-2 sentences: overall assessment]
 
 ### Inline Comments
-[For each specific issue, provide a structured comment that will appear on the code]
+[Provide MAXIMUM 10 inline comments focusing on the most critical issues]
+[Prioritize: Design > Functionality > Consistency > Clean Code]
 [Format: Each comment MUST start with "INLINE_COMMENT:" followed by file path and line number]
 [If no inline comments, write "None"]
 
@@ -198,7 +218,7 @@ INLINE_COMMENT: path/to/file.ext:123
 **[Severity: Critical/Major/Minor]** [Issue title]
 [Detailed explanation of the problem and recommendation for fixing it]
 
-[Repeat for each issue found in the code]
+[Repeat for each critical issue - MAX 10 COMMENTS TOTAL]
 
 ### Positive Aspects
 [List good practices observed, or write "None notable" if basic]
@@ -217,6 +237,9 @@ INLINE_COMMENT: path/to/file.ext:123
 - Apply SOLID principles and design pattern knowledge rigorously
 - For inline comments, always specify the exact file path and line number where the issue exists
 - Line numbers should reference the new file content (after changes), not the diff
+- **CRITICAL**: Provide MAXIMUM 10 inline comments - prioritize the most impactful issues
+- Focus ONLY on: Design, Functionality, Consistency, and Clean Code issues
+- Skip minor/trivial issues to stay within the 10-comment limit
 `;
 
   return prompt;

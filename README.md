@@ -74,12 +74,17 @@ cursor .         # For Cursor
 │   ├── module-name/         # Each module is self-contained
 │   │   ├── src/             # Source code
 │   │   ├── test/            # Tests
-│   │   ├── release/         # Release build output
-│   │   ├── debug/           # Debug build output
+│   │   ├── release/         # Module release output
+│   │   ├── debug/           # Module debug output
 │   │   ├── build-config/    # Build configuration
-│   │   └── Makefile         # Build script
+│   │   └── Makefile         # Module build script
 │   └── another-module/      # Add more modules as needed
 │
+├── output/                  # Combined build output (all modules)
+│   ├── release/             # Combined release builds
+│   └── debug/               # Combined debug builds
+│
+├── Makefile                 # Top-level build script
 ├── .github/workflows/       # GitHub Actions
 └── AI-WORKFLOW.md           # Main workflow documentation
 ```

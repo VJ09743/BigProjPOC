@@ -89,6 +89,12 @@ modules/*/debug/
 !modules/*/release/.gitkeep
 !modules/*/debug/.gitkeep
 
+# Combined output directory (aggregates all module builds)
+output/release/*
+output/debug/*
+!output/release/.gitkeep
+!output/debug/.gitkeep
+
 # Generated code directories
 **/gen-cpp/
 **/gen-java/

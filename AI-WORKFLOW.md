@@ -116,12 +116,17 @@ YourProject/
 │   ├── module-name/             # Each module is self-contained
 │   │   ├── src/                 # Module source code
 │   │   ├── test/                # Module tests
-│   │   ├── release/             # Release build output
-│   │   ├── debug/               # Debug build output
+│   │   ├── release/             # Module release output
+│   │   ├── debug/               # Module debug output
 │   │   ├── build-config/        # Build configuration
 │   │   └── Makefile             # Module build script
 │   └── another-module/          # Add more modules as needed
 │
+├── output/                      # Combined build output
+│   ├── release/                 # Combined release (all modules)
+│   └── debug/                   # Combined debug (all modules)
+│
+├── Makefile                     # Top-level build script
 ├── .github/                     # GitHub configuration
 │   ├── workflows/               # GitHub Actions
 │   └── scripts/                 # Automation scripts

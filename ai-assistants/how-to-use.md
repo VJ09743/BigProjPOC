@@ -115,12 +115,17 @@ your-project/
 │   ├── module-name/         # Each module is self-contained
 │   │   ├── src/             # Module source code
 │   │   ├── test/            # Module tests
-│   │   ├── release/         # Release builds (gitignored)
-│   │   ├── debug/           # Debug builds (gitignored)
+│   │   ├── release/         # Module release output
+│   │   ├── debug/           # Module debug output
 │   │   ├── build-config/    # Build configuration
-│   │   └── Makefile         # Build script
+│   │   └── Makefile         # Module build script
 │   └── example-module/      # Template to copy for new modules
 │
+├── output/                  # Combined output (all modules)
+│   ├── release/             # Combined release builds
+│   └── debug/               # Combined debug builds
+│
+├── Makefile                 # Top-level build script
 └── .github/                 # GitHub workflows
 ```
 

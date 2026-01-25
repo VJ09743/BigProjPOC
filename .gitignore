@@ -1,3 +1,36 @@
+# =============================================================================
+# API Keys and Secrets (CRITICAL - Never commit these!)
+# =============================================================================
+
+# LLM Provider Configuration (contains API settings)
+.llm/config.json
+
+# Generic API key files
+*.key
+*.secret
+*.token
+.api_key
+.llm_key
+api_key.txt
+secrets.txt
+
+# Environment files with secrets
+.env
+.env.*
+!.env.example
+!.env.template
+
+# Provider-specific token files
+.github_token
+.anthropic_key
+.openai_key
+.azure_key
+.google_key
+
+# =============================================================================
+# Build Artifacts
+# =============================================================================
+
 # Prerequisites
 *.d
 
@@ -37,26 +70,130 @@
 *.out
 *.app
 
-# debug information files
+# Debug information files
 *.dwo
 
-# GitHub token (sensitive)
-.github_token
 # Build directories
 **/build/
+**/dist/
+**/out/
 
-# Module-level release directories (build artifacts)
-BigModule*/release/
+# =============================================================================
+# Project Structure
+# =============================================================================
 
-# Root-level release artifacts (executables and libraries)
+# Release artifacts (executables and libraries)
 release/bin/
 release/lib/
 release/include/
+release/v*/
 
 # Generated code directories
 **/gen-cpp/
 **/gen-java/
 **/gen-py/
+**/generated/
 
-# Thrift temporary files
-*.thrift~
+# =============================================================================
+# Language-Specific
+# =============================================================================
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.egg-info/
+.eggs/
+venv/
+.venv/
+env/
+
+# Node.js
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.npm/
+package-lock.json
+
+# Java
+*.class
+*.jar
+*.war
+target/
+
+# Rust
+/target/
+Cargo.lock
+
+# Go
+/vendor/
+go.sum
+
+# =============================================================================
+# IDE and Editor
+# =============================================================================
+
+# VS Code
+.vscode/
+*.code-workspace
+
+# JetBrains
+.idea/
+*.iml
+*.iws
+*.ipr
+
+# Vim
+*.swp
+*.swo
+*~
+
+# Emacs
+*~
+\#*\#
+/.emacs.desktop
+/.emacs.desktop.lock
+
+# =============================================================================
+# OS Files
+# =============================================================================
+
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+._*
+
+# Windows
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+
+# Linux
+*~
+.directory
+
+# =============================================================================
+# Temporary and Cache Files
+# =============================================================================
+
+# Logs
+*.log
+logs/
+
+# Temporary files
+*.tmp
+*.temp
+*.bak
+.cache/
+
+# Coverage reports
+coverage/
+.coverage
+htmlcov/
+*.lcov
+
+# Test outputs
+test-results/
+.pytest_cache/

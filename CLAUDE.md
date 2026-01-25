@@ -1,17 +1,51 @@
-# Claude Code Agentic Workflow Template
+# AI-Assisted Agentic Workflow Template
 
 ## Overview
 
-This is a **template repository** for setting up a multi-agent workflow with Claude Code. It provides a structured approach to software development where specialized AI agents (Team Leader, Architect, Developer, Tester, IT) collaborate to complete tasks.
+This is a **provider-agnostic template** for setting up a multi-agent AI workflow. It works with any LLM (Large Language Model) provider and AI coding assistant.
 
-**This template is designed for non-programmers** who want to leverage AI-assisted development workflows for their software projects.
+**Supported AI Providers:**
+- Anthropic (Claude)
+- OpenAI (GPT-4, GPT-4o)
+- Azure OpenAI
+- Google (Gemini)
+- Ollama (Local models)
+- Any OpenAI-compatible API
+
+**Compatible AI Coding Tools:**
+- Claude Code, Aider, Cursor, Continue, Cody, and more
+
+**This template is designed for non-programmers** who want to leverage AI-assisted development workflows.
 
 ## Quick Start
 
-1. **Fork or clone this repository** for your new project
-2. **Customize the Domain Section** below with your project's domain expertise
-3. **Update the Project Structure** to match your needs
-4. **Start working** - tell Claude what you want to build!
+1. **Fork or clone this repository**
+2. **Configure your LLM provider** (see `.llm/README.md`)
+3. **Set your API key** as an environment variable
+4. **Start your AI assistant** and describe what you want to build
+
+---
+
+## LLM Provider Setup
+
+See `.llm/README.md` for detailed setup instructions.
+
+### Quick Configuration
+
+```bash
+# 1. Copy the config template
+cp .llm/config.template.json .llm/config.json
+
+# 2. Set your API key (add to ~/.bashrc or ~/.zshrc)
+export LLM_API_KEY="your-api-key"
+
+# 3. Start your AI tool
+# For Claude Code:
+claude
+
+# For Aider (works with multiple providers):
+aider --model gpt-4o  # or --model claude-3-opus
+```
 
 ---
 
@@ -49,7 +83,7 @@ Replace this section with your project's domain context. Examples:
 ```
 
 **Agent Domain Expertise**:
-All agents should understand your project's domain to make informed decisions. Update the agent files in `.claude/agents/` to include relevant domain expertise.
+All agents should understand your project's domain to make informed decisions. Update the agent files in `.agents/` to include relevant domain expertise.
 
 ---
 
@@ -57,56 +91,37 @@ All agents should understand your project's domain to make informed decisions. U
 
 ```
 YourProject/
-├── .claude/                 # Claude Code configuration
-│   ├── agents/             # Agent role definitions
-│   │   ├── team-leader-agent.md   # Orchestrator and planner
-│   │   ├── it-agent.md            # Infrastructure specialist
-│   │   ├── architect-agent.md     # System designer
-│   │   ├── developer-agent.md     # Implementation specialist
-│   │   └── tester-agent.md        # QA specialist
-│   └── settings.json       # Project settings
+├── .agents/                 # Agent role definitions
+│   ├── team-leader-agent.md     # Orchestrator and planner
+│   ├── it-agent.md              # Infrastructure specialist
+│   ├── architect-agent.md       # System designer
+│   ├── developer-agent.md       # Implementation specialist
+│   └── tester-agent.md          # QA specialist
+├── .llm/                    # LLM provider configuration
+│   ├── config.template.json     # Config template
+│   ├── config.json              # Your config (gitignored)
+│   └── README.md                # Setup instructions
 ├── .github/                 # GitHub configuration
-│   ├── workflows/          # GitHub Actions for peer review
-│   └── scripts/            # Automation scripts
-├── docs/                   # Project documentation
-│   ├── tasks/              # Task management system
-│   │   ├── it/             # Tasks for IT Agent
-│   │   ├── architect/      # Tasks for Architect Agent
-│   │   ├── developer/      # Tasks for Developer Agent
-│   │   └── tester/         # Tasks for Tester Agent
-│   ├── architecture/       # Architecture docs
-│   │   ├── eps/            # External Product Specifications
-│   │   ├── eds/            # External Design Specifications
-│   │   ├── interfaces/     # Interface specifications
-│   │   ├── tasks/          # Development tasks
-│   │   └── decisions/      # Architecture Decision Records
-│   ├── requirements/       # Requirements docs
-│   ├── tests/              # Test documentation
-│   │   ├── plans/          # Test plans
-│   │   ├── reports/        # Test reports
-│   │   └── bugs/           # Bug reports
-│   ├── it/                 # IT documentation
-│   │   ├── build/          # Build system docs
-│   │   ├── releases/       # Release docs
-│   │   └── infrastructure/ # Infrastructure docs
-│   └── team-leader/        # Team leader docs
-│       ├── plans/          # Planning documents
-│       ├── lessons-learned/# Lessons learned
-│       └── scripts/        # Helper scripts
-├── src/                    # Your source code (customize as needed)
-├── tests/                  # Your tests (customize as needed)
-├── release/                # Release artifacts
-├── CLAUDE.md               # This file
-└── README.md               # Project readme
+│   ├── workflows/               # GitHub Actions
+│   └── scripts/                 # Automation scripts
+├── docs/                    # Project documentation
+│   ├── tasks/                   # Task management system
+│   ├── architecture/            # Architecture docs
+│   ├── tests/                   # Test documentation
+│   ├── it/                      # Infrastructure docs
+│   └── team-leader/             # Planning docs
+├── src/                     # Your source code
+├── tests/                   # Your tests
+├── release/                 # Release artifacts
+├── CLAUDE.md                # This file (works with any AI)
+└── README.md                # Project readme
 ```
-
-**Note**: Customize this structure for your project. Add or remove directories as needed.
 
 ---
 
 ## Agent System
 
-This template uses a **multi-agent system** where Claude Code adopts specialized roles based on the task. The agents work together through a structured workflow.
+This template uses a **multi-agent system** where the AI assistant adopts specialized roles based on the task. The agents work together through a structured workflow.
 
 ### Agent Roles
 
@@ -187,17 +202,12 @@ Agents work in separate git worktrees to enable parallel work:
 
 ```bash
 # Team Leader creates worktrees
-git worktree add ../worktree-architect claude/architect-{project}-{sessionID}
-git worktree add ../worktree-developer claude/developer-{project}-{sessionID}
+git worktree add ../worktree-architect agent/architect-{project}-{sessionID}
+git worktree add ../worktree-developer agent/developer-{project}-{sessionID}
 
 # Each agent works independently in their worktree
 # When done, merge back via PR
 ```
-
-**Branch Naming Convention**:
-- Format: `claude/{agent}-{project}-{sessionID}`
-- Example: `claude/developer-myproject-abc123`
-- This is REQUIRED for remote pushes to succeed
 
 ### Peer Review Process
 
@@ -225,7 +235,7 @@ Before PRs go to user review:
 1. Copy `TEMPLATE.md` to new file
 2. Fill in objective, requirements, deliverables
 3. Set status and priority
-4. Tell Claude to process the task
+4. Tell your AI assistant to process the task
 
 ### Task Lifecycle
 
@@ -246,7 +256,7 @@ pending → in-progress → completed → archived
 
 ### Git Workflow
 - Main branch: `master` or `main`
-- Feature branches: `claude/{agent}-{project}-{sessionID}`
+- Feature branches follow your naming convention
 - Always test before committing
 
 ### Testing Strategy
@@ -266,7 +276,10 @@ pending → in-progress → completed → archived
 Set up a GitHub token for automated PR creation:
 
 ```bash
-# Store token in .github_token (excluded from git)
+# Store token as environment variable (recommended)
+export GITHUB_TOKEN="your_github_token"
+
+# Or store in a file (gitignored)
 echo "your_github_token" > .github_token
 ```
 
@@ -275,32 +288,32 @@ echo "your_github_token" > .github_token
 Agents create PRs using:
 
 ```bash
-export GH_TOKEN=$(cat .github_token)
+export GH_TOKEN=$GITHUB_TOKEN
 gh pr create --base master --head <branch> \
   --title "Title" \
   --body "Description"
 ```
 
-### Automated Peer Review
-
-The `.github/workflows/` directory contains workflows for automated peer review assignment and tracking.
-
 ---
 
 ## Customization Guide
 
-### 1. Update Domain Expertise
+### 1. Configure Your LLM Provider
 
-Edit each agent file in `.claude/agents/` to include your project's domain knowledge.
+Edit `.llm/config.json` with your provider settings. See `.llm/README.md` for details.
 
-### 2. Customize Project Structure
+### 2. Update Domain Expertise
+
+Edit each agent file in `.agents/` to include your project's domain knowledge.
+
+### 3. Customize Project Structure
 
 Modify the directory structure to match your project's needs:
 - Add source directories for your modules
 - Configure build systems for your technology stack
 - Set up test directories appropriate for your frameworks
 
-### 3. Configure Build System
+### 4. Configure Build System
 
 Add build scripts appropriate for your technology:
 - Makefiles for C/C++ projects
@@ -308,34 +321,75 @@ Add build scripts appropriate for your technology:
 - requirements.txt for Python
 - build.gradle for Java
 
-### 4. Update GitHub Workflows
+### 5. Update GitHub Workflows
 
 Modify `.github/workflows/` for your CI/CD needs.
 
 ---
 
-## Notes for Claude
+## Using with Different AI Tools
+
+### Claude Code
+```bash
+npm install -g @anthropic-ai/claude-code
+export ANTHROPIC_API_KEY="your-key"
+cd your-project
+claude
+```
+
+### Aider
+```bash
+pip install aider-chat
+export OPENAI_API_KEY="your-key"  # or ANTHROPIC_API_KEY
+cd your-project
+aider
+```
+
+### Cursor
+1. Download from cursor.sh
+2. Open your project
+3. Use Cmd/Ctrl+K for AI assistance
+
+### Continue (VS Code)
+1. Install Continue extension
+2. Configure your API key
+3. Use the Continue panel
+
+---
+
+## Notes for AI Assistants
 
 - Automatically adopt appropriate agent role based on task
-- Read agent configs in `.claude/agents/` for responsibilities
+- Read agent configs in `.agents/` for responsibilities
 - Follow peer review process before creating PRs
 - Document decisions in appropriate docs folders
-- Keep this CLAUDE.md updated when structure changes
+- Keep this file updated when structure changes
+- API keys are stored as environment variables, never in code
 
 ---
 
 ## Getting Started
 
-1. **Describe your project** to Claude
-2. Claude will ask clarifying questions
-3. Work begins with Team Leader analysis
-4. Agents collaborate to complete the work
-5. Review and merge PRs
+1. **Configure your AI provider** (see `.llm/README.md`)
+2. **Describe your project** to the AI assistant
+3. The AI will ask clarifying questions
+4. Work begins with Team Leader analysis
+5. Agents collaborate to complete the work
+6. Review and merge PRs
 
 **Example first request**:
 "I want to build a web application for managing tasks. It should have user authentication, task creation, and notifications."
 
 ---
 
-**Template Version**: 1.0
+## Security Best Practices
+
+- **Never commit API keys** - Use environment variables
+- **Use .gitignore** - API keys and secrets are automatically excluded
+- **Rotate keys regularly** - Especially if accidentally exposed
+- **Use least privilege** - Only grant necessary API permissions
+
+---
+
+**Template Version**: 2.0
 **Last Updated**: 2026-01-25

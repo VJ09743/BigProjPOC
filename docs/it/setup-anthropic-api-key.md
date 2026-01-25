@@ -80,15 +80,15 @@ The automated multi-agent peer review system uses **Claude API** (Anthropic) to 
 
 1. **Create a test branch**:
    ```bash
-   git checkout -b claude/developer-test-12345
+   git checkout -b agent/developer-test-12345
    echo "test" > test.txt
    git add test.txt
    git commit -m "Test: Automated review system"
-   git push -u origin claude/developer-test-12345
+   git push -u origin agent/developer-test-12345
    ```
 
 2. **Create PR**:
-   - Go to GitHub and create PR from `claude/developer-test-12345` to `master`
+   - Go to GitHub and create PR from `agent/developer-test-12345` to `master`
 
 3. **Check Workflow**:
    - Go to "Actions" tab
@@ -169,7 +169,7 @@ The automated multi-agent peer review system uses **Claude API** (Anthropic) to 
 **Cause**: Multiple possible causes
 
 **Solutions**:
-1. **Check branch name**: Must match `claude/{agent}-{project}-{sessionID}`
+1. **Check branch name**: Must match `agent/{agent}-{project}-{sessionID}`
 2. **Check PR target**: Must target `master` or `main` branch
 3. **Check GitHub Actions**: Ensure Actions are enabled (Settings → Actions)
 4. **Check permissions**: Verify "Read and write permissions" are enabled

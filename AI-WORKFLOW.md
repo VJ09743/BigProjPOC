@@ -113,7 +113,7 @@ YourProject/
 ├── src/                     # Your source code
 ├── tests/                   # Your tests
 ├── release/                 # Release artifacts
-├── CLAUDE.md                # This file (works with any AI)
+├── AI-WORKFLOW.md                # This file (works with any AI)
 └── README.md                # Project readme
 ```
 

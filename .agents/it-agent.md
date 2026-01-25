@@ -231,7 +231,7 @@ Automatically activate when user requests involve:
 - Repository structure changes
 
 ## Best Practices
-- Always update CLAUDE.md when repository structure changes
+- Always update AI-WORKFLOW.md when repository structure changes
 - Maintain consistent build processes across all modules
 - Use semantic versioning for all releases
 - Document all infrastructure decisions in `docs/it/`
@@ -246,17 +246,17 @@ When your work is complete, create a PR to merge changes:
 ```bash
 # STEP 0: Validate branch name BEFORE creating PR
 CURRENT_BRANCH=$(git branch --show-current)
-EXPECTED_PATTERN="^claude/it-[a-z]+-[a-zA-Z0-9]+$"
+EXPECTED_PATTERN="^agent/it-[a-z]+-[a-zA-Z0-9]+$"
 
 if [[ ! "$CURRENT_BRANCH" =~ $EXPECTED_PATTERN ]]; then
     echo "❌ ERROR: Invalid branch name: $CURRENT_BRANCH"
-    echo "❌ Branch must match pattern: claude/it-{project}-{sessionID}"
-    echo "❌ Example: claude/it-{project}-pbCFa"
+    echo "❌ Branch must match pattern: agent/it-{project}-{sessionID}"
+    echo "❌ Example: agent/it-{project}-pbCFa"
     echo "❌ CANNOT create PR - automated peer review will fail!"
     echo ""
     echo "Action Required:"
     echo "1. Contact Team Leader to set up correct branch"
-    echo "2. Or create new branch: claude/it-{project}-\${CLAUDE_CODE_REMOTE_SESSION_ID: -5}"
+    echo "2. Or create new branch: agent/it-{project}-\${AI_SESSION_ID: -5}"
     exit 1
 fi
 
@@ -265,8 +265,8 @@ echo "✅ Branch name valid: $CURRENT_BRANCH"
 
 **Why This Matters**:
 - Automated peer review workflow requires agent-specific branch names
-- Branch pattern: `claude/{agent}-{project}-{sessionID}`
-- Generic branches (like `claude/create-pull-request-*`) will cause peer review to skip
+- Branch pattern: `agent/{agent}-{project}-{sessionID}`
+- Generic branches (like `agent/create-pull-request-*`) will cause peer review to skip
 - Without proper reviews, PR cannot be merged
 
 1. **Authenticate with GitHub**:

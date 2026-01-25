@@ -6,12 +6,12 @@ A **provider-agnostic template** for AI-assisted multi-agent development workflo
 
 | Provider | Models | Tools |
 |----------|--------|-------|
-| **Anthropic** | Claude 3.5, Claude 3 Opus | Claude Code |
+| **Anthropic** | Claude 3.5, Opus | Any compatible CLI |
 | **OpenAI** | GPT-4o, GPT-4 Turbo | Aider, Cursor |
 | **Azure** | GPT-4, GPT-3.5 | Aider, Cursor |
-| **Google** | Gemini Pro, Gemini Ultra | - |
-| **Ollama** | Llama 3, Mistral, CodeLlama | Aider |
-| **Any** | OpenAI-compatible APIs | Custom |
+| **Google** | Gemini Pro, Ultra | Custom |
+| **Ollama** | Llama 3, Mistral | Aider |
+| **Any** | OpenAI-compatible | Custom |
 
 ## What is this?
 
@@ -40,12 +40,10 @@ cd my-project
 cp .llm/config.template.json .llm/config.json
 export LLM_API_KEY="your-api-key"
 
-# 3. Start your AI tool
-claude           # For Claude Code
+# 3. Start your AI tool and describe what you want to build
 aider            # For Aider
 cursor .         # For Cursor
-
-# 4. Describe what you want to build
+# or any other AI coding assistant
 ```
 
 ## Features
@@ -64,7 +62,6 @@ cursor .         # For Cursor
 ├── .llm/                # LLM provider configuration
 │   ├── config.template.json  # Config template
 │   └── README.md             # Setup instructions
-├── .claude/             # Claude Code compatibility
 ├── .github/workflows/   # GitHub Actions
 ├── docs/                # Documentation templates
 │   ├── tasks/           # Task management
@@ -73,7 +70,7 @@ cursor .         # For Cursor
 │   └── it/              # Infrastructure docs
 ├── src/                 # Your source code
 ├── tests/               # Your tests
-└── CLAUDE.md            # Main configuration (works with any AI)
+└── AI-WORKFLOW.md       # Main workflow configuration
 ```
 
 ## How It Works
@@ -87,18 +84,18 @@ cursor .         # For Cursor
 
 ## Setup by Provider
 
-### Anthropic (Claude)
-```bash
-export ANTHROPIC_API_KEY="sk-ant-..."
-npm install -g @anthropic-ai/claude-code
-claude
-```
-
 ### OpenAI (GPT-4)
 ```bash
 export OPENAI_API_KEY="sk-..."
 pip install aider-chat
 aider
+```
+
+### Anthropic
+```bash
+export ANTHROPIC_API_KEY="sk-ant-..."
+pip install aider-chat
+aider --model claude-3-opus-20240229
 ```
 
 ### Ollama (Local)

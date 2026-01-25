@@ -57,8 +57,8 @@ jobs:
             console.log(`Branch: ${branchName}`);
             console.log(`Author: ${prAuthor}`);
 
-            // Extract agent type from branch name pattern: claude/{agent}-{project}-{sessionID}
-            const branchPattern = /^claude\/([a-z-]+)-([a-z-]+)-([a-zA-Z0-9]+)$/;
+            // Extract agent type from branch name pattern: agent/{agent}-{project}-{sessionID}
+            const branchPattern = /^agent\/([a-z-]+)-([a-z-]+)-([a-zA-Z0-9]+)$/;
             const match = branchName.match(branchPattern);
 
             if (!match) {

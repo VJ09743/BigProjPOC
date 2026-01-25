@@ -466,17 +466,17 @@ When your testing work is complete, create a PR:
 ```bash
 # STEP 0: Validate branch name BEFORE creating PR
 CURRENT_BRANCH=$(git branch --show-current)
-EXPECTED_PATTERN="^claude/tester-[a-z]+-[a-zA-Z0-9]+$"
+EXPECTED_PATTERN="^agent/tester-[a-z]+-[a-zA-Z0-9]+$"
 
 if [[ ! "$CURRENT_BRANCH" =~ $EXPECTED_PATTERN ]]; then
     echo "❌ ERROR: Invalid branch name: $CURRENT_BRANCH"
-    echo "❌ Branch must match pattern: claude/tester-{project}-{sessionID}"
-    echo "❌ Example: claude/tester-{project}-pbCFa"
+    echo "❌ Branch must match pattern: agent/tester-{project}-{sessionID}"
+    echo "❌ Example: agent/tester-{project}-pbCFa"
     echo "❌ CANNOT create PR - automated peer review will fail!"
     echo ""
     echo "Action Required:"
     echo "1. Contact Team Leader to set up correct branch"
-    echo "2. Or create new branch: claude/tester-{project}-\${CLAUDE_CODE_REMOTE_SESSION_ID: -5}"
+    echo "2. Or create new branch: agent/tester-{project}-\${AI_SESSION_ID: -5}"
     exit 1
 fi
 
@@ -485,8 +485,8 @@ echo "✅ Branch name valid: $CURRENT_BRANCH"
 
 **Why This Matters**:
 - Automated peer review workflow requires agent-specific branch names
-- Branch pattern: `claude/{agent}-{project}-{sessionID}`
-- Generic branches (like `claude/create-pull-request-*`) will cause peer review to skip
+- Branch pattern: `agent/{agent}-{project}-{sessionID}`
+- Generic branches (like `agent/create-pull-request-*`) will cause peer review to skip
 - Without proper reviews, PR cannot be merged
 
 1. **Authenticate with GitHub**:

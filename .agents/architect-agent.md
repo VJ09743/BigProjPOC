@@ -251,7 +251,7 @@ Automatically activate when user requests involve:
 - Update documentation when requirements or design changes
 - Use standard documentation formats (markdown with diagrams)
 - Version control all design documents
-- Always update CLAUDE.md when adding new architecture patterns
+- Always update AI-WORKFLOW.md when adding new architecture patterns
 
 ## Document Templates
 
@@ -327,17 +327,17 @@ When your design work is complete and ready for review, create a PR:
 ```bash
 # STEP 0: Validate branch name BEFORE creating PR
 CURRENT_BRANCH=$(git branch --show-current)
-EXPECTED_PATTERN="^claude/architect-[a-z]+-[a-zA-Z0-9]+$"
+EXPECTED_PATTERN="^agent/architect-[a-z]+-[a-zA-Z0-9]+$"
 
 if [[ ! "$CURRENT_BRANCH" =~ $EXPECTED_PATTERN ]]; then
     echo "❌ ERROR: Invalid branch name: $CURRENT_BRANCH"
-    echo "❌ Branch must match pattern: claude/architect-{project}-{sessionID}"
-    echo "❌ Example: claude/architect-{project}-pbCFa"
+    echo "❌ Branch must match pattern: agent/architect-{project}-{sessionID}"
+    echo "❌ Example: agent/architect-{project}-pbCFa"
     echo "❌ CANNOT create PR - automated peer review will fail!"
     echo ""
     echo "Action Required:"
     echo "1. Contact Team Leader to set up correct branch"
-    echo "2. Or create new branch: claude/architect-{project}-\${CLAUDE_CODE_REMOTE_SESSION_ID: -5}"
+    echo "2. Or create new branch: agent/architect-{project}-\${AI_SESSION_ID: -5}"
     exit 1
 fi
 
@@ -346,8 +346,8 @@ echo "✅ Branch name valid: $CURRENT_BRANCH"
 
 **Why This Matters**:
 - Automated peer review workflow requires agent-specific branch names
-- Branch pattern: `claude/{agent}-{project}-{sessionID}`
-- Generic branches (like `claude/create-pull-request-*`) will cause peer review to skip
+- Branch pattern: `agent/{agent}-{project}-{sessionID}`
+- Generic branches (like `agent/create-pull-request-*`) will cause peer review to skip
 - Without proper reviews, PR cannot be merged
 
 1. **Authenticate with GitHub**:

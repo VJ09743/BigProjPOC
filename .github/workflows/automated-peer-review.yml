@@ -1,6 +1,6 @@
 name: Automated Multi-Agent Peer Review
 
-# This workflow implements automated sequential peer review using Claude API.
+# This workflow implements automated sequential peer review using LLM APIs.
 #
 # MANUAL TRIGGER ONLY - Saves API costs by running only when you click "Run workflow"
 #
@@ -11,8 +11,8 @@ name: Automated Multi-Agent Peer Review
 # 4. If 2+ approvals → Mark PR as peer-review:approved
 #
 # Requirements:
-# - ANTHROPIC_API_KEY secret must be configured in repository
-# - Claude API access
+# - LLM_API_KEY secret must be configured in repository
+# - Supports: Anthropic, OpenAI, or other providers (configure in .llm/config.json)
 
 on:
   workflow_dispatch:
@@ -63,7 +63,7 @@ jobs:
             });
 
             const branchName = pr.data.head.ref;
-            const branchPattern = /^claude\/([a-z-]+)-([a-z-]+)-([a-zA-Z0-9]+)$/;
+            const branchPattern = /^agent\/([a-z-]+)-([a-z-]+)-([a-zA-Z0-9]+)$/;
             const match = branchName.match(branchPattern);
 
             if (!match) {
@@ -149,7 +149,7 @@ jobs:
         id: review_team_leader
         if: steps.reviewers.outputs.skip != 'true' && contains(fromJSON(steps.reviewers.outputs.reviewers), 'team-leader')
         env:
-          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          LLM_API_KEY: ${{ secrets.LLM_API_KEY }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           node .github/scripts/automated-review.js \
@@ -162,7 +162,7 @@ jobs:
         id: review_architect
         if: steps.reviewers.outputs.skip != 'true' && contains(fromJSON(steps.reviewers.outputs.reviewers), 'architect')
         env:
-          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          LLM_API_KEY: ${{ secrets.LLM_API_KEY }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           node .github/scripts/automated-review.js \
@@ -175,7 +175,7 @@ jobs:
         id: review_tester
         if: steps.reviewers.outputs.skip != 'true' && contains(fromJSON(steps.reviewers.outputs.reviewers), 'tester')
         env:
-          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          LLM_API_KEY: ${{ secrets.LLM_API_KEY }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           node .github/scripts/automated-review.js \
@@ -188,7 +188,7 @@ jobs:
         id: review_developer
         if: steps.reviewers.outputs.skip != 'true' && contains(fromJSON(steps.reviewers.outputs.reviewers), 'developer')
         env:
-          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          LLM_API_KEY: ${{ secrets.LLM_API_KEY }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           node .github/scripts/automated-review.js \

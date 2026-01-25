@@ -37,7 +37,7 @@ To create a task:
 ```
 
 **Automatic Trigger** (using git hooks):
-See `.claude/hooks/post-commit-check-tasks.sh` (if available)
+See `.agent/hooks/post-commit-check-tasks.sh` (if available)
 
 ### 3. Task Lifecycle
 

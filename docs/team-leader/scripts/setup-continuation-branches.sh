@@ -10,12 +10,12 @@ set -e
 PROJECT="${1:-{project}}"
 
 # Get current session ID (last 5 chars)
-if [ -z "$CLAUDE_CODE_REMOTE_SESSION_ID" ]; then
-    echo "❌ ERROR: CLAUDE_CODE_REMOTE_SESSION_ID environment variable not set"
+if [ -z "$AI_SESSION_ID" ]; then
+    echo "❌ ERROR: AI_SESSION_ID environment variable not set"
     exit 1
 fi
 
-SESSION_ID="${CLAUDE_CODE_REMOTE_SESSION_ID: -5}"
+SESSION_ID="${AI_SESSION_ID: -5}"
 
 echo "========================================="
 echo "Setup Continuation Branches"
@@ -46,7 +46,7 @@ for AGENT in architect developer tester it; do
     echo "   Latest commit: $COMMIT_SHORT"
 
     # Construct new branch name
-    NEW_BRANCH="claude/${AGENT}-${PROJECT}-${SESSION_ID}"
+    NEW_BRANCH="agent/${AGENT}-${PROJECT}-${SESSION_ID}"
 
     # Check if branch already exists
     if git show-ref --verify --quiet "refs/heads/$NEW_BRANCH"; then
@@ -69,6 +69,6 @@ echo ""
 echo "Next steps:"
 echo "1. Verify branches in each worktree"
 echo "2. Push to remote when ready:"
-echo "   git push -u origin claude/{agent}-${PROJECT}-${SESSION_ID}"
+echo "   git push -u origin agent/{agent}-${PROJECT}-${SESSION_ID}"
 echo "3. Create PR from agent-specific branch"
 echo ""

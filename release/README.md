@@ -24,7 +24,7 @@ Releases are created by the IT Agent following this workflow:
 
 ## Creating a Release
 
-Tell Claude: "Create a release for version X.Y.Z"
+Tell your AI assistant: "Create a release for version X.Y.Z"
 
 The IT Agent will:
 1. Build all modules

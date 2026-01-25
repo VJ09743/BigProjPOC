@@ -35,8 +35,8 @@ Example assignment:
 
 **Agent**:
 - Commits all changes to their branch
-- Branch MUST follow naming: `claude/{agent}-{project}-{sessionID}`
-  - Example: `claude/developer-rtdcs-NxeRq`
+- Branch MUST follow naming: `agent/{agent}-{project}-{sessionID}`
+  - Example: `agent/developer-rtdcs-NxeRq`
   - This naming is CRITICAL for automated review to work
 - Pushes branch to GitHub
 - Creates PR using `gh pr create`
@@ -45,7 +45,7 @@ Example PR creation:
 ```bash
 export GH_TOKEN=$(cat /home/user/BigProjPOC/.github_token)
 
-gh pr create --base master --head claude/developer-rtdcs-NxeRq \
+gh pr create --base master --head agent/developer-rtdcs-NxeRq \
   --title "Implement temperature monitoring" \
   --body "$(cat <<'EOF'
 ## Summary
@@ -76,7 +76,7 @@ EOF
 ### Step 6: Automated Multi-Agent Review Runs
 
 **GitHub Actions Workflow**:
-- Detects agent type from branch name (e.g., `developer` from `claude/developer-rtdcs-NxeRq`)
+- Detects agent type from branch name (e.g., `developer` from `agent/developer-rtdcs-NxeRq`)
 - Determines reviewers based on agent type:
   - **Developer PR** → Reviewed by: Architect + Tester (2 reviewers)
   - **Architect PR** → Reviewed by: Developer + Tester (2 reviewers)
@@ -151,7 +151,7 @@ When you re-trigger the workflow on a PR that already has reviews:
 
 ## Key Points
 
-✅ **Branch naming is CRITICAL**: Must be `claude/{agent}-{project}-{sessionID}`
+✅ **Branch naming is CRITICAL**: Must be `agent/{agent}-{project}-{sessionID}`
 ✅ **Manual trigger only**: Saves API costs by running only when you click
 ✅ **Focused reviews**: Only critical issues (Design, Functionality, Consistency, Clean Code)
 ✅ **Limited comments**: Maximum 10 per reviewer - prioritizes most important issues
@@ -187,7 +187,7 @@ User reviews → Merges (if approved)
 
 - **Workflow**: `.github/workflows/automated-peer-review.yml`
 - **Review Script**: `.github/scripts/automated-review.js`
-- **Agent Definitions**: `.claude/agents/{agent}-agent.md`
+- **Agent Definitions**: `.agent/agents/{agent}-agent.md`
 - **GitHub Token**: `.github_token` (for creating PRs)
 
 ## Cost Optimization

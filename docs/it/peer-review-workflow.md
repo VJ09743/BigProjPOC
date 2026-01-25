@@ -85,12 +85,12 @@ Agents review each other's work:
 
 ### Branch Naming Convention
 
-All agent work uses the pattern: `claude/{agent}-{project}-{sessionID}`
+All agent work uses the pattern: `agent/{agent}-{project}-{sessionID}`
 
 Examples:
-- `claude/developer-rtdcs-pbCFa` (Developer Agent working on RTDCS)
-- `claude/architect-rtdcs-pbCFa` (Architect Agent working on RTDCS)
-- `claude/tester-rtdcs-Xy1Z9` (Tester Agent working on RTDCS)
+- `agent/developer-rtdcs-pbCFa` (Developer Agent working on RTDCS)
+- `agent/architect-rtdcs-pbCFa` (Architect Agent working on RTDCS)
+- `agent/tester-rtdcs-Xy1Z9` (Tester Agent working on RTDCS)
 
 ### Automatic Review Assignment
 
@@ -170,7 +170,7 @@ For each PR, the workflow:
 
 1. **Complete Work** in your dedicated git worktree
 2. **Commit Changes** with clear, descriptive messages
-3. **Push to Remote**: `git push -u origin claude/{agent}-{project}-{sessionID}`
+3. **Push to Remote**: `git push -u origin agent/{agent}-{project}-{sessionID}`
 4. **Create Pull Request** to `master` branch
 5. **Automated Assignment**: Workflow automatically assigns reviewers
 6. **Address Feedback**: Respond to review comments, make requested changes
@@ -213,7 +213,7 @@ For each PR, the workflow:
 - [ ] Code follows project standards and conventions
 - [ ] Commit messages are clear and descriptive
 - [ ] PR description explains what, why, and how
-- [ ] Documentation is updated (CLAUDE.md, README, etc.)
+- [ ] Documentation is updated (AI-WORKFLOW.md, README, etc.)
 
 **Design and Architecture**:
 - [ ] Design patterns are correctly applied
@@ -396,7 +396,7 @@ Labels should be created in the GitHub repository:
 **Symptom**: PR created but no automated review assignment
 
 **Possible Causes**:
-1. Branch name doesn't match pattern `claude/{agent}-{project}-{sessionID}`
+1. Branch name doesn't match pattern `agent/{agent}-{project}-{sessionID}`
 2. PR targets a branch other than `master` or `main`
 3. GitHub Actions are disabled
 
@@ -436,7 +436,7 @@ Labels should be created in the GitHub repository:
 
 **Solution**:
 1. Check branch name: `git branch --show-current`
-2. Ensure format is `claude/{agent}-{project}-{sessionID}`
+2. Ensure format is `agent/{agent}-{project}-{sessionID}`
 3. Agent must be: developer, architect, tester, it, or team-leader
 4. Recreate branch with correct name if needed
 
@@ -458,11 +458,11 @@ Labels should be created in the GitHub repository:
 ### Scenario: Developer Creates PR for BigModuleA Implementation
 
 1. **Developer completes work** in `/home/user/worktree-developer`
-2. **Developer commits and pushes**: `git push -u origin claude/developer-rtdcs-pbCFa`
+2. **Developer commits and pushes**: `git push -u origin agent/developer-rtdcs-pbCFa`
 3. **Developer creates PR** via GitHub API or web interface:
    - Title: "BigModuleA: Implement ThermalMonitor with Unit Tests"
    - Base: `master`
-   - Head: `claude/developer-rtdcs-pbCFa`
+   - Head: `agent/developer-rtdcs-pbCFa`
 
 4. **Workflow triggers automatically**:
    - Detects agent type: `developer`

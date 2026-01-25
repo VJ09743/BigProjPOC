@@ -163,7 +163,7 @@ Once configured, interact with the AI assistant:
 
 ## Adapting Agent Prompts
 
-The agent definitions in `.claude/agents/` work with any LLM. If your tool uses different prompt formats:
+The agent definitions in `.agent/agents/` work with any LLM. If your tool uses different prompt formats:
 
 1. Copy the agent files to your tool's format
 2. Maintain the same role definitions and responsibilities

@@ -290,7 +290,7 @@ git worktree remove ../worktree-developer
 ### Problem: Session IDs Change
 - Each continuation session gets a NEW session ID
 - Old branches become invalid (HTTP 403 on push)
-- Generic branches (like `claude/create-pull-request-*`) break automated peer review
+- Generic branches (like `agent/create-pull-request-*`) break automated peer review
 
 ### Solution: Update Branches with Current Session ID
 
@@ -298,7 +298,7 @@ git worktree remove ../worktree-developer
 
 1. **Get Current Session ID**:
 ```bash
-SESSION_ID="${CLAUDE_CODE_REMOTE_SESSION_ID: -5}"
+SESSION_ID="${AI_SESSION_ID: -5}"
 echo "Current session ID: $SESSION_ID"
 ```
 
@@ -312,14 +312,14 @@ Or **manually set up each worktree**:
 
 ```bash
 PROJECT="{project}"  # or current project name
-SESSION_ID="${CLAUDE_CODE_REMOTE_SESSION_ID: -5}"
+SESSION_ID="${AI_SESSION_ID: -5}"
 
 for AGENT in architect developer tester it; do
     WORKTREE="/home/user/worktree-${AGENT}"
     if [ -d "$WORKTREE" ]; then
         cd "$WORKTREE"
         LATEST_COMMIT=$(git rev-parse HEAD)
-        NEW_BRANCH="claude/${AGENT}-${PROJECT}-${SESSION_ID}"
+        NEW_BRANCH="agent/${AGENT}-${PROJECT}-${SESSION_ID}"
 
         # Create new branch with current session ID
         git checkout -b "$NEW_BRANCH" "$LATEST_COMMIT" 2>/dev/null || git checkout "$NEW_BRANCH"
@@ -330,12 +330,12 @@ done
 
 3. **Verify Branch Names**:
 ```bash
-# Each branch MUST match pattern: claude/{agent}-{project}-{sessionID}
-# Example: claude/developer-{project}-NxeRq
+# Each branch MUST match pattern: agent/{agent}-{project}-{sessionID}
+# Example: agent/developer-{project}-NxeRq
 for AGENT in architect developer tester it; do
     cd /home/user/worktree-${AGENT} 2>/dev/null || continue
     BRANCH=$(git branch --show-current)
-    if [[ "$BRANCH" =~ ^claude/${AGENT}-[a-z]+-[a-zA-Z0-9]+$ ]]; then
+    if [[ "$BRANCH" =~ ^agent/${AGENT}-[a-z]+-[a-zA-Z0-9]+$ ]]; then
         echo "✅ $AGENT: $BRANCH (VALID)"
     else
         echo "❌ $AGENT: $BRANCH (INVALID - will break automated peer review!)"
@@ -351,12 +351,12 @@ done
 ### What NOT To Do
 
 ❌ **DON'T** use generic branches:
-- `claude/create-pull-request-pbCFa` ← WRONG (breaks peer review)
-- `claude/feature-name-xyz` ← WRONG (no agent type)
+- `agent/create-pull-request-pbCFa` ← WRONG (breaks peer review)
+- `agent/feature-name-xyz` ← WRONG (no agent type)
 
 ✅ **DO** use agent-specific branches:
-- `claude/developer-{project}-NxeRq` ← CORRECT
-- `claude/architect-{project}-NxeRq` ← CORRECT
+- `agent/developer-{project}-NxeRq` ← CORRECT
+- `agent/architect-{project}-NxeRq` ← CORRECT
 
 ### Why This Matters
 
@@ -364,7 +364,7 @@ The automated peer review workflow (`.github/workflows/automated-peer-review.yml
 
 ```javascript
 // From workflow: Determine Reviewers step
-const branchPattern = /^claude\/([a-z-]+)-([a-z-]+)-([a-zA-Z0-9]+)$/;
+const branchPattern = /^agent\/([a-z-]+)-([a-z-]+)-([a-zA-Z0-9]+)$/;
 const match = branchName.match(branchPattern);
 const agentType = match[1];  // e.g., "developer"
 

@@ -6,11 +6,10 @@ This directory contains agent role definitions for the multi-agent workflow. The
 
 | Tool | Provider(s) | Setup |
 |------|-------------|-------|
-| Claude Code | Anthropic | Reads from `.claude/agents/` |
 | Aider | OpenAI, Anthropic, Ollama | Configure in `.aider.conf.yml` |
 | Cursor | OpenAI, Anthropic | Add to `.cursorrules` |
 | Continue | Multiple | Reference in system prompt |
-| Custom | Any | Read these files as context |
+| Any CLI | Any provider | Read these files as context |
 
 ## Agent Files
 
@@ -56,9 +55,6 @@ Agents work together through handoffs:
 
 ## Customizing for Your AI Tool
 
-### For Claude Code
-Already configured via `.claude/agents/` symlink.
-
 ### For Aider
 Add to `.aider.conf.yml`:
 ```yaml
@@ -102,4 +98,4 @@ Replace with your project's domain expertise (healthcare, finance, e-commerce, e
 
 ## Documentation
 
-See `CLAUDE.md` (works with any AI) for full workflow documentation.
+See `AI-WORKFLOW.md` for full workflow documentation.

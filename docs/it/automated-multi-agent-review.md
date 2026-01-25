@@ -52,7 +52,7 @@ The **Automated Multi-Agent Peer Review System** uses Claude API to automaticall
 ### Workflow Triggers
 
 The automated review workflow triggers on:
-- **Pull request opened**: New PR created from `claude/{agent}-*` branch
+- **Pull request opened**: New PR created from `agent/{agent}-*` branch
 - **Pull request synchronize**: New commits pushed to existing PR
 - **Pull request reopened**: Previously closed PR is reopened
 
@@ -89,7 +89,7 @@ Done
 
 ### Agent Selection
 
-Based on PR branch name `claude/{agent}-{project}-{sessionID}`:
+Based on PR branch name `agent/{agent}-{project}-{sessionID}`:
 
 | PR Author | Automated Reviewers |
 |-----------|---------------------|
@@ -105,7 +105,7 @@ Based on PR branch name `claude/{agent}-{project}-{sessionID}`:
 
 ### Phase 1: Initial Review (PR Opened)
 
-1. **Developer** creates PR from `claude/developer-rtdcs-pbCFa`
+1. **Developer** creates PR from `agent/developer-rtdcs-pbCFa`
 2. **Workflow triggers** automatically
 3. **Team Leader Agent** reviews:
    - Fetches PR diff and files
@@ -251,7 +251,7 @@ After merging this PR:
 2. **Verify GitHub Actions permissions** (see 5.2 above)
 3. **Test with a sample PR**:
    ```bash
-   # Create a test PR from a claude/developer-test-xxxxx branch
+   # Create a test PR from a agent/developer-test-xxxxx branch
    # Watch workflow run in Actions tab
    # Check PR comments for agent reviews
    ```
@@ -423,7 +423,7 @@ After 2+ approvals:
 **Symptoms**: PR created but no automated reviews appear
 
 **Possible Causes**:
-1. Branch name doesn't match pattern `claude/{agent}-{project}-{sessionID}`
+1. Branch name doesn't match pattern `agent/{agent}-{project}-{sessionID}`
 2. PR targets branch other than `master` or `main`
 3. GitHub Actions disabled
 4. ANTHROPIC_API_KEY not configured

@@ -105,21 +105,21 @@ The Tester should understand the domain to design comprehensive and relevant tes
 - Define test strategies (component, integration, system, regression)
 - Identify test scenarios and edge cases
 - Estimate testing effort
-- Document test plans in `docs/tests/plans/`
+- Document test plans in `project-management/quality/plans/`
 
 ### Component Testing
 - Test individual components in isolation
 - Verify component behavior against specifications
 - Test component interfaces
 - Create component test suites
-- Store component tests in `<module>/tests/component/`
+- Store component tests in `modules/*/test/component/`
 
 ### System Testing
 - Test complete system functionality end-to-end
 - Verify system behavior against EPS requirements
 - Test system integration between modules
 - Perform acceptance testing
-- Store system tests in `<module>/tests/system/` or `tests/system/`
+- Store system tests in `modules/*/test/system/` or `modules/*/test/system/`
 
 ### Test Implementation
 - Write automated test scripts
@@ -139,24 +139,24 @@ The Tester should understand the domain to design comprehensive and relevant tes
 - Prioritize issues by severity and impact
 - Report bugs to Developer agent
 - Verify bug fixes
-- Maintain bug tracking documentation in `docs/tests/bugs/`
+- Maintain bug tracking documentation in `project-management/quality/bugs/`
 
 ### Test Documentation
 - Document test cases and test results
 - Create test reports and metrics
 - Maintain test coverage documentation
 - Document known issues and limitations
-- Store documentation in `docs/tests/`
+- Store documentation in `project-management/quality/`
 
 ## Output Locations
-- **Test Plans**: `docs/tests/plans/`
-- **Test Reports**: `docs/tests/reports/`
-- **Bug Reports**: `docs/tests/bugs/`
-- **Test Documentation**: `docs/tests/documentation/`
-- **Component Tests**: `<module>/tests/component/`
-- **System Tests**: `<module>/tests/system/` or `tests/system/`
-- **Integration Tests**: `<module>/tests/integration/`
-- **Test Data**: `<module>/tests/data/`
+- **Test Plans**: `project-management/quality/plans/`
+- **Test Reports**: `project-management/quality/reports/`
+- **Bug Reports**: `project-management/quality/bugs/`
+- **Test Documentation**: `project-management/quality/documentation/`
+- **Component Tests**: `modules/*/test/component/`
+- **System Tests**: `modules/*/test/system/` or `modules/*/test/system/`
+- **Integration Tests**: `modules/*/test/integration/`
+- **Test Data**: `modules/*/test/data/`
 
 ## Handoffs & Collaboration
 
@@ -188,7 +188,7 @@ When receiving a new task, ALWAYS:
   - **Success Criteria**: How will we know this is done correctly?
 
 ### 2. Document Understanding
-Create or update a memory file in `docs/tests/documentation/` to record:
+Create or update a memory file in `project-management/quality/documentation/` to record:
 - Task understanding and interpretation
 - Key testing decisions and rationale
 - Important context for future work
@@ -250,7 +250,7 @@ Get Approval → Execute → Document Results → Complete
    - Review requirements and design specifications
    - Create comprehensive test plan
    - Identify test scenarios and cases
-   - Document in `docs/tests/plans/`
+   - Document in `project-management/quality/plans/`
 
 2. **Test Design**
    - Design test cases based on specifications
@@ -262,20 +262,20 @@ Get Approval → Execute → Document Results → Complete
    - Test individual components
    - Verify component interfaces
    - Test component behavior in isolation
-   - Create component test suites in `<module>/tests/component/`
+   - Create component test suites in `modules/*/test/component/`
 
 4. **Integration Testing**
    - Test component interactions
    - Verify data flow between components
    - Test module integration
-   - Create integration tests in `<module>/tests/integration/`
+   - Create integration tests in `modules/*/test/integration/`
 
 5. **System Testing**
    - Test complete end-to-end functionality
    - Verify against EPS requirements
    - Test user workflows
    - Perform acceptance testing
-   - Create system tests in `tests/system/`
+   - Create system tests in `modules/*/test/system/`
 
 6. **Bug Reporting**
    - Document bugs clearly with:
@@ -284,7 +284,7 @@ Get Approval → Execute → Document Results → Complete
      - Expected vs actual behavior
      - Environment details
    - Report to Developer agent
-   - Store in `docs/tests/bugs/`
+   - Store in `project-management/quality/bugs/`
 
 7. **Verification & Sign-off**
    - Verify bug fixes
@@ -475,7 +475,7 @@ if [[ ! "$CURRENT_BRANCH" =~ $EXPECTED_PATTERN ]]; then
     echo "❌ CANNOT create PR - automated peer review will fail!"
     echo ""
     echo "Action Required:"
-    echo "1. Contact Team Leader to set up correct branch"
+    echo "1. Contact Project Manager to set up correct branch"
     echo "2. Or create new branch: agent/tester-{project}-\${AI_SESSION_ID: -5}"
     exit 1
 fi

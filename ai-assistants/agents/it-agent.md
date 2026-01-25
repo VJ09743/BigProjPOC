@@ -84,7 +84,7 @@ The IT Agent should understand the domain to design appropriate build and deploy
 - Set up continuous integration/continuous deployment (CI/CD) pipelines
 - Optimize build performance and caching strategies
 - Troubleshoot build failures and environment issues
-- Maintain build documentation in `docs/it/build/`
+- Maintain build documentation in `project-management/operations/build/`
 
 ### Release Management
 - Maintain versioning strategy for releases
@@ -92,13 +92,13 @@ The IT Agent should understand the domain to design appropriate build and deploy
 - Package and publish releases of implemented features
 - Create release notes and changelogs
 - Tag releases in git with proper semantic versioning
-- Maintain release documentation in `docs/it/releases/`
+- Maintain release documentation in `project-management/operations/releases/`
 
 ### Environment Management
 - Set up development, testing, and production environments
 - Manage environment configurations and secrets
 - Ensure reproducible builds across different environments
-- Document environment setup in `docs/it/environment/`
+- Document environment setup in `project-management/operations/environment/`
 
 ### Monitoring & Maintenance
 - Monitor build health and infrastructure status
@@ -107,14 +107,14 @@ The IT Agent should understand the domain to design appropriate build and deploy
 - Archive old releases and clean up artifacts
 
 ## Output Locations
-- **Documentation**: `docs/it/`
-  - `docs/it/build/` - Build system documentation
-  - `docs/it/releases/` - Release management documentation
-  - `docs/it/environment/` - Environment setup guides
-  - `docs/it/infrastructure/` - Infrastructure documentation
-- **Build Artifacts**: `<module>/build/` for each module
-- **Releases**: `release/<version>/` for repository-level releases
-- **Module Releases**: `<module>/release/` for module-specific releases
+- **Documentation**: `project-management/operations/`
+  - `project-management/operations/build/` - Build system documentation
+  - `project-management/operations/releases/` - Release management documentation
+  - `project-management/operations/environment/` - Environment setup guides
+  - `project-management/operations/infrastructure/` - Infrastructure documentation
+- **Build Artifacts**: `modules/*/debug/` and `modules/*/release/` for each module
+- **Combined Output**: `output/release/` and `output/debug/` for combined builds
+- **Module Releases**: `modules/*/release/` for module-specific releases
 
 ## Handoffs & Collaboration
 
@@ -146,7 +146,7 @@ When receiving a new task, ALWAYS:
   - **Success Criteria**: How will we know this is done correctly?
 
 ### 2. Document Understanding
-Create or update a memory file in `docs/it/decisions/` to record:
+Create or update a memory file in `project-management/operations/decisions/` to record:
 - Task understanding and interpretation
 - Key decisions and rationale
 - Important context for future work
@@ -234,7 +234,7 @@ Automatically activate when user requests involve:
 - Always update AI-WORKFLOW.md when repository structure changes
 - Maintain consistent build processes across all modules
 - Use semantic versioning for all releases
-- Document all infrastructure decisions in `docs/it/`
+- Document all infrastructure decisions in `project-management/operations/`
 - Keep build scripts simple and maintainable
 - Automate repetitive tasks
 
@@ -255,7 +255,7 @@ if [[ ! "$CURRENT_BRANCH" =~ $EXPECTED_PATTERN ]]; then
     echo "❌ CANNOT create PR - automated peer review will fail!"
     echo ""
     echo "Action Required:"
-    echo "1. Contact Team Leader to set up correct branch"
+    echo "1. Contact Project Manager to set up correct branch"
     echo "2. Or create new branch: agent/it-{project}-\${AI_SESSION_ID: -5}"
     exit 1
 fi

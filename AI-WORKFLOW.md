@@ -143,36 +143,28 @@ This template uses a **multi-agent system** where the AI assistant adopts specia
 
 ### Agent Roles
 
-#### Team Leader Agent
-**Role**: Senior Technical Leader and Task Orchestrator
+#### Project Manager Agent
+**Role**: Client-Facing Project Lead and Team Coordinator
 
 - **ALWAYS activates first** for new user requests
-- Breaks down complex tasks using design patterns
-- Creates git worktrees for independent agent work
-- Facilitates peer review process
-- Ensures quality before user review
+- Primary point of contact with user/client
+- Coordinates work across all agents
+- Assigns tasks to appropriate agents
+- Tracks progress and reports to user
 
-**Activates for**: Any new task from user, coordination, planning
-
-#### IT Agent
-**Role**: Infrastructure and Operations Specialist
-
-- Maintains build infrastructure
-- Manages releases and versioning
-- Sets up CI/CD pipelines
-- Documents infrastructure
-
-**Activates for**: Build systems, releases, infrastructure, tools
+**Activates for**: Any new task from user, coordination, status updates
 
 #### Architect Agent
 **Role**: System Architect and Design Lead
 
-- Gathers and documents requirements
-- Creates specifications (EPS, EDS)
+- Creates technical specifications (EPS, EDS)
 - Designs interfaces and APIs
-- Creates development tasks
+- Creates detailed development tasks
+- Makes architectural decisions
 
 **Activates for**: New features, specifications, design, architecture
+
+**Note**: Architect creates *technical tasks*. Project Manager *assigns* work to agents.
 
 #### Developer Agent
 **Role**: Software Developer and Implementation Specialist
@@ -194,6 +186,26 @@ This template uses a **multi-agent system** where the AI assistant adopts specia
 
 **Activates for**: Testing, QA, validation, bug reporting
 
+#### IT Agent
+**Role**: Infrastructure and Operations Specialist
+
+- Maintains build infrastructure
+- Manages releases and versioning
+- Sets up CI/CD pipelines
+- Documents infrastructure
+
+**Activates for**: Build systems, releases, infrastructure, tools
+
+#### Cost Analyst Agent
+**Role**: Resource Analyst and Cost Optimization Specialist
+
+- Estimates token consumption before expensive operations
+- Warns user before high-cost tasks
+- Logs usage for transparency
+- Recommends cost optimization strategies
+
+**Activates for**: Large operations, cost estimation, usage reporting
+
 ### Agent Workflow
 
 The agents work together in a collaborative workflow:
@@ -201,7 +213,7 @@ The agents work together in a collaborative workflow:
 ```
 User Request
     ↓
-Team Leader (Analyzes & Plans)
+Project Manager (Analyzes & Plans)
     ↓
 Create Git Worktrees → Assign to Agent(s)
     ↓
@@ -219,7 +231,7 @@ User Reviews & Merges
 Agents work in separate git worktrees to enable parallel work:
 
 ```bash
-# Team Leader creates worktrees
+# Project Manager creates worktrees
 git worktree add ../worktree-architect agent/architect-{project}-{sessionID}
 git worktree add ../worktree-developer agent/developer-{project}-{sessionID}
 
@@ -397,7 +409,7 @@ aider
 1. **Configure your AI provider** (see `ai-assistants/provider-setup/README.md`)
 2. **Describe your project** to the AI assistant
 3. The AI will ask clarifying questions
-4. Work begins with Team Leader analysis
+4. Work begins with Project Manager analysis
 5. Agents collaborate to complete the work
 6. Review and merge PRs
 

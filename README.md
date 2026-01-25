@@ -17,11 +17,12 @@ A **provider-agnostic template** for AI-assisted multi-agent development workflo
 
 A structured approach to software development using specialized AI agents:
 
-- **Team Leader**: Orchestrates work and coordinates agents
-- **Architect**: Designs systems and creates specifications
+- **Project Manager**: Client-facing lead, coordinates agents
+- **Architect**: Designs systems and creates technical specifications
 - **Developer**: Implements features and writes code
 - **Tester**: Tests and validates implementations
 - **IT**: Manages infrastructure and releases
+- **Cost Analyst**: Estimates token costs, warns before expensive operations
 
 ## Who is this for?
 
@@ -92,11 +93,13 @@ cursor .         # For Cursor
 ## How It Works
 
 1. You describe what you want to build
-2. Team Leader analyzes and plans the work
-3. Appropriate agents are assigned tasks
-4. Agents work independently in git worktrees
-5. Peer review ensures quality
-6. PRs are created for your review
+2. Project Manager receives request and clarifies needs
+3. Cost Analyst estimates resource usage (warns if expensive)
+4. Architect creates technical specifications
+5. Project Manager assigns tasks to agents
+6. Agents work independently in git worktrees
+7. Peer review ensures quality
+8. PRs are created for your review
 
 ## Setup by Provider
 

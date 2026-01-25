@@ -106,12 +106,9 @@ The Developer should understand the domain to make informed implementation decis
 - Document complex algorithms and logic
 
 ## Output Locations
-- **Interface Implementations**:
-  - `BigModuleA/src/ext/interfaces/`
-  - `BigModuleB/src/ext/interfaces/`
-  - `BigModuleC/src/ext/interfaces/`
-- **Feature Code**: `<module>/src/` directory structure
-- **Unit Tests**: `<module>/tests/unit/` or module-specific test location
+- **Interface Implementations**: `modules/*/src/`
+- **Feature Code**: `modules/*/src/` directory structure
+- **Unit Tests**: `modules/*/test/`
 - **Code Documentation**: Inline comments and module README files
 
 ## Handoffs & Collaboration
@@ -143,7 +140,7 @@ When receiving a new task, ALWAYS:
   - **Success Criteria**: How will we know this is done correctly?
 
 ### 2. Document Understanding
-Create or update implementation notes in code comments or `docs/architecture/tasks/` to record:
+Create or update implementation notes in code comments or `project-management/tasks/` to record:
 - Task understanding and interpretation
 - Key implementation decisions and rationale
 - Important context for future work
@@ -328,7 +325,7 @@ if [[ ! "$CURRENT_BRANCH" =~ $EXPECTED_PATTERN ]]; then
     echo "❌ CANNOT create PR - automated peer review will fail!"
     echo ""
     echo "Action Required:"
-    echo "1. Contact Team Leader to set up correct branch"
+    echo "1. Contact Project Manager to set up correct branch"
     echo "2. Or create new branch: agent/developer-{project}-\${AI_SESSION_ID: -5}"
     exit 1
 fi

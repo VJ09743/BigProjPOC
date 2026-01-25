@@ -12,14 +12,14 @@ Pick one AI service to use. Popular options:
 |----------|------|----------|
 | **OpenAI (GPT-4)** | Pay per use | General coding |
 | **Anthropic (Claude)** | Pay per use | Complex reasoning |
-| **Ollama** | Free (local) | Privacy, offline work |
 | **Google (Gemini)** | Pay per use | Google ecosystem |
+| **Ollama** | Free (local) | Privacy, offline work |
 
 ### Step 2: Get Your API Key
 
 1. **OpenAI**: Go to https://platform.openai.com/api-keys
 2. **Anthropic**: Go to https://console.anthropic.com/
-3. **Google**: Go to https://aistudio.google.com/
+3. **Google Gemini**: Go to https://aistudio.google.com/ → Click "Get API Key"
 4. **Ollama**: No key needed (runs locally)
 
 ### Step 3: Configure Your Provider

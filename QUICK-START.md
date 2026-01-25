@@ -24,7 +24,14 @@ You need an API key from an AI provider. Choose ONE:
 4. Create a new key
 5. Copy the key (starts with `sk-ant-...`)
 
-### Option C: Ollama (Free, runs on your computer)
+### Option C: Google Gemini
+1. Go to https://aistudio.google.com/
+2. Create an account (or sign in with Google)
+3. Click **"Get API Key"**
+4. Create a new key
+5. Copy the key
+
+### Option D: Ollama (Free, runs on your computer)
 1. Go to https://ollama.ai/download
 2. Download and install Ollama
 3. Open terminal and run: `ollama pull llama3`
@@ -46,6 +53,10 @@ source ~/.bashrc
 # For Anthropic:
 echo 'export ANTHROPIC_API_KEY="your-key-here"' >> ~/.bashrc
 source ~/.bashrc
+
+# For Google Gemini:
+echo 'export GOOGLE_API_KEY="your-key-here"' >> ~/.bashrc
+source ~/.bashrc
 ```
 
 ### On Windows:
@@ -53,7 +64,7 @@ source ~/.bashrc
 2. Click "Edit the system environment variables"
 3. Click "Environment Variables" button
 4. Under "User variables", click "New"
-5. Variable name: `OPENAI_API_KEY` (or `ANTHROPIC_API_KEY`)
+5. Variable name: `OPENAI_API_KEY`, `ANTHROPIC_API_KEY`, or `GOOGLE_API_KEY`
 6. Variable value: your API key
 7. Click OK
 
@@ -65,27 +76,72 @@ Choose ONE tool to interact with the AI:
 
 ### Option A: Aider (Works with most AI providers)
 
+First, check if Python is installed and install it if needed:
+
 **On Mac:**
 ```bash
-brew install python3
+# This script checks for Python and installs if needed
+if command -v python3 &> /dev/null; then
+    echo "Python is already installed: $(python3 --version)"
+else
+    echo "Python not found. Installing..."
+    if command -v brew &> /dev/null; then
+        brew install python3
+    else
+        echo "Installing Homebrew first..."
+        /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+        brew install python3
+    fi
+fi
+# Now install Aider
 pip3 install aider-chat
 ```
 
-**On Windows:**
-1. Download Python from https://www.python.org/downloads/
-2. Install Python (check "Add to PATH" during install)
-3. Open Command Prompt and run:
-```bash
+**On Windows (PowerShell - Run as Administrator):**
+```powershell
+# This script checks for Python and installs if needed
+$pythonInstalled = Get-Command python -ErrorAction SilentlyContinue
+if ($pythonInstalled) {
+    Write-Host "Python is already installed: $(python --version)"
+} else {
+    Write-Host "Python not found. Installing..."
+    # Download and install Python using winget (Windows 10/11)
+    winget install Python.Python.3.11 --accept-package-agreements --accept-source-agreements
+    # Refresh PATH
+    $env:Path = [System.Environment]::GetEnvironmentVariable("Path","Machine") + ";" + [System.Environment]::GetEnvironmentVariable("Path","User")
+}
+# Now install Aider
 pip install aider-chat
 ```
 
-**On Linux:**
+**On Linux (Ubuntu/Debian):**
 ```bash
-sudo apt install python3 python3-pip
+# This script checks for Python and installs if needed
+if command -v python3 &> /dev/null; then
+    echo "Python is already installed: $(python3 --version)"
+else
+    echo "Python not found. Installing..."
+    sudo apt update
+    sudo apt install -y python3 python3-pip
+fi
+# Now install Aider
 pip3 install aider-chat
 ```
 
-### Option B: Cursor IDE (Easiest for beginners)
+**On Linux (Fedora/RHEL):**
+```bash
+# This script checks for Python and installs if needed
+if command -v python3 &> /dev/null; then
+    echo "Python is already installed: $(python3 --version)"
+else
+    echo "Python not found. Installing..."
+    sudo dnf install -y python3 python3-pip
+fi
+# Now install Aider
+pip3 install aider-chat
+```
+
+### Option B: Cursor IDE (Easiest for beginners - No Python needed)
 1. Go to https://cursor.sh
 2. Download and install
 3. Open your project folder in Cursor

@@ -9,7 +9,7 @@ A **provider-agnostic template** for AI-assisted multi-agent development workflo
 | **Anthropic** | Claude 3.5, Opus | Any compatible CLI |
 | **OpenAI** | GPT-4o, GPT-4 Turbo | Aider, Cursor |
 | **Azure** | GPT-4, GPT-3.5 | Aider, Cursor |
-| **Google** | Gemini Pro, Ultra | Custom |
+| **Google** | Gemini Pro, Gemini Ultra | Aider, Custom |
 | **Ollama** | Llama 3, Mistral | Aider |
 | **Any** | OpenAI-compatible | Custom |
 
@@ -123,6 +123,13 @@ aider
 export ANTHROPIC_API_KEY="sk-ant-..."
 pip install aider-chat
 aider --model claude-3-opus-20240229
+```
+
+### Google Gemini
+```bash
+export GOOGLE_API_KEY="your-key-here"
+pip install aider-chat
+aider --model gemini/gemini-1.5-pro-latest
 ```
 
 ### Ollama (Local)

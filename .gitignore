@@ -83,10 +83,11 @@ build/
 # Project Structure
 # =============================================================================
 
-# Release artifacts (executables and libraries)
-build/release/bin/
-build/release/lib/
-build/debug/
+# Module build outputs (each module has release/ and debug/ folders)
+modules/*/release/
+modules/*/debug/
+!modules/*/release/.gitkeep
+!modules/*/debug/.gitkeep
 
 # Generated code directories
 **/gen-cpp/

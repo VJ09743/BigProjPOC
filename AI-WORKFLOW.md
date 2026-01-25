@@ -112,16 +112,15 @@ YourProject/
 │   ├── operations/              # Infrastructure and releases
 │   └── workflow/                # Team coordination docs
 │
-├── src/                         # Your source code
-│   ├── internal/                # Code you write
-│   ├── external/                # Third-party libraries
-│   └── generated/               # Auto-generated code
-│
-├── tests/                       # Your tests
-│
-├── build/                       # Build output (gitignored)
-│   ├── release/                 # Production builds
-│   └── debug/                   # Debug builds
+├── modules/                     # Software modules
+│   ├── module-name/             # Each module is self-contained
+│   │   ├── src/                 # Module source code
+│   │   ├── test/                # Module tests
+│   │   ├── release/             # Release build output
+│   │   ├── debug/               # Debug build output
+│   │   ├── build-config/        # Build configuration
+│   │   └── Makefile             # Module build script
+│   └── another-module/          # Add more modules as needed
 │
 ├── .github/                     # GitHub configuration
 │   ├── workflows/               # GitHub Actions
@@ -264,12 +263,15 @@ pending → in-progress → completed → archived
 ## Development Guidelines
 
 ### Code Organization
-- Keep source code in `src/` directory
-  - `src/internal/` for your project code
-  - `src/external/` for third-party dependencies
-  - `src/generated/` for auto-generated files
-- Tests in `tests/` directory
-- Build artifacts in `build/` (gitignored)
+- Organize code into self-contained modules in `modules/`
+- Each module contains:
+  - `src/` - Module source code
+  - `test/` - Module tests
+  - `release/` - Release build output (gitignored)
+  - `debug/` - Debug build output (gitignored)
+  - `build-config/` - Build configuration files
+  - `Makefile` - Module build script
+- Copy `modules/example-module/` to create new modules
 
 ### Git Workflow
 - Main branch: `master` or `main`

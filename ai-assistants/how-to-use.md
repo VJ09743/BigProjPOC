@@ -111,16 +111,17 @@ your-project/
 │   ├── quality/             # Test plans
 │   └── operations/          # Release docs
 │
-├── src/                     # Your source code
-│   ├── internal/            # Code you write
-│   ├── external/            # Third-party libraries
-│   └── generated/           # Auto-generated code
+├── modules/                 # Software modules
+│   ├── module-name/         # Each module is self-contained
+│   │   ├── src/             # Module source code
+│   │   ├── test/            # Module tests
+│   │   ├── release/         # Release builds (gitignored)
+│   │   ├── debug/           # Debug builds (gitignored)
+│   │   ├── build-config/    # Build configuration
+│   │   └── Makefile         # Build script
+│   └── example-module/      # Template to copy for new modules
 │
-├── tests/                   # Test files
-│
-└── build/                   # Build output (gitignored)
-    ├── release/             # Production builds
-    └── debug/               # Debug builds
+└── .github/                 # GitHub workflows
 ```
 
 ## Need Help?

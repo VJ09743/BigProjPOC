@@ -70,16 +70,15 @@ cursor .         # For Cursor
 │   ├── quality/             # Test plans and QA
 │   └── operations/          # Releases and infrastructure
 │
-├── src/                     # Your source code
-│   ├── internal/            # Code you write
-│   ├── external/            # Third-party libraries
-│   └── generated/           # Auto-generated code
-│
-├── tests/                   # Your tests
-│
-├── build/                   # Build output (gitignored)
-│   ├── release/             # Production builds
-│   └── debug/               # Debug builds
+├── modules/                 # Software modules
+│   ├── module-name/         # Each module is self-contained
+│   │   ├── src/             # Source code
+│   │   ├── test/            # Tests
+│   │   ├── release/         # Release build output
+│   │   ├── debug/           # Debug build output
+│   │   ├── build-config/    # Build configuration
+│   │   └── Makefile         # Build script
+│   └── another-module/      # Add more modules as needed
 │
 ├── .github/workflows/       # GitHub Actions
 └── AI-WORKFLOW.md           # Main workflow documentation

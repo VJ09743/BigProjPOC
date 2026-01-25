@@ -143,28 +143,30 @@ This template uses a **multi-agent system** where the AI assistant adopts specia
 
 ### Agent Roles
 
-#### Project Manager Agent
-**Role**: Client-Facing Project Lead and Team Coordinator
+#### Product Owner Agent
+**Role**: Customer-Facing Requirements Lead and Backlog Manager
 
 - **ALWAYS activates first** for new user requests
-- Primary point of contact with user/client
+- Gathers and clarifies user requirements
+- Creates high-level user stories (WHAT to build, not HOW)
 - Coordinates work across all agents
-- Assigns tasks to appropriate agents
-- Tracks progress and reports to user
+- Accepts completed work
 
-**Activates for**: Any new task from user, coordination, status updates
+**Activates for**: Any new task from user, requirements, prioritization
+
+**Note**: Product Owner focuses on WHAT to build. Technical details are filled in by Architect.
 
 #### Architect Agent
 **Role**: System Architect and Design Lead
 
-- Creates technical specifications (EPS, EDS)
+- Enriches user stories with technical specifications
 - Designs interfaces and APIs
 - Creates detailed development tasks
 - Makes architectural decisions
 
 **Activates for**: New features, specifications, design, architecture
 
-**Note**: Architect creates *technical tasks*. Project Manager *assigns* work to agents.
+**Note**: Architect creates *technical specifications*. Product Owner creates *high-level requirements*.
 
 #### Developer Agent
 **Role**: Software Developer and Implementation Specialist
@@ -213,7 +215,7 @@ The agents work together in a collaborative workflow:
 ```
 User Request
     ↓
-Project Manager (Analyzes & Plans)
+Product Owner (Analyzes & Plans)
     ↓
 Create Git Worktrees → Assign to Agent(s)
     ↓
@@ -231,7 +233,7 @@ User Reviews & Merges
 Agents work in separate git worktrees to enable parallel work:
 
 ```bash
-# Project Manager creates worktrees
+# Product Owner creates worktrees
 git worktree add ../worktree-architect agent/architect-{project}-{sessionID}
 git worktree add ../worktree-developer agent/developer-{project}-{sessionID}
 
@@ -409,7 +411,7 @@ aider
 1. **Configure your AI provider** (see `ai-assistants/provider-setup/README.md`)
 2. **Describe your project** to the AI assistant
 3. The AI will ask clarifying questions
-4. Work begins with Project Manager analysis
+4. Work begins with Product Owner analysis
 5. Agents collaborate to complete the work
 6. Review and merge PRs
 

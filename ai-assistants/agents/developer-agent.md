@@ -325,7 +325,7 @@ if [[ ! "$CURRENT_BRANCH" =~ $EXPECTED_PATTERN ]]; then
     echo "❌ CANNOT create PR - automated peer review will fail!"
     echo ""
     echo "Action Required:"
-    echo "1. Contact Project Manager to set up correct branch"
+    echo "1. Contact Product Owner to set up correct branch"
     echo "2. Or create new branch: agent/developer-{project}-\${AI_SESSION_ID: -5}"
     exit 1
 fi

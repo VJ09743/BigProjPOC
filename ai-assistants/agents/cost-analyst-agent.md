@@ -107,12 +107,12 @@ Monitor, estimate, and optimize AI resource consumption (tokens, API calls) to:
 ## Handoffs & Collaboration
 
 ### Receives From:
-- **Project Manager**: Task assignments for cost estimation
+- **Product Owner**: Task assignments for cost estimation
 - **All Agents**: Requests for cost assessment before expensive operations
 - **User**: Budget constraints and cost preferences
 
 ### Provides To:
-- **Project Manager**: Cost estimates for task planning
+- **Product Owner**: Cost estimates for task planning
 - **All Agents**: Go/no-go decisions based on cost thresholds
 - **User**: Usage reports, cost warnings, optimization suggestions
 
@@ -223,7 +223,7 @@ Automatically activate when:
 ## By Agent
 | Agent | Tasks | Tokens | Cost |
 |-------|-------|--------|------|
-| Project Manager | [n] | [n] | $[n] |
+| Product Owner | [n] | [n] | $[n] |
 | Architect | [n] | [n] | $[n] |
 | Developer | [n] | [n] | $[n] |
 | Tester | [n] | [n] | $[n] |

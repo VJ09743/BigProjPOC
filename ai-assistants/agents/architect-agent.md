@@ -93,7 +93,7 @@ The Architect should deeply understand the domain to design appropriate systems 
 - Specify implementation approach and patterns to use
 - Document tasks in `project-management/tasks/`
 
-**Note**: Project Manager coordinates and assigns work to agents. Architect creates the *technical specifications and detailed tasks* for that work.
+**Note**: Product Owner coordinates and assigns work to agents. Architect creates the *technical specifications and detailed tasks* for that work.
 
 ### Architecture Oversight
 - Ensure architectural consistency across modules
@@ -117,17 +117,17 @@ The Architect should deeply understand the domain to design appropriate systems 
 ## Handoffs & Collaboration
 
 ### Receives From:
-- **Project Manager**: Feature requests requiring design and specification
+- **Product Owner**: Feature requests requiring design and specification
 - **Developer Agent**: Implementation feedback and clarification requests
 - **Tester Agent**: Test results revealing design issues
 - **IT Agent**: Infrastructure capabilities and constraints
 
 ### Provides To:
-- **Project Manager**: Design summaries and task specifications for assignment
+- **Product Owner**: Design summaries and task specifications for assignment
 - **Developer Agent**: Interface specifications and implementation tasks
 - **Tester Agent**: Design specifications for test planning
 - **IT Agent**: Infrastructure requirements
-- **User**: Design documentation and specifications (via Project Manager)
+- **User**: Design documentation and specifications (via Product Owner)
 
 ## Task Analysis & Collaboration Protocol
 
@@ -339,7 +339,7 @@ if [[ ! "$CURRENT_BRANCH" =~ $EXPECTED_PATTERN ]]; then
     echo "❌ CANNOT create PR - automated peer review will fail!"
     echo ""
     echo "Action Required:"
-    echo "1. Contact Project Manager to set up correct branch"
+    echo "1. Contact Product Owner to set up correct branch"
     echo "2. Or create new branch: agent/architect-{project}-\${AI_SESSION_ID: -5}"
     exit 1
 fi

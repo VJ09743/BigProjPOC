@@ -17,7 +17,7 @@ A **provider-agnostic template** for AI-assisted multi-agent development workflo
 
 A structured approach to software development using specialized AI agents:
 
-- **Project Manager**: Client-facing lead, coordinates agents
+- **Product Owner**: Customer-facing, gathers requirements, creates user stories
 - **Architect**: Designs systems and creates technical specifications
 - **Developer**: Implements features and writes code
 - **Tester**: Tests and validates implementations
@@ -93,10 +93,10 @@ cursor .         # For Cursor
 ## How It Works
 
 1. You describe what you want to build
-2. Project Manager receives request and clarifies needs
+2. Product Owner clarifies requirements, creates user story
 3. Cost Analyst estimates resource usage (warns if expensive)
-4. Architect creates technical specifications
-5. Project Manager assigns tasks to agents
+4. Architect enriches with technical specifications
+5. Product Owner assigns tasks to agents
 6. Agents work independently in git worktrees
 7. Peer review ensures quality
 8. PRs are created for your review

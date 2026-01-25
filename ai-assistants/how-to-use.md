@@ -56,19 +56,20 @@ Download from https://cursor.sh
 When you interact with the AI, it will automatically:
 
 1. **Analyze your request** - Understand what you want to build
-2. **Adopt the right role** - Team Leader, Architect, Developer, Tester, or IT
-3. **Follow the workflow** - Plan, design, implement, test, release
+2. **Adopt the right role** - Product Owner, Architect, Developer, Tester, IT, or Cost Analyst
+3. **Follow the workflow** - Requirements, design, implement, test, release
 4. **Create pull requests** - For your review before merging
 
-### The 5 Agent Roles
+### The 6 Agent Roles
 
 | Agent | What They Do |
 |-------|--------------|
-| **Team Leader** | Plans work, assigns tasks, coordinates agents |
-| **Architect** | Designs systems, creates specifications |
+| **Product Owner** | Gathers requirements, creates user stories, coordinates agents |
+| **Architect** | Designs systems, creates technical specifications |
 | **Developer** | Writes code, implements features |
 | **Tester** | Tests code, reports bugs, validates quality |
 | **IT** | Manages builds, releases, infrastructure |
+| **Cost Analyst** | Estimates token costs, warns before expensive operations |
 
 ## Example Conversations
 
@@ -78,8 +79,8 @@ You say:
 > "I want to add a login page with email and password"
 
 The AI will:
-1. Team Leader: Plan the feature breakdown
-2. Architect: Design the login flow
+1. Product Owner: Create user story with acceptance criteria
+2. Architect: Design the login flow with technical specs
 3. Developer: Implement the code
 4. Tester: Validate it works
 5. Create a PR for your review
@@ -90,10 +91,11 @@ You say:
 > "Users can't save their profile changes"
 
 The AI will:
-1. Tester: Investigate and document the bug
-2. Developer: Fix the issue
-3. Tester: Verify the fix
-4. Create a PR for your review
+1. Product Owner: Document the issue
+2. Tester: Investigate and document the bug
+3. Developer: Fix the issue
+4. Tester: Verify the fix
+5. Create a PR for your review
 
 ## Project Structure
 

@@ -13,8 +13,8 @@ This directory contains agent role definitions for the multi-agent workflow. The
 
 ## Agent Files
 
-- **`project-manager-agent.md`**: Client-Facing Project Lead - coordinates work and manages user communication
-- **`architect-agent.md`**: Design Agent - creates specifications, designs, and technical tasks
+- **`product-owner-agent.md`**: Customer-Facing Requirements Lead - gathers requirements, creates user stories, coordinates agents
+- **`architect-agent.md`**: Design Agent - creates technical specifications, designs, enriches tasks with details
 - **`developer-agent.md`**: Implementation Agent - writes code and unit tests
 - **`tester-agent.md`**: QA Agent - validates quality and reports bugs
 - **`it-agent.md`**: Infrastructure Agent - manages builds, releases, CI/CD
@@ -30,28 +30,37 @@ This directory contains agent role definitions for the multi-agent workflow. The
 
 ## Role Clarification
 
-| Role | Primary Responsibility |
-|------|------------------------|
-| **Project Manager** | User communication, coordination, assigns work to agents |
-| **Architect** | Technical design, specifications, creates detailed tasks |
-| **Developer** | Code implementation, unit testing |
-| **Tester** | Quality validation, test planning, bug reporting |
-| **IT** | Build systems, releases, infrastructure |
-| **Cost Analyst** | Token estimation, cost warnings, usage tracking |
+| Role | Primary Responsibility | Focus |
+|------|------------------------|-------|
+| **Product Owner** | User communication, requirements, user stories | WHAT to build |
+| **Architect** | Technical design, specifications, enriches tasks | HOW to build |
+| **Developer** | Code implementation, unit testing | Build it |
+| **Tester** | Quality validation, test planning, bug reporting | Verify it |
+| **IT** | Build systems, releases, infrastructure | Ship it |
+| **Cost Analyst** | Token estimation, cost warnings, usage tracking | Cost awareness |
+
+## Key Distinction: Product Owner vs Architect
+
+| Aspect | Product Owner | Architect |
+|--------|---------------|-----------|
+| **Focus** | WHAT to build | HOW to build |
+| **Language** | Business terms, user needs | Technical terms, patterns |
+| **Tasks** | High-level user stories | Detailed technical specs |
+| **Example** | "Users need to login" | "Use OAuth2 with IAuthService" |
 
 ## Example Workflows
 
 ### Creating a New Feature
-1. **Project Manager**: Receives request → Clarifies with user → Assigns to Architect
-2. **Architect**: Creates EPS/EDS → Designs interfaces → Creates technical tasks
-3. **Project Manager**: Assigns implementation tasks to Developer
+1. **Product Owner**: Receives request → Creates user story with acceptance criteria
+2. **Architect**: Enriches with technical design → Creates detailed tasks
+3. **Product Owner**: Assigns implementation tasks to Developer
 4. **Developer**: Implements code → Writes unit tests
 5. **Tester**: Validates → Reports issues → Approves
 6. **IT**: Creates release
 
 ### Fixing a Bug
-1. **Project Manager**: Receives bug report → Assigns investigation
-2. **Tester**: Documents bug details
+1. **Product Owner**: Receives bug report → Documents issue
+2. **Tester**: Investigates and documents details
 3. **Developer**: Fixes code → Updates tests
 4. **Tester**: Verifies fix → Approves
 
@@ -64,8 +73,8 @@ This directory contains agent role definitions for the multi-agent workflow. The
 ## Agent Collaboration
 
 Agents work together through handoffs:
-- **Project Manager** coordinates all agents and user communication
-- **Architect** creates specs and technical tasks
+- **Product Owner** gathers requirements and coordinates agents
+- **Architect** enriches tasks with technical specifications
 - **Developer** implements based on Architect's specs
 - **Tester** validates Developer's work
 - **IT** provides infrastructure to all
@@ -77,7 +86,7 @@ Agents work together through handoffs:
 Add to `.aider.conf.yml`:
 ```yaml
 read:
-  - ai-assistants/agents/project-manager-agent.md
+  - ai-assistants/agents/product-owner-agent.md
   - ai-assistants/agents/architect-agent.md
   - ai-assistants/agents/developer-agent.md
   - ai-assistants/agents/tester-agent.md

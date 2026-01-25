@@ -30,7 +30,15 @@ A structured approach to software development using specialized AI agents:
 - **Teams** wanting structured AI-assisted workflows
 - **Projects** needing consistent development processes
 
-## Quick Start
+---
+
+## **New here? Start with [QUICK-START.md](QUICK-START.md)**
+
+A simple 5-step guide for non-programmers to get up and running.
+
+---
+
+## Quick Start (For Developers)
 
 ```bash
 # 1. Clone this template

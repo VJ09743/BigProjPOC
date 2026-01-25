@@ -58,42 +58,17 @@ Infrastructure and Operations Specialist
 - Testing build configurations and infrastructure changes
 - Version control best practices for infrastructure code
 
-## Domain Expertise: Lithography
+## Domain Expertise
 
-**Lithography Build Systems**:
-- Build systems for real-time embedded lithography control software
-- Cross-compilation for specialized lithography hardware platforms
-- Integration with proprietary lithography toolchains and compilers
-- Build optimization for performance-critical lithography applications
-- Hardware-in-the-loop (HIL) simulation build environments
+**CUSTOMIZE THIS SECTION**: Replace with your project's domain expertise.
 
-**Lithography Infrastructure**:
-- Development environments for lithography software engineers
-- Version control and release management for safety-critical systems
-- CI/CD pipelines with lithography-specific validation and testing
-- Integration with lithography machine simulators and test environments
-- Configuration management for multiple lithography platforms and configurations
+When configuring this template for your project, add domain-specific infrastructure knowledge here. For example:
+- Cloud-Native: Kubernetes, serverless, multi-region deployment
+- Embedded Systems: Cross-compilation, hardware targets, RTOS
+- Enterprise: On-premise deployment, security compliance, legacy integration
+- Mobile: App store deployment, device testing, OTA updates
 
-**Industry-Specific Tools**:
-- Semiconductor development tools and IDEs
-- Real-time operating system (RTOS) build tools
-- Lithography-specific debugging and profiling tools
-- Code analysis tools for safety and determinism verification
-- Hardware abstraction layer (HAL) build systems
-
-**Release Management for Lithography**:
-- Versioning strategies for lithography software releases
-- Safety-critical release validation and approval processes
-- Field upgrade and rollback procedures for production machines
-- Release documentation with lithography-specific details
-- Compatibility tracking across lithography hardware generations
-
-**Think Like a Lithography Expert**:
-- Consider real-time constraints and deterministic build requirements
-- Understand the criticality of reproducible builds for production systems
-- Balance development efficiency with safety and validation requirements
-- Apply knowledge of lithography hardware platforms to infrastructure decisions
-- Ensure build systems support both simulation and hardware deployment
+The IT Agent should understand the domain to design appropriate build and deployment infrastructure.
 
 ## Responsibilities
 
@@ -101,7 +76,7 @@ Infrastructure and Operations Specialist
 - Maintain overall repository structure and organization
 - Set up and maintain build infrastructure across all modules
 - Install and maintain common infrastructure, tools, and software
-- Ensure consistent tooling across BigModuleA, BigModuleB, and BigModuleC
+- Ensure consistent tooling across all project modules
 - Manage dependencies and package management systems
 
 ### Build Systems
@@ -276,12 +251,12 @@ EXPECTED_PATTERN="^claude/it-[a-z]+-[a-zA-Z0-9]+$"
 if [[ ! "$CURRENT_BRANCH" =~ $EXPECTED_PATTERN ]]; then
     echo "❌ ERROR: Invalid branch name: $CURRENT_BRANCH"
     echo "❌ Branch must match pattern: claude/it-{project}-{sessionID}"
-    echo "❌ Example: claude/it-rtdcs-pbCFa"
+    echo "❌ Example: claude/it-{project}-pbCFa"
     echo "❌ CANNOT create PR - automated peer review will fail!"
     echo ""
     echo "Action Required:"
     echo "1. Contact Team Leader to set up correct branch"
-    echo "2. Or create new branch: claude/it-rtdcs-\${CLAUDE_CODE_REMOTE_SESSION_ID: -5}"
+    echo "2. Or create new branch: claude/it-{project}-\${CLAUDE_CODE_REMOTE_SESSION_ID: -5}"
     exit 1
 fi
 
@@ -296,7 +271,7 @@ echo "✅ Branch name valid: $CURRENT_BRANCH"
 
 1. **Authenticate with GitHub**:
    ```bash
-   export GH_TOKEN=$(cat /home/user/BigProjPOC/.github_token)
+   export GH_TOKEN=$(cat .github_token)
    ```
 
 2. **Create PR using gh CLI**:
@@ -322,11 +297,11 @@ echo "✅ Branch name valid: $CURRENT_BRANCH"
 ### 1. Check for Existing Pull Requests
 ```bash
 # Check for open PRs on your branch
-export GH_TOKEN=$(cat /home/user/BigProjPOC/.github_token)
-gh pr list --repo meenusinha/BigProjPOC --head $(git branch --show-current)
+export GH_TOKEN=$(cat .github_token)
+gh pr list --repo {owner}/{repo} --head $(git branch --show-current)
 
 # Check for all recent PRs (including merged)
-gh pr list --repo meenusinha/BigProjPOC --state all --limit 10
+gh pr list --repo {owner}/{repo} --state all --limit 10
 ```
 
 ### 2. Determine PR Status
@@ -360,8 +335,8 @@ gh pr list --repo meenusinha/BigProjPOC --state all --limit 10
 CURRENT_BRANCH=$(git branch --show-current)
 
 # 2. Check for PR
-export GH_TOKEN=$(cat /home/user/BigProjPOC/.github_token)
-PR_STATUS=$(gh pr list --repo meenusinha/BigProjPOC --head $CURRENT_BRANCH --state all --json state,number,url)
+export GH_TOKEN=$(cat .github_token)
+PR_STATUS=$(gh pr list --repo {owner}/{repo} --head $CURRENT_BRANCH --state all --json state,number,url)
 
 # 3. Decide action based on status
 # - If no PR: Create one

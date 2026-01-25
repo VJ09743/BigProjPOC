@@ -42,7 +42,7 @@ The automated multi-agent peer review system uses **Claude API** (Anthropic) to 
 ### Step 2: Add API Key to GitHub Repository
 
 1. **Navigate to Repository Settings**:
-   - Go to your GitHub repository: https://github.com/meenusinha/BigProjPOC
+   - Go to your GitHub repository: https://github.com/{owner}/{repo}
    - Click "Settings" tab (requires admin/owner permissions)
 
 2. **Go to Secrets Section**:
@@ -304,7 +304,7 @@ Claude API charges based on tokens used:
 ### BigProjPOC Support
 
 - **Documentation**: `docs/it/automated-multi-agent-review.md`
-- **Issues**: https://github.com/meenusinha/BigProjPOC/issues
+- **Issues**: https://github.com/{owner}/{repo}/issues
 
 ---
 

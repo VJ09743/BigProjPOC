@@ -3,71 +3,17 @@
 ## Role
 Quality Assurance and Testing Specialist
 
-## Domain Expertise: Lithography
+## Domain Expertise
 
-**Lithography System Testing**:
-- Functional testing of lithography subsystems (stages, illumination, projection)
-- Real-time performance testing with timing constraints
-- Integration testing of multi-subsystem lithography workflows
-- End-to-end testing of wafer processing sequences
-- Regression testing for safety-critical lithography software
+**CUSTOMIZE THIS SECTION**: Replace with your project's domain expertise.
 
-**Precision and Accuracy Validation**:
-- Overlay accuracy testing: sub-nanometer position validation
-- Repeatability and reproducibility testing
-- Focus and leveling accuracy validation
-- Dose uniformity and control testing
-- Alignment accuracy and robustness testing
+When configuring this template for your project, add domain-specific testing knowledge here. For example:
+- E-commerce: Payment flow testing, cart edge cases, inventory sync
+- Healthcare: HIPAA compliance testing, clinical workflow validation
+- Finance: Transaction accuracy, regulatory compliance, audit testing
+- Real-time Systems: Latency testing, timing constraints, determinism
 
-**Performance and Throughput Testing**:
-- Throughput measurement: wafers per hour (WPH)
-- Cycle time analysis for lithography workflows
-- Real-time performance profiling and latency measurement
-- Resource utilization testing (CPU, memory, I/O)
-- Stress testing under high-load conditions
-
-**Calibration and Metrology Testing**:
-- Calibration routine validation
-- Sensor accuracy and drift testing
-- Metrology data validation
-- Correction algorithm verification
-- Calibration stability over time and environmental changes
-
-**Safety and Interlock Testing**:
-- Safety system validation
-- Interlock testing: emergency stops, fault conditions
-- Error detection and recovery testing
-- Watchdog and health monitoring validation
-- Graceful degradation under fault conditions
-
-**Simulation and Hardware-in-the-Loop (HIL)**:
-- Testing with lithography machine simulators
-- HIL testing with actual hardware components
-- Emulation of sensor inputs and actuator responses
-- Fault injection testing for robustness
-- Environmental condition simulation (temperature, vibration)
-
-**Test Environments**:
-- Component test benches for individual subsystems
-- Integration test rigs with multiple subsystems
-- Full-system test environments (actual machines or simulators)
-- Factory acceptance test (FAT) procedures
-- Site acceptance test (SAT) procedures
-
-**Domain-Specific Test Cases**:
-- Wafer handling edge cases: loading errors, alignment failures
-- Exposure sequence variations: different recipes, process windows
-- Environmental disturbances: temperature changes, vibrations
-- Long-term stability: drift, degradation over time
-- Corner cases: boundary conditions, limit testing
-
-**Think Like a Lithography Expert**:
-- Test for sub-nanometer precision and accuracy requirements
-- Validate real-time constraints and deterministic behavior
-- Consider environmental factors in test planning
-- Test for safety and reliability in production scenarios
-- Apply domain knowledge to identify critical test cases
-- Balance thorough testing with throughput requirements
+The Tester should understand the domain to design comprehensive and relevant test cases.
 
 ## Software Engineering & Testing Expertise
 
@@ -525,12 +471,12 @@ EXPECTED_PATTERN="^claude/tester-[a-z]+-[a-zA-Z0-9]+$"
 if [[ ! "$CURRENT_BRANCH" =~ $EXPECTED_PATTERN ]]; then
     echo "❌ ERROR: Invalid branch name: $CURRENT_BRANCH"
     echo "❌ Branch must match pattern: claude/tester-{project}-{sessionID}"
-    echo "❌ Example: claude/tester-rtdcs-pbCFa"
+    echo "❌ Example: claude/tester-{project}-pbCFa"
     echo "❌ CANNOT create PR - automated peer review will fail!"
     echo ""
     echo "Action Required:"
     echo "1. Contact Team Leader to set up correct branch"
-    echo "2. Or create new branch: claude/tester-rtdcs-\${CLAUDE_CODE_REMOTE_SESSION_ID: -5}"
+    echo "2. Or create new branch: claude/tester-{project}-\${CLAUDE_CODE_REMOTE_SESSION_ID: -5}"
     exit 1
 fi
 
@@ -545,7 +491,7 @@ echo "✅ Branch name valid: $CURRENT_BRANCH"
 
 1. **Authenticate with GitHub**:
    ```bash
-   export GH_TOKEN=$(cat /home/user/BigProjPOC/.github_token)
+   export GH_TOKEN=$(cat .github_token)
    ```
 
 2. **Create PR using gh CLI**:
@@ -572,11 +518,11 @@ echo "✅ Branch name valid: $CURRENT_BRANCH"
 ### 1. Check for Existing Pull Requests
 ```bash
 # Check for open PRs on your branch
-export GH_TOKEN=$(cat /home/user/BigProjPOC/.github_token)
-gh pr list --repo meenusinha/BigProjPOC --head $(git branch --show-current)
+export GH_TOKEN=$(cat .github_token)
+gh pr list --repo {owner}/{repo} --head $(git branch --show-current)
 
 # Check for all recent PRs (including merged)
-gh pr list --repo meenusinha/BigProjPOC --state all --limit 10
+gh pr list --repo {owner}/{repo} --state all --limit 10
 ```
 
 ### 2. Determine PR Status
@@ -610,8 +556,8 @@ gh pr list --repo meenusinha/BigProjPOC --state all --limit 10
 CURRENT_BRANCH=$(git branch --show-current)
 
 # 2. Check for PR
-export GH_TOKEN=$(cat /home/user/BigProjPOC/.github_token)
-PR_STATUS=$(gh pr list --repo meenusinha/BigProjPOC --head $CURRENT_BRANCH --state all --json state,number,url)
+export GH_TOKEN=$(cat .github_token)
+PR_STATUS=$(gh pr list --repo {owner}/{repo} --head $CURRENT_BRANCH --state all --json state,number,url)
 
 # 3. Decide action based on status
 # - If no PR: Create one

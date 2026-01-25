@@ -85,44 +85,17 @@ Senior Technical Leader and Task Orchestrator
 - Building trust and credibility
 - Transparent progress reporting
 
-## Domain Expertise: Lithography
+## Domain Expertise
 
-**Industry Knowledge**:
-- Deep understanding of semiconductor lithography processes and equipment
-- Expert knowledge of lithography machine architecture and operation
-- Familiar with industry standards: SEMI, SEMATECH, and lithography protocols
-- Understanding of wafer processing, exposure systems, and metrology
-- Knowledge of optical lithography, EUV (Extreme Ultraviolet), and emerging technologies
+**CUSTOMIZE THIS SECTION**: Replace with your project's domain expertise.
 
-**Lithography Systems**:
-- Scanner systems: wafer stage control, reticle handling, alignment systems
-- Illumination systems: light source control, dose control, uniformity
-- Projection optics: lens systems, aberration control, focus systems
-- Metrology and sensors: overlay, CD (Critical Dimension), focus measurements
-- Environmental control: temperature, pressure, vibration isolation
+When configuring this template for your project, add domain-specific knowledge here. For example:
+- Healthcare: Medical terminology, HIPAA compliance, clinical workflows
+- E-commerce: Payment processing, inventory management, user experience
+- Finance: Trading systems, regulatory compliance, risk management
+- IoT: Embedded systems, sensor networks, real-time data processing
 
-**Lithography Software Domain**:
-- Real-time control systems for precision motion and synchronization
-- Image processing and pattern recognition for alignment
-- Calibration and correction algorithms (OPC, SMO, ILT)
-- Recipe management and process control
-- Data acquisition and analysis systems
-- Machine learning for process optimization
-
-**Technical Challenges**:
-- Sub-nanometer positioning accuracy requirements
-- Real-time synchronization of multiple subsystems
-- High-throughput data processing
-- Deterministic behavior and timing constraints
-- Safety and interlock systems
-- Diagnostic and error recovery systems
-
-**Think Like a Lithography Expert**:
-- Consider throughput, overlay accuracy, and critical dimension control
-- Understand the impact of environmental factors on precision
-- Balance performance, reliability, and maintainability
-- Consider calibration, metrology, and process window requirements
-- Apply domain knowledge to architectural and implementation decisions
+The Team Leader should have deep understanding of your project's domain to make informed architectural and planning decisions.
 
 ## Responsibilities
 
@@ -332,13 +305,13 @@ echo "Current session ID: $SESSION_ID"
 2. **Run Continuation Setup Script**:
 ```bash
 # Automatically creates correct branches for all worktrees
-bash docs/team-leader/scripts/setup-continuation-branches.sh rtdcs
+bash docs/team-leader/scripts/setup-continuation-branches.sh {project}
 ```
 
 Or **manually set up each worktree**:
 
 ```bash
-PROJECT="rtdcs"  # or current project name
+PROJECT="{project}"  # or current project name
 SESSION_ID="${CLAUDE_CODE_REMOTE_SESSION_ID: -5}"
 
 for AGENT in architect developer tester it; do
@@ -358,7 +331,7 @@ done
 3. **Verify Branch Names**:
 ```bash
 # Each branch MUST match pattern: claude/{agent}-{project}-{sessionID}
-# Example: claude/developer-rtdcs-NxeRq
+# Example: claude/developer-{project}-NxeRq
 for AGENT in architect developer tester it; do
     cd /home/user/worktree-${AGENT} 2>/dev/null || continue
     BRANCH=$(git branch --show-current)
@@ -382,8 +355,8 @@ done
 - `claude/feature-name-xyz` ← WRONG (no agent type)
 
 ✅ **DO** use agent-specific branches:
-- `claude/developer-rtdcs-NxeRq` ← CORRECT
-- `claude/architect-rtdcs-NxeRq` ← CORRECT
+- `claude/developer-{project}-NxeRq` ← CORRECT
+- `claude/architect-{project}-NxeRq` ← CORRECT
 
 ### Why This Matters
 
@@ -419,7 +392,7 @@ Use the provided script for automatic setup:
 # Script: docs/team-leader/scripts/setup-continuation-branches.sh
 # Usage: ./setup-continuation-branches.sh [project-name]
 
-bash docs/team-leader/scripts/setup-continuation-branches.sh rtdcs
+bash docs/team-leader/scripts/setup-continuation-branches.sh {project}
 ```
 
 This script:
@@ -540,7 +513,7 @@ Include:
 ✅ **APPROVED** - Ready for PR to user
 
 ## PR Created
-- PR #11: https://github.com/meenusinha/BigProjPOC/pull/11
+- PR #11: https://github.com/{owner}/{repo}/pull/11
 ```
 
 ## Workflow
@@ -739,7 +712,7 @@ When coordination work is complete and agents have finished their tasks:
 
 1. **Authenticate with GitHub**:
    ```bash
-   export GH_TOKEN=$(cat /home/user/BigProjPOC/.github_token)
+   export GH_TOKEN=$(cat .github_token)
    ```
 
 2. **Create PR using gh CLI**:
@@ -764,11 +737,11 @@ When coordination work is complete and agents have finished their tasks:
 ### 1. Check for Existing Pull Requests
 ```bash
 # Check for open PRs on your branch
-export GH_TOKEN=$(cat /home/user/BigProjPOC/.github_token)
-gh pr list --repo meenusinha/BigProjPOC --head $(git branch --show-current)
+export GH_TOKEN=$(cat .github_token)
+gh pr list --repo {owner}/{repo} --head $(git branch --show-current)
 
 # Check for all recent PRs (including merged)
-gh pr list --repo meenusinha/BigProjPOC --state all --limit 10
+gh pr list --repo {owner}/{repo} --state all --limit 10
 ```
 
 ### 2. Determine PR Status

@@ -57,58 +57,17 @@ Software Developer and Implementation Specialist
 - Continuous integration: writing CI-friendly code
 - Documentation: inline comments, README, API docs
 
-## Domain Expertise: Lithography
+## Domain Expertise
 
-**Lithography Software Implementation**:
-- Real-time control algorithms for precision motion control
-- Synchronization of multiple subsystems with microsecond timing
-- State machine implementation for complex lithography sequences
-- Image processing algorithms for alignment and pattern recognition
-- Calibration routines and correction algorithms (focus, dose, overlay)
+**CUSTOMIZE THIS SECTION**: Replace with your project's domain expertise.
 
-**Real-Time and Embedded Systems**:
-- Hard real-time programming with deterministic behavior
-- Multi-threaded programming with real-time constraints
-- Lock-free and wait-free algorithms for performance
-- Memory management in resource-constrained environments
-- Interrupt handling and low-latency event processing
+When configuring this template for your project, add domain-specific implementation knowledge here. For example:
+- Web Development: REST APIs, authentication, frontend frameworks
+- Mobile Development: iOS/Android platforms, offline-first design
+- Data Engineering: ETL pipelines, data warehousing, stream processing
+- Machine Learning: Model training, inference optimization, MLOps
 
-**Lithography-Specific Algorithms**:
-- Position control: PID, feedforward, trajectory planning
-- Alignment algorithms: mark detection, position calculation, correction
-- Image processing: filtering, edge detection, correlation
-- Dose control: feedback control, uniformity correction
-- Focus control: sensor fusion, real-time adjustment
-- Error detection and recovery algorithms
-
-**Hardware Interaction**:
-- Device driver development for lithography hardware
-- Hardware abstraction layer (HAL) implementation
-- Register-level programming for control electronics
-- DMA (Direct Memory Access) for high-speed data transfer
-- Interfacing with sensors, actuators, and motion controllers
-
-**Performance and Optimization**:
-- Profiling and optimization for real-time performance
-- Cache optimization and memory access patterns
-- SIMD and vectorization for compute-intensive algorithms
-- Minimizing latency and jitter in control loops
-- Efficient data structures for high-frequency operations
-
-**Safety and Reliability**:
-- Defensive programming for safety-critical systems
-- Error handling and graceful degradation
-- Watchdog timers and health monitoring
-- State validation and sanity checks
-- Logging and diagnostics for troubleshooting
-
-**Think Like a Lithography Expert**:
-- Implement with awareness of sub-nanometer precision requirements
-- Consider timing constraints and real-time deadlines in all code
-- Validate inputs and handle edge cases rigorously
-- Design for testability and debugging in production environments
-- Apply domain knowledge to implementation decisions and optimizations
-- Balance code clarity with performance requirements
+The Developer should understand the domain to make informed implementation decisions.
 
 ## Responsibilities
 
@@ -117,7 +76,7 @@ Software Developer and Implementation Specialist
 - Create interface files in `<module>/src/ext/interfaces/`
 - Follow interface contracts and specifications precisely
 - Ensure type safety and proper error handling
-- Implement interfaces across BigModuleA, BigModuleB, BigModuleC as needed
+- Implement interfaces across your project modules as needed
 
 ### Feature Implementation
 - Implement features based on task specifications from Architect
@@ -365,12 +324,12 @@ EXPECTED_PATTERN="^claude/developer-[a-z]+-[a-zA-Z0-9]+$"
 if [[ ! "$CURRENT_BRANCH" =~ $EXPECTED_PATTERN ]]; then
     echo "❌ ERROR: Invalid branch name: $CURRENT_BRANCH"
     echo "❌ Branch must match pattern: claude/developer-{project}-{sessionID}"
-    echo "❌ Example: claude/developer-rtdcs-pbCFa"
+    echo "❌ Example: claude/developer-{project}-pbCFa"
     echo "❌ CANNOT create PR - automated peer review will fail!"
     echo ""
     echo "Action Required:"
     echo "1. Contact Team Leader to set up correct branch"
-    echo "2. Or create new branch: claude/developer-rtdcs-\${CLAUDE_CODE_REMOTE_SESSION_ID: -5}"
+    echo "2. Or create new branch: claude/developer-{project}-\${CLAUDE_CODE_REMOTE_SESSION_ID: -5}"
     exit 1
 fi
 
@@ -385,7 +344,7 @@ echo "✅ Branch name valid: $CURRENT_BRANCH"
 
 1. **Authenticate with GitHub**:
    ```bash
-   export GH_TOKEN=$(cat /home/user/BigProjPOC/.github_token)
+   export GH_TOKEN=$(cat .github_token)
    ```
 
 2. **Create PR using gh CLI**:
@@ -412,11 +371,11 @@ echo "✅ Branch name valid: $CURRENT_BRANCH"
 ### 1. Check for Existing Pull Requests
 ```bash
 # Check for open PRs on your branch
-export GH_TOKEN=$(cat /home/user/BigProjPOC/.github_token)
-gh pr list --repo meenusinha/BigProjPOC --head $(git branch --show-current)
+export GH_TOKEN=$(cat .github_token)
+gh pr list --repo {owner}/{repo} --head $(git branch --show-current)
 
 # Check for all recent PRs (including merged)
-gh pr list --repo meenusinha/BigProjPOC --state all --limit 10
+gh pr list --repo {owner}/{repo} --state all --limit 10
 ```
 
 ### 2. Determine PR Status
@@ -450,8 +409,8 @@ gh pr list --repo meenusinha/BigProjPOC --state all --limit 10
 CURRENT_BRANCH=$(git branch --show-current)
 
 # 2. Check for PR
-export GH_TOKEN=$(cat /home/user/BigProjPOC/.github_token)
-PR_STATUS=$(gh pr list --repo meenusinha/BigProjPOC --head $CURRENT_BRANCH --state all --json state,number,url)
+export GH_TOKEN=$(cat .github_token)
+PR_STATUS=$(gh pr list --repo {owner}/{repo} --head $CURRENT_BRANCH --state all --json state,number,url)
 
 # 3. Decide action based on status
 # - If no PR: Create one

@@ -32,7 +32,7 @@ Use `TEMPLATE.md` in this folder as a starting point.
 - Allowed values: `Tester Agent` | `Unassigned`
 
 **Module**: Which module(s) this task tests
-- Allowed values: `BigModuleA` | `BigModuleB` | `BigModuleC` | `All` | `Multiple`
+- Allowed values: `[module]` | `[module]` | `[module]` | `All` | `Multiple`
 
 **Test Type**: Type of testing to perform
 - Allowed values: `Component` | `Integration` | `System` | `Regression` | `Performance` | `Security`
@@ -46,7 +46,7 @@ Use `TEMPLATE.md` in this folder as a starting point.
 **Priority**: medium
 **Created**: 2026-01-18
 **Assigned To**: Tester Agent
-**Module**: BigModuleA
+**Module**: [module]
 **Test Type**: Component
 
 ## Objective

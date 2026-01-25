@@ -181,7 +181,7 @@ async function getPreviousReview(octokit, repo, prNumber, agentType) {
 function constructReviewPrompt(agentType, prDetails, previousReview = null) {
   const agent = AGENT_PROMPTS[agentType];
 
-  const prompt = `You are the ${agent.title} reviewing a pull request in the BigProjPOC repository.
+  const prompt = `You are the ${agent.title} reviewing a pull request in the YourProject repository.
 
 **Your Role**: ${agent.role}
 

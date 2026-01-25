@@ -16,7 +16,7 @@ if [[ ! "$CURRENT_BRANCH" =~ $EXPECTED_PATTERN ]]; then
     echo ""
     echo "❌ ERROR: Invalid branch name: $CURRENT_BRANCH"
     echo "❌ Branch must match pattern: claude/${AGENT_TYPE}-{project}-{sessionID}"
-    echo "❌ Example: claude/${AGENT_TYPE}-rtdcs-pbCFa"
+    echo "❌ Example: claude/${AGENT_TYPE}-{project}-pbCFa"
     echo "❌ CANNOT create PR - automated peer review will fail!"
     echo ""
     echo "📝 Automated peer review requires agent-specific branch names"
@@ -27,7 +27,7 @@ if [[ ! "$CURRENT_BRANCH" =~ $EXPECTED_PATTERN ]]; then
     echo "2. Create new branch with current session ID:"
     echo ""
     echo "   SESSION_ID=\"\${CLAUDE_CODE_REMOTE_SESSION_ID: -5}\""
-    echo "   git checkout -b claude/${AGENT_TYPE}-rtdcs-\$SESSION_ID"
+    echo "   git checkout -b claude/${AGENT_TYPE}-{project}-\$SESSION_ID"
     echo ""
     exit 1
 fi

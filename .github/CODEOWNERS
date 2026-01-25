@@ -14,30 +14,31 @@
 # Architecture and Design Documentation
 # ============================================================================
 
-# Architecture documentation - Architect Agent owns, Team Leader reviews
+# Architecture documentation - Architect Agent owns
 /docs/architecture/                @architect-agent
 /docs/requirements/                @architect-agent
-
-# External Product Specifications (EPS)
-/docs/architecture/eps/            @architect-agent
-
-# External Design Specifications (EDS)
-/docs/architecture/eds/            @architect-agent
 
 # Architecture Decision Records (ADRs)
 /docs/architecture/decisions/      @architect-agent
 
-# Development tasks - Architect creates, Developer and Team Leader review
+# Development tasks - Architect creates, Developer reviews
 /docs/architecture/tasks/          @architect-agent @developer-agent
+
+# ============================================================================
+# Source Code
+# ============================================================================
+
+# Source code - Developer implements, Architect reviews
+/src/                              @developer-agent @architect-agent
 
 # ============================================================================
 # Build System and Infrastructure
 # ============================================================================
 
-# Build system - IT Agent owns
-/common_infra/build_tools/         @it-agent
-*.mk                                @it-agent
-Makefile                            @it-agent
+# Build files - IT Agent owns
+Makefile                           @it-agent
+*.mk                               @it-agent
+package.json                       @it-agent
 
 # CI/CD workflows - IT Agent owns
 /.github/workflows/                @it-agent
@@ -49,60 +50,20 @@ Makefile                            @it-agent
 /release/                          @it-agent
 
 # ============================================================================
-# Shared Libraries and Common Code
-# ============================================================================
-
-# Thrift installation and common infrastructure
-/common_infra/thrift/              @it-agent
-
-# Shared memory interfaces - Architect defines, Developer implements
-/common_infra/shared_memory/       @architect-agent @developer-agent
-
-# ============================================================================
-# Module-Specific Code
-# ============================================================================
-
-# BigModuleA - Developer implements, Architect reviews
-/BigModuleA/src/ext/interfaces/    @architect-agent @developer-agent
-/BigModuleA/src/int/impl/          @developer-agent
-/BigModuleA/src/int/generated/     @developer-agent
-
-# BigModuleB - Developer implements, Architect reviews
-/BigModuleB/src/ext/interfaces/    @architect-agent @developer-agent
-/BigModuleB/src/int/impl/          @developer-agent
-/BigModuleB/src/int/generated/     @developer-agent
-
-# BigModuleC - Developer implements, Architect reviews
-/BigModuleC/src/ext/interfaces/    @architect-agent @developer-agent
-/BigModuleC/src/int/impl/          @developer-agent
-/BigModuleC/src/int/generated/     @developer-agent
-
-# Thrift interface definitions - Architect owns, Developer reviews
-*.thrift                           @architect-agent @developer-agent
-
-# ============================================================================
 # Testing
 # ============================================================================
 
 # Unit tests - Developer owns
-/BigModuleA/tests/unit/            @developer-agent
-/BigModuleB/tests/unit/            @developer-agent
-/BigModuleC/tests/unit/            @developer-agent
+/tests/unit/                       @developer-agent
 
 # Component tests - Tester Agent owns
-/BigModuleA/tests/component/       @tester-agent
-/BigModuleB/tests/component/       @tester-agent
-/BigModuleC/tests/component/       @tester-agent
+/tests/component/                  @tester-agent
 
 # Integration tests - Tester Agent owns
-/BigModuleA/tests/integration/     @tester-agent
-/BigModuleB/tests/integration/     @tester-agent
-/BigModuleC/tests/integration/     @tester-agent
+/tests/integration/                @tester-agent
 
 # System tests - Tester Agent owns
-/BigModuleA/tests/system/          @tester-agent
-/BigModuleB/tests/system/          @tester-agent
-/BigModuleC/tests/system/          @tester-agent
+/tests/system/                     @tester-agent
 
 # Test documentation - Tester Agent owns
 /docs/tests/                       @tester-agent
@@ -120,6 +81,9 @@ Makefile                            @it-agent
 
 # Team leader documentation
 /docs/team-leader/                 @team-leader-agent
+
+# Agent configuration - Team Leader manages
+/.claude/agents/                   @team-leader-agent
 
 # ============================================================================
 # Notes

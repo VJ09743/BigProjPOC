@@ -12,7 +12,7 @@
 <!-- Allowed values: IT Agent | Unassigned -->
 
 **Module**: All
-<!-- Allowed values: All | BigModuleA | BigModuleB | BigModuleC | N/A -->
+<!-- Allowed values: All | [module] | [module] | [module] | N/A -->
 
 ## Objective
 Clear, concise description of what needs to be accomplished.

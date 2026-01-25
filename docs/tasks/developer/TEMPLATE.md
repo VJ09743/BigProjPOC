@@ -11,8 +11,8 @@
 **Assigned To**: Developer Agent
 <!-- Allowed values: Developer Agent | Unassigned -->
 
-**Module**: BigModuleA
-<!-- Allowed values: BigModuleA | BigModuleB | BigModuleC | Multiple -->
+**Module**: [module]
+<!-- Allowed values: [module] | [module] | [module] | Multiple -->
 
 **Type**: Implementation
 <!-- Allowed values: Implementation | Bug Fix | Refactoring | Enhancement | Interface -->

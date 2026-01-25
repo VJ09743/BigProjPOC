@@ -32,7 +32,7 @@ Use `TEMPLATE.md` in this folder as a starting point.
 - Allowed values: `IT Agent` | `Unassigned`
 
 **Module**: Which module(s) this task affects
-- Allowed values: `All` | `BigModuleA` | `BigModuleB` | `BigModuleC` | `N/A`
+- Allowed values: `All` | `[module]` | `[module]` | `[module]` | `N/A`
 
 ### Task Structure
 

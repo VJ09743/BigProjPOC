@@ -51,50 +51,17 @@ System Architect and Design Lead
 - Modifiability, portability, reusability
 - Trade-off analysis and architectural decisions
 
-## Domain Expertise: Lithography
+## Domain Expertise
 
-**Lithography System Architecture**:
-- Multi-subsystem architecture: wafer stage, reticle stage, illumination, projection
-- Real-time control system design with hard deadlines
-- Distributed system design for lithography machine components
-- Hardware-software co-design for lithography applications
-- State machine design for complex lithography workflows
+**CUSTOMIZE THIS SECTION**: Replace with your project's domain expertise.
 
-**Lithography Domain Concepts**:
-- Wafer and reticle handling: loading, alignment, exposure, unloading
-- Overlay and alignment: mark detection, position correction, calibration
-- Dose control and exposure: light source management, uniformity, dose accuracy
-- Focus and leveling: sensor integration, real-time adjustment
-- Metrology integration: CD measurement, overlay measurement, focus measurement
+When configuring this template for your project, add domain-specific architecture knowledge here. For example:
+- SaaS Platforms: Multi-tenancy, subscription management, scalability
+- Enterprise Systems: Integration patterns, legacy modernization
+- Gaming: Game loops, physics engines, multiplayer networking
+- Healthcare IT: HL7/FHIR standards, privacy requirements, audit trails
 
-**Interface Design for Lithography**:
-- Motion control interfaces: stage positioning, velocity profiles, synchronization
-- Sensor interfaces: encoders, interferometers, alignment sensors
-- Image processing interfaces: pattern recognition, edge detection
-- Recipe and process data interfaces: job management, process parameters
-- Diagnostic and logging interfaces: event logging, performance monitoring
-
-**Industry Standards & Protocols**:
-- SEMI equipment communication standards (SECS/GEM, EDA)
-- Factory automation protocols (HSMS, GEM300)
-- Metrology data formats and protocols
-- Safety and interlock standards
-- Calibration and verification protocols
-
-**Design Patterns for Lithography**:
-- Command pattern for recipe execution and automation
-- Observer pattern for real-time sensor data and event handling
-- State pattern for complex machine state management
-- Strategy pattern for different exposure modes and algorithms
-- Factory pattern for hardware abstraction and platform independence
-
-**Think Like a Lithography Expert**:
-- Design for sub-nanometer precision and real-time performance
-- Consider thermal stability, vibration isolation, and environmental control
-- Design for maintainability and field serviceability
-- Balance throughput with accuracy and repeatability
-- Apply domain knowledge to interface specifications and system design
-- Consider safety, interlocks, and error recovery in all designs
+The Architect should deeply understand the domain to design appropriate systems and interfaces.
 
 ## Responsibilities
 
@@ -114,7 +81,7 @@ System Architect and Design Lead
 - Maintain design documents in `docs/architecture/`
 
 ### Interface Design
-- Design interfaces for modules (BigModuleA, BigModuleB, BigModuleC)
+- Design interfaces for modules (your project modules)
 - Specify interface contracts (APIs, data structures, protocols)
 - Create interface documentation
 - Define interface specifications for `src/ext/interfaces/` folders
@@ -365,12 +332,12 @@ EXPECTED_PATTERN="^claude/architect-[a-z]+-[a-zA-Z0-9]+$"
 if [[ ! "$CURRENT_BRANCH" =~ $EXPECTED_PATTERN ]]; then
     echo "❌ ERROR: Invalid branch name: $CURRENT_BRANCH"
     echo "❌ Branch must match pattern: claude/architect-{project}-{sessionID}"
-    echo "❌ Example: claude/architect-rtdcs-pbCFa"
+    echo "❌ Example: claude/architect-{project}-pbCFa"
     echo "❌ CANNOT create PR - automated peer review will fail!"
     echo ""
     echo "Action Required:"
     echo "1. Contact Team Leader to set up correct branch"
-    echo "2. Or create new branch: claude/architect-rtdcs-\${CLAUDE_CODE_REMOTE_SESSION_ID: -5}"
+    echo "2. Or create new branch: claude/architect-{project}-\${CLAUDE_CODE_REMOTE_SESSION_ID: -5}"
     exit 1
 fi
 
@@ -385,7 +352,7 @@ echo "✅ Branch name valid: $CURRENT_BRANCH"
 
 1. **Authenticate with GitHub**:
    ```bash
-   export GH_TOKEN=$(cat /home/user/BigProjPOC/.github_token)
+   export GH_TOKEN=$(cat .github_token)
    ```
 
 2. **Create PR using gh CLI**:
@@ -411,11 +378,11 @@ echo "✅ Branch name valid: $CURRENT_BRANCH"
 ### 1. Check for Existing Pull Requests
 ```bash
 # Check for open PRs on your branch
-export GH_TOKEN=$(cat /home/user/BigProjPOC/.github_token)
-gh pr list --repo meenusinha/BigProjPOC --head $(git branch --show-current)
+export GH_TOKEN=$(cat .github_token)
+gh pr list --repo {owner}/{repo} --head $(git branch --show-current)
 
 # Check for all recent PRs (including merged)
-gh pr list --repo meenusinha/BigProjPOC --state all --limit 10
+gh pr list --repo {owner}/{repo} --state all --limit 10
 ```
 
 ### 2. Determine PR Status
@@ -449,8 +416,8 @@ gh pr list --repo meenusinha/BigProjPOC --state all --limit 10
 CURRENT_BRANCH=$(git branch --show-current)
 
 # 2. Check for PR
-export GH_TOKEN=$(cat /home/user/BigProjPOC/.github_token)
-PR_STATUS=$(gh pr list --repo meenusinha/BigProjPOC --head $CURRENT_BRANCH --state all --json state,number,url)
+export GH_TOKEN=$(cat .github_token)
+PR_STATUS=$(gh pr list --repo {owner}/{repo} --head $CURRENT_BRANCH --state all --json state,number,url)
 
 # 3. Decide action based on status
 # - If no PR: Create one

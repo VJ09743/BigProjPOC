@@ -34,7 +34,7 @@ Use `TEMPLATE.md` in this folder as a starting point.
 - Allowed values: `Developer Agent` | `Unassigned`
 
 **Module**: Which module this task affects
-- Allowed values: `BigModuleA` | `BigModuleB` | `BigModuleC` | `Multiple`
+- Allowed values: `[module]` | `[module]` | `[module]` | `Multiple`
 
 **Type**: Type of development work
 - Allowed values: `Implementation` | `Bug Fix` | `Refactoring` | `Enhancement` | `Interface`
@@ -48,7 +48,7 @@ Use `TEMPLATE.md` in this folder as a starting point.
 **Priority**: medium
 **Created**: 2026-01-18
 **Assigned To**: Developer Agent
-**Module**: BigModuleA
+**Module**: [module]
 **Type**: Implementation
 
 ## Objective

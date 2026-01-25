@@ -3,11 +3,11 @@
 # Automatically creates branches with current session ID for all worktrees
 #
 # Usage: ./setup-continuation-branches.sh [project-name]
-# Example: ./setup-continuation-branches.sh rtdcs
+# Example: ./setup-continuation-branches.sh {project}
 
 set -e
 
-PROJECT="${1:-rtdcs}"
+PROJECT="${1:-{project}}"
 
 # Get current session ID (last 5 chars)
 if [ -z "$CLAUDE_CODE_REMOTE_SESSION_ID" ]; then

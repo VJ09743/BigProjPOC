@@ -1,136 +1,47 @@
-# RTDCS Release Package
+# Release Directory
 
-**Reticle Thermal Distortion Compensation System**
-**Version:** 1.0
-**Release Date:** 2026-01-21
+This directory contains release artifacts for the project.
 
----
-
-## Contents
-
-This release package contains documentation for the RTDCS proof-of-concept system.
-
-### Documentation
-
-- **[QUICK-START.md](docs/QUICK-START.md)** - One-page quick reference for building and running
-- **[RTDCS-User-Guide.md](docs/RTDCS-User-Guide.md)** - Complete user guide with detailed instructions
-- **[ARCHITECTURE.md](docs/ARCHITECTURE.md)** - System architecture and design documentation
-
-### Executables (Build Required)
-
-Executables are built from source and located in:
-- `BigModuleA/build/release/BigModuleA` - Thermal Monitor
-- `BigModuleB/build/release/BigModuleB` - Distortion Predictor
-- `BigModuleC/build/release/BigModuleC` - Compensation Controller
-
----
-
-## Quick Start
-
-### For the Impatient
-
-#### Linux
-```bash
-# Install dependencies
-sudo apt-get install -y build-essential libthrift-dev
-
-# Build
-make -C BigModuleA build && make -C BigModuleB build && make -C BigModuleC build
-
-# Run (3 terminals)
-./BigModuleA/build/release/BigModuleA --samples 100
-./BigModuleC/build/release/BigModuleC --port 9090
-./BigModuleB/build/release/BigModuleB --samples 50
-```
-
-#### macOS
-```bash
-# Install dependencies
-brew install thrift googletest boost
-
-# Build
-make -C BigModuleA build && make -C BigModuleB build && make -C BigModuleC build
-
-# Run (3 terminals)
-./BigModuleA/build/release/BigModuleA --samples 100
-./BigModuleC/build/release/BigModuleC --port 9090
-./BigModuleB/build/release/BigModuleB --samples 50
-```
-
----
-
-## System Overview
-
-RTDCS demonstrates multi-process communication for thermal distortion compensation:
+## Structure
 
 ```
-BigModuleA → Shared Memory → BigModuleB → Thrift RPC → BigModuleC → Shared Memory
-(Temperature)                (Prediction)              (Compensation)
+release/
+├── README.md          # This file
+├── .gitkeep           # Keeps directory in git
+└── [versioned releases will be added here]
 ```
 
-**Key Technologies:**
-- POSIX Shared Memory for high-speed data sharing
-- Apache Thrift RPC for inter-process communication
-- Multi-threaded concurrent processing
-- Real-time operation (10 Hz temperature, 5 Hz prediction)
+## Release Process
 
----
+Releases are created by the IT Agent following this workflow:
 
-## Documentation Index
+1. **Build** - All modules are built in release mode
+2. **Test** - All tests must pass
+3. **Package** - Artifacts are packaged
+4. **Version** - Semantic versioning (v1.0.0)
+5. **Tag** - Git tag is created
+6. **Document** - Release notes are generated
 
-### Getting Started
-- **Quick Start** - Get running in 5 minutes
-- **User Guide** - Complete installation and usage instructions
-- **Architecture** - System design and implementation details
+## Creating a Release
 
-### Reference
-- **Build System** - Makefile documentation and build targets
-- **Configuration** - Command-line options and environment variables
-- **Troubleshooting** - Common issues and solutions
+Tell Claude: "Create a release for version X.Y.Z"
 
-### For Developers
-- **API Reference** - Module interfaces and data structures
-- **Testing** - Unit test, integration test, and system test guidelines
-- **Contributing** - Development workflow and coding standards
+The IT Agent will:
+1. Build all modules
+2. Run all tests
+3. Create `release/vX.Y.Z/` directory
+4. Copy artifacts and documentation
+5. Create git tag
+6. Generate release notes
 
----
+## Version Format
 
-## Important Disclaimers
+Semantic Versioning (SemVer):
+- MAJOR.MINOR.PATCH
+- Example: 1.0.0, 1.1.0, 2.0.0
 
-⚠️ **PROOF OF CONCEPT ONLY**
+## Notes
 
-This system uses **COMPLETELY FICTIONAL** algorithms that have **NO scientific validity**:
-
-1. **Zeeman Thermal Expansion Model** (BigModuleB)
-   - Made-up quadratic model: `distortion = α*ΔT + β*ΔT²`
-   - Fictional coefficients chosen arbitrarily
-
-2. **Simple Negation Strategy** (BigModuleC)
-   - Trivial algorithm: `compensation = -distortion`
-   - Not representative of real compensation systems
-
-**Real lithography systems use:**
-- Finite Element Analysis (FEA)
-- Calibration-based correction tables
-- Multi-parameter physics-based models
-- Complex control algorithms
-
-**DO NOT use this system in production or for any application requiring accuracy.**
-
----
-
-## Support
-
-- **Documentation:** See `docs/` folder
-- **Issues:** https://github.com/meenusinha/BigProjPOC/issues
-- **Source Code:** https://github.com/meenusinha/BigProjPOC
-
----
-
-## License
-
-See LICENSE file in repository root.
-
----
-
-**Copyright © 2026 BigProjPOC Contributors**
+- Release artifacts are gitignored (except README and .gitkeep)
+- Each release gets its own versioned subfolder
+- Release documentation goes in `docs/it/releases/`

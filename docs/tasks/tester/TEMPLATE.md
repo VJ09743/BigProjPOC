@@ -11,8 +11,8 @@
 **Assigned To**: Tester Agent
 <!-- Allowed values: Tester Agent | Unassigned -->
 
-**Module**: BigModuleA
-<!-- Allowed values: BigModuleA | BigModuleB | BigModuleC | All | Multiple -->
+**Module**: [module]
+<!-- Allowed values: [module] | [module] | [module] | All | Multiple -->
 
 **Test Type**: Component
 <!-- Allowed values: Component | Integration | System | Regression | Performance | Security -->

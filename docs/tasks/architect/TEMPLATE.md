@@ -25,7 +25,7 @@ Clear description of what needs to be designed or specified.
 ## Scope
 - What's included in this design
 - What's explicitly out of scope
-- Module(s) affected: BigModuleA | BigModuleB | BigModuleC
+- Module(s) affected: [module] | [module] | [module]
 
 ## Deliverables
 - [ ] Requirements document in docs/requirements/

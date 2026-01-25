@@ -59,17 +59,17 @@ Agents work together through handoffs:
 Add to `.aider.conf.yml`:
 ```yaml
 read:
-  - .agents/team-leader-agent.md
-  - .agents/architect-agent.md
-  - .agents/developer-agent.md
-  - .agents/tester-agent.md
-  - .agents/it-agent.md
+  - ai-assistants/agents/team-leader-agent.md
+  - ai-assistants/agents/architect-agent.md
+  - ai-assistants/agents/developer-agent.md
+  - ai-assistants/agents/tester-agent.md
+  - ai-assistants/agents/it-agent.md
 ```
 
 ### For Cursor
 Add to `.cursorrules`:
 ```
-Read and follow the agent role definitions in the .agents/ directory.
+Read and follow the agent role definitions in the ai-assistants/agents/ directory.
 When working on tasks, adopt the appropriate agent role based on the task type.
 ```
 

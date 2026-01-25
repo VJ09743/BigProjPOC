@@ -37,7 +37,7 @@ git clone <repo-url> my-project
 cd my-project
 
 # 2. Set up your AI provider
-cp .llm/config.template.json .llm/config.json
+cp ai-assistants/provider-setup/config.template.json ai-assistants/provider-setup/config.json
 export LLM_API_KEY="your-api-key"
 
 # 3. Start your AI tool and describe what you want to build
@@ -58,19 +58,31 @@ cursor .         # For Cursor
 ## Structure
 
 ```
-├── .agents/             # Agent role definitions (LLM-agnostic)
-├── .llm/                # LLM provider configuration
-│   ├── config.template.json  # Config template
-│   └── README.md             # Setup instructions
-├── .github/workflows/   # GitHub Actions
-├── docs/                # Documentation templates
-│   ├── tasks/           # Task management
-│   ├── architecture/    # Design docs
-│   ├── tests/           # Test docs
-│   └── it/              # Infrastructure docs
-├── src/                 # Your source code
-├── tests/               # Your tests
-└── AI-WORKFLOW.md       # Main workflow configuration
+├── ai-assistants/           # AI setup and configuration
+│   ├── agents/              # Agent role definitions
+│   ├── provider-setup/      # LLM provider configuration
+│   └── how-to-use.md        # Getting started guide
+│
+├── project-management/      # Project documentation
+│   ├── tasks/               # Task assignments
+│   ├── designs/             # Architecture docs
+│   ├── requirements/        # Feature requirements
+│   ├── quality/             # Test plans and QA
+│   └── operations/          # Releases and infrastructure
+│
+├── src/                     # Your source code
+│   ├── internal/            # Code you write
+│   ├── external/            # Third-party libraries
+│   └── generated/           # Auto-generated code
+│
+├── tests/                   # Your tests
+│
+├── build/                   # Build output (gitignored)
+│   ├── release/             # Production builds
+│   └── debug/               # Debug builds
+│
+├── .github/workflows/       # GitHub Actions
+└── AI-WORKFLOW.md           # Main workflow documentation
 ```
 
 ## How It Works
@@ -104,12 +116,12 @@ ollama pull llama3
 aider --model ollama/llama3
 ```
 
-See `.llm/README.md` for detailed setup instructions.
+See `ai-assistants/provider-setup/README.md` for detailed setup instructions.
 
 ## Customization
 
-1. **Configure your AI provider** - Edit `.llm/config.json`
-2. **Add domain expertise** - Update agent files in `.agents/`
+1. **Configure your AI provider** - Edit `ai-assistants/provider-setup/config.json`
+2. **Add domain expertise** - Update agent files in `ai-assistants/agents/`
 3. **Customize structure** - Modify directories for your project
 4. **Configure builds** - Add your build system
 5. **Update workflows** - Modify `.github/workflows/`

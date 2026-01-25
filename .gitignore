@@ -3,7 +3,7 @@
 # =============================================================================
 
 # LLM Provider Configuration (contains API settings)
-.llm/config.json
+ai-assistants/provider-setup/config.json
 
 # Generic API key files
 *.key
@@ -74,6 +74,7 @@ secrets.txt
 *.dwo
 
 # Build directories
+build/
 **/build/
 **/dist/
 **/out/
@@ -83,10 +84,9 @@ secrets.txt
 # =============================================================================
 
 # Release artifacts (executables and libraries)
-release/bin/
-release/lib/
-release/include/
-release/v*/
+build/release/bin/
+build/release/lib/
+build/debug/
 
 # Generated code directories
 **/gen-cpp/

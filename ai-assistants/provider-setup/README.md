@@ -6,7 +6,7 @@ This directory contains configuration for your LLM (Large Language Model) provid
 
 1. **Copy the template:**
    ```bash
-   cp .llm/config.template.json .llm/config.json
+   cp ai-assistants/provider-setup/config.template.json ai-assistants/provider-setup/config.json
    ```
 
 2. **Set your API key:**
@@ -145,7 +145,7 @@ export LLM_API_KEY="..."
 ## Security
 
 **Never commit API keys!** The following are gitignored:
-- `.llm/config.json` (your actual config)
+- `ai-assistants/provider-setup/config.json` (your actual config)
 - `.env` files
 - `*_key`, `*_token`, `*_secret` files
 - `.api_key`, `.llm_key`
@@ -163,7 +163,7 @@ Once configured, interact with the AI assistant:
 
 ## Adapting Agent Prompts
 
-The agent definitions in `.agent/agents/` work with any LLM. If your tool uses different prompt formats:
+The agent definitions in `ai-assistants/agents/` work with any LLM. If your tool uses different prompt formats:
 
 1. Copy the agent files to your tool's format
 2. Maintain the same role definitions and responsibilities

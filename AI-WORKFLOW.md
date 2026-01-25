@@ -20,7 +20,7 @@ This is a **provider-agnostic template** for setting up a multi-agent AI workflo
 ## Quick Start
 
 1. **Fork or clone this repository**
-2. **Configure your LLM provider** (see `.llm/README.md`)
+2. **Configure your LLM provider** (see `ai-assistants/provider-setup/README.md`)
 3. **Set your API key** as an environment variable
 4. **Start your AI assistant** and describe what you want to build
 
@@ -28,13 +28,13 @@ This is a **provider-agnostic template** for setting up a multi-agent AI workflo
 
 ## LLM Provider Setup
 
-See `.llm/README.md` for detailed setup instructions.
+See `ai-assistants/provider-setup/README.md` for detailed setup instructions.
 
 ### Quick Configuration
 
 ```bash
 # 1. Copy the config template
-cp .llm/config.template.json .llm/config.json
+cp ai-assistants/provider-setup/config.template.json ai-assistants/provider-setup/config.json
 
 # 2. Set your API key (add to ~/.bashrc or ~/.zshrc)
 export LLM_API_KEY="your-api-key"
@@ -83,7 +83,7 @@ Replace this section with your project's domain context. Examples:
 ```
 
 **Agent Domain Expertise**:
-All agents should understand your project's domain to make informed decisions. Update the agent files in `.agents/` to include relevant domain expertise.
+All agents should understand your project's domain to make informed decisions. Update the agent files in `ai-assistants/agents/` to include relevant domain expertise.
 
 ---
 
@@ -91,30 +91,44 @@ All agents should understand your project's domain to make informed decisions. U
 
 ```
 YourProject/
-├── .agents/                 # Agent role definitions
-│   ├── team-leader-agent.md     # Orchestrator and planner
-│   ├── it-agent.md              # Infrastructure specialist
-│   ├── architect-agent.md       # System designer
-│   ├── developer-agent.md       # Implementation specialist
-│   └── tester-agent.md          # QA specialist
-├── .llm/                    # LLM provider configuration
-│   ├── config.template.json     # Config template
-│   ├── config.json              # Your config (gitignored)
-│   └── README.md                # Setup instructions
-├── .github/                 # GitHub configuration
+├── ai-assistants/               # AI configuration
+│   ├── agents/                  # Agent role definitions
+│   │   ├── team-leader-agent.md     # Orchestrator and planner
+│   │   ├── it-agent.md              # Infrastructure specialist
+│   │   ├── architect-agent.md       # System designer
+│   │   ├── developer-agent.md       # Implementation specialist
+│   │   └── tester-agent.md          # QA specialist
+│   ├── provider-setup/          # LLM provider configuration
+│   │   ├── config.template.json     # Config template
+│   │   ├── config.json              # Your config (gitignored)
+│   │   └── README.md                # Setup instructions
+│   └── how-to-use.md            # Getting started guide
+│
+├── project-management/          # Project documentation
+│   ├── tasks/                   # Task management system
+│   ├── designs/                 # Architecture docs (EPS, EDS)
+│   ├── requirements/            # Feature requirements
+│   ├── quality/                 # Test plans and QA docs
+│   ├── operations/              # Infrastructure and releases
+│   └── workflow/                # Team coordination docs
+│
+├── src/                         # Your source code
+│   ├── internal/                # Code you write
+│   ├── external/                # Third-party libraries
+│   └── generated/               # Auto-generated code
+│
+├── tests/                       # Your tests
+│
+├── build/                       # Build output (gitignored)
+│   ├── release/                 # Production builds
+│   └── debug/                   # Debug builds
+│
+├── .github/                     # GitHub configuration
 │   ├── workflows/               # GitHub Actions
 │   └── scripts/                 # Automation scripts
-├── docs/                    # Project documentation
-│   ├── tasks/                   # Task management system
-│   ├── architecture/            # Architecture docs
-│   ├── tests/                   # Test documentation
-│   ├── it/                      # Infrastructure docs
-│   └── team-leader/             # Planning docs
-├── src/                     # Your source code
-├── tests/                   # Your tests
-├── release/                 # Release artifacts
-├── AI-WORKFLOW.md                # This file (works with any AI)
-└── README.md                # Project readme
+│
+├── AI-WORKFLOW.md               # This file
+└── README.md                    # Project readme
 ```
 
 ---
@@ -225,10 +239,10 @@ Before PRs go to user review:
 
 ### Task Folders
 
-- `docs/tasks/it/` - Infrastructure tasks
-- `docs/tasks/architect/` - Design tasks
-- `docs/tasks/developer/` - Implementation tasks
-- `docs/tasks/tester/` - Testing tasks
+- `project-management/tasks/it/` - Infrastructure tasks
+- `project-management/tasks/architect/` - Design tasks
+- `project-management/tasks/developer/` - Implementation tasks
+- `project-management/tasks/tester/` - Testing tasks
 
 ### Creating Tasks
 
@@ -250,9 +264,12 @@ pending → in-progress → completed → archived
 ## Development Guidelines
 
 ### Code Organization
-- Keep source code in `src/` or module-specific directories
-- Tests in `tests/` or module-specific test directories
-- Build artifacts excluded from version control
+- Keep source code in `src/` directory
+  - `src/internal/` for your project code
+  - `src/external/` for third-party dependencies
+  - `src/generated/` for auto-generated files
+- Tests in `tests/` directory
+- Build artifacts in `build/` (gitignored)
 
 ### Git Workflow
 - Main branch: `master` or `main`
@@ -300,11 +317,11 @@ gh pr create --base master --head <branch> \
 
 ### 1. Configure Your LLM Provider
 
-Edit `.llm/config.json` with your provider settings. See `.llm/README.md` for details.
+Edit `ai-assistants/provider-setup/config.json` with your provider settings. See `ai-assistants/provider-setup/README.md` for details.
 
 ### 2. Update Domain Expertise
 
-Edit each agent file in `.agents/` to include your project's domain knowledge.
+Edit each agent file in `ai-assistants/agents/` to include your project's domain knowledge.
 
 ### 3. Customize Project Structure
 
@@ -360,9 +377,9 @@ aider
 ## Notes for AI Assistants
 
 - Automatically adopt appropriate agent role based on task
-- Read agent configs in `.agents/` for responsibilities
+- Read agent configs in `ai-assistants/agents/` for responsibilities
 - Follow peer review process before creating PRs
-- Document decisions in appropriate docs folders
+- Document decisions in appropriate project-management folders
 - Keep this file updated when structure changes
 - API keys are stored as environment variables, never in code
 
@@ -370,7 +387,7 @@ aider
 
 ## Getting Started
 
-1. **Configure your AI provider** (see `.llm/README.md`)
+1. **Configure your AI provider** (see `ai-assistants/provider-setup/README.md`)
 2. **Describe your project** to the AI assistant
 3. The AI will ask clarifying questions
 4. Work begins with Team Leader analysis
@@ -391,5 +408,5 @@ aider
 
 ---
 
-**Template Version**: 2.0
+**Template Version**: 2.1
 **Last Updated**: 2026-01-25

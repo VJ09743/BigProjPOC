@@ -4,6 +4,8 @@ Welcome! This guide will help you set up the AI-assisted workflow in **5 simple 
 
 No programming experience required.
 
+> **New here?** First, [fork this template](README.md#fork-this-template) to create your own copy, then follow the steps below.
+
 ---
 
 ## Step 1: Get an AI API Key (5 minutes)

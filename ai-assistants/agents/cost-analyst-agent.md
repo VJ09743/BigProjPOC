@@ -23,12 +23,11 @@ Monitor, estimate, and optimize AI resource consumption (tokens, API calls) to:
 | Provider | Model | Input Cost | Output Cost |
 |----------|-------|------------|-------------|
 | Anthropic | Claude 3.5 Sonnet | $3/1M tokens | $15/1M tokens |
-| Anthropic | Claude 3 Opus | $15/1M tokens | $75/1M tokens |
-| OpenAI | GPT-4o | $5/1M tokens | $15/1M tokens |
-| OpenAI | GPT-4 Turbo | $10/1M tokens | $30/1M tokens |
+| Anthropic | Claude Opus 4 | $15/1M tokens | $75/1M tokens |
 | Google | Gemini 1.5 Pro | $1.25/1M tokens | $5/1M tokens |
 | Google | Gemini 1.5 Flash | $0.075/1M tokens | $0.30/1M tokens |
-| Ollama | Local models | Free | Free |
+| OpenAI | GPT-4o | $5/1M tokens | $15/1M tokens |
+| OpenAI | GPT-4 Turbo | $10/1M tokens | $30/1M tokens |
 
 *Note: Prices may change. Update this table as needed.*
 
@@ -263,5 +262,4 @@ Automatically activate when:
 
 - Cost estimates are approximations based on current provider pricing
 - Actual costs may vary based on model version and API changes
-- Local models (Ollama) have no API cost but have compute costs
 - Regular calibration of estimates improves accuracy over time

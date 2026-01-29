@@ -10,32 +10,26 @@ No programming experience required.
 
 You need an API key from an AI provider. Choose ONE:
 
-### Option A: OpenAI (Recommended for beginners)
-1. Go to https://platform.openai.com/signup
-2. Create an account (or sign in)
-3. Go to https://platform.openai.com/api-keys
-4. Click **"Create new secret key"**
-5. Copy the key (starts with `sk-...`)
-
-### Option B: Anthropic (Claude)
+### Option A: Anthropic Claude (Recommended - Best for software projects)
 1. Go to https://console.anthropic.com/
 2. Create an account (or sign in)
 3. Go to API Keys section
 4. Create a new key
 5. Copy the key (starts with `sk-ant-...`)
 
-### Option C: Google Gemini
+### Option B: Google Gemini
 1. Go to https://aistudio.google.com/
 2. Create an account (or sign in with Google)
 3. Click **"Get API Key"**
 4. Create a new key
 5. Copy the key
 
-### Option D: Ollama (Free, runs on your computer)
-1. Go to https://ollama.ai/download
-2. Download and install Ollama
-3. Open terminal and run: `ollama pull llama3`
-4. No API key needed!
+### Option C: OpenAI (ChatGPT)
+1. Go to https://platform.openai.com/signup
+2. Create an account (or sign in)
+3. Go to https://platform.openai.com/api-keys
+4. Click **"Create new secret key"**
+5. Copy the key (starts with `sk-...`)
 
 ---
 
@@ -46,16 +40,16 @@ Your API key needs to be saved so the AI tools can use it.
 ### On Mac/Linux:
 Open Terminal and run:
 ```bash
-# For OpenAI:
-echo 'export OPENAI_API_KEY="your-key-here"' >> ~/.bashrc
-source ~/.bashrc
-
-# For Anthropic:
+# For Anthropic Claude (recommended):
 echo 'export ANTHROPIC_API_KEY="your-key-here"' >> ~/.bashrc
 source ~/.bashrc
 
 # For Google Gemini:
 echo 'export GOOGLE_API_KEY="your-key-here"' >> ~/.bashrc
+source ~/.bashrc
+
+# For OpenAI:
+echo 'export OPENAI_API_KEY="your-key-here"' >> ~/.bashrc
 source ~/.bashrc
 ```
 
@@ -64,7 +58,7 @@ source ~/.bashrc
 2. Click "Edit the system environment variables"
 3. Click "Environment Variables" button
 4. Under "User variables", click "New"
-5. Variable name: `OPENAI_API_KEY`, `ANTHROPIC_API_KEY`, or `GOOGLE_API_KEY`
+5. Variable name: `ANTHROPIC_API_KEY`, `GOOGLE_API_KEY`, or `OPENAI_API_KEY`
 6. Variable value: your API key
 7. Click OK
 
@@ -74,7 +68,75 @@ source ~/.bashrc
 
 Choose ONE tool to interact with the AI:
 
-### Option A: Aider (Works with most AI providers)
+### Option A: Claude Code (Recommended - Best for software projects)
+
+Claude Code is Anthropic's official CLI tool, optimized for software development.
+
+First, check if Node.js is installed and install it if needed, then install Claude Code:
+
+**On Mac:**
+```bash
+# This script checks for Node.js and installs if needed
+if command -v node &> /dev/null; then
+    echo "Node.js is already installed: $(node --version)"
+else
+    echo "Node.js not found. Installing..."
+    if command -v brew &> /dev/null; then
+        brew install node
+    else
+        echo "Installing Homebrew first..."
+        /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+        brew install node
+    fi
+fi
+# Now install Claude Code
+npm install -g @anthropic-ai/claude-code
+```
+
+**On Windows (PowerShell - Run as Administrator):**
+```powershell
+# This script checks for Node.js and installs if needed
+$nodeInstalled = Get-Command node -ErrorAction SilentlyContinue
+if ($nodeInstalled) {
+    Write-Host "Node.js is already installed: $(node --version)"
+} else {
+    Write-Host "Node.js not found. Installing..."
+    winget install OpenJS.NodeJS.LTS --accept-package-agreements --accept-source-agreements
+    # Refresh PATH
+    $env:Path = [System.Environment]::GetEnvironmentVariable("Path","Machine") + ";" + [System.Environment]::GetEnvironmentVariable("Path","User")
+}
+# Now install Claude Code
+npm install -g @anthropic-ai/claude-code
+```
+
+**On Linux (Ubuntu/Debian):**
+```bash
+# This script checks for Node.js and installs if needed
+if command -v node &> /dev/null; then
+    echo "Node.js is already installed: $(node --version)"
+else
+    echo "Node.js not found. Installing..."
+    curl -fsSL https://deb.nodesource.com/setup_lts.x | sudo -E bash -
+    sudo apt install -y nodejs
+fi
+# Now install Claude Code
+npm install -g @anthropic-ai/claude-code
+```
+
+**On Linux (Fedora/RHEL):**
+```bash
+# This script checks for Node.js and installs if needed
+if command -v node &> /dev/null; then
+    echo "Node.js is already installed: $(node --version)"
+else
+    echo "Node.js not found. Installing..."
+    sudo dnf install -y nodejs
+fi
+# Now install Claude Code
+npm install -g @anthropic-ai/claude-code
+```
+
+### Option B: Aider (Works with Google Gemini and OpenAI)
 
 First, check if Python is installed and install it if needed:
 
@@ -105,7 +167,6 @@ if ($pythonInstalled) {
     Write-Host "Python is already installed: $(python --version)"
 } else {
     Write-Host "Python not found. Installing..."
-    # Download and install Python using winget (Windows 10/11)
     winget install Python.Python.3.11 --accept-package-agreements --accept-source-agreements
     # Refresh PATH
     $env:Path = [System.Environment]::GetEnvironmentVariable("Path","Machine") + ";" + [System.Environment]::GetEnvironmentVariable("Path","User")
@@ -141,7 +202,7 @@ fi
 pip3 install aider-chat
 ```
 
-### Option B: Cursor IDE (Easiest for beginners - No Python needed)
+### Option C: Cursor IDE (Easiest for beginners - No installation scripts needed)
 1. Go to https://cursor.sh
 2. Download and install
 3. Open your project folder in Cursor
@@ -150,6 +211,12 @@ pip3 install aider-chat
 ---
 
 ## Step 4: Open Your Project (1 minute)
+
+### If using Claude Code (recommended):
+```bash
+cd /path/to/your/project
+claude
+```
 
 ### If using Aider:
 ```bash
@@ -248,7 +315,7 @@ your-project/
 
 ## Cost Awareness
 
-Using AI APIs costs money (except Ollama which is free).
+Using AI APIs costs money per request.
 
 **Approximate costs:**
 - Simple question: ~$0.01

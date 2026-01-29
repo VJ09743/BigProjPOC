@@ -6,21 +6,19 @@ This guide helps you set up and use AI assistants for your software project.
 
 ### Step 1: Choose Your AI Provider
 
-Pick one AI service to use. Popular options:
+Pick one AI service to use:
 
 | Provider | Cost | Best For |
 |----------|------|----------|
-| **OpenAI (GPT-4)** | Pay per use | General coding |
-| **Anthropic (Claude)** | Pay per use | Complex reasoning |
+| **Anthropic (Claude)** | Pay per use | Best for software projects (recommended) |
 | **Google (Gemini)** | Pay per use | Google ecosystem |
-| **Ollama** | Free (local) | Privacy, offline work |
+| **OpenAI (GPT-4)** | Pay per use | General coding |
 
 ### Step 2: Get Your API Key
 
-1. **OpenAI**: Go to https://platform.openai.com/api-keys
-2. **Anthropic**: Go to https://console.anthropic.com/
-3. **Google Gemini**: Go to https://aistudio.google.com/ → Click "Get API Key"
-4. **Ollama**: No key needed (runs locally)
+1. **Anthropic**: Go to https://console.anthropic.com/
+2. **Google Gemini**: Go to https://aistudio.google.com/ → Click "Get API Key"
+3. **OpenAI**: Go to https://platform.openai.com/api-keys
 
 ### Step 3: Configure Your Provider
 
@@ -36,16 +34,16 @@ export LLM_API_KEY="your-api-key-here"
 
 Choose one:
 
-**Option A: Aider (works with most providers)**
-```bash
-pip install aider-chat
-aider
-```
-
-**Option B: Claude Code (Anthropic only)**
+**Option A: Claude Code (Recommended - Best for software projects)**
 ```bash
 npm install -g @anthropic-ai/claude-code
 claude
+```
+
+**Option B: Aider (Works with Gemini and OpenAI)**
+```bash
+pip install aider-chat
+aider
 ```
 
 **Option C: Cursor IDE**

@@ -4,14 +4,12 @@ A **provider-agnostic template** for AI-assisted multi-agent development workflo
 
 ## Works With Any AI
 
-| Provider | Models | Tools |
-|----------|--------|-------|
-| **Anthropic** | Claude 3.5, Opus | Any compatible CLI |
+| Provider | Models | Recommended Tools |
+|----------|--------|-------------------|
+| **Anthropic** | Claude 3.5, Opus 4 | Claude Code (recommended) |
+| **Google** | Gemini 1.5 Pro, Flash | Aider, Cursor |
 | **OpenAI** | GPT-4o, GPT-4 Turbo | Aider, Cursor |
 | **Azure** | GPT-4, GPT-3.5 | Aider, Cursor |
-| **Google** | Gemini Pro, Gemini Ultra | Aider, Custom |
-| **Ollama** | Llama 3, Mistral | Aider |
-| **Any** | OpenAI-compatible | Custom |
 
 ## What is this?
 
@@ -47,12 +45,12 @@ cd my-project
 
 # 2. Set up your AI provider
 cp ai-assistants/provider-setup/config.template.json ai-assistants/provider-setup/config.json
-export LLM_API_KEY="your-api-key"
+export ANTHROPIC_API_KEY="your-api-key"  # or GOOGLE_API_KEY or OPENAI_API_KEY
 
 # 3. Start your AI tool and describe what you want to build
-aider            # For Aider
-cursor .         # For Cursor
-# or any other AI coding assistant
+claude           # For Claude Code (recommended)
+aider            # For Aider (Gemini/OpenAI)
+cursor .         # For Cursor IDE
 ```
 
 ## Features
@@ -111,18 +109,11 @@ cursor .         # For Cursor
 
 ## Setup by Provider
 
-### OpenAI (GPT-4)
-```bash
-export OPENAI_API_KEY="sk-..."
-pip install aider-chat
-aider
-```
-
-### Anthropic
+### Anthropic Claude (Recommended)
 ```bash
 export ANTHROPIC_API_KEY="sk-ant-..."
-pip install aider-chat
-aider --model claude-3-opus-20240229
+npm install -g @anthropic-ai/claude-code
+claude
 ```
 
 ### Google Gemini
@@ -132,10 +123,11 @@ pip install aider-chat
 aider --model gemini/gemini-1.5-pro-latest
 ```
 
-### Ollama (Local)
+### OpenAI (GPT-4)
 ```bash
-ollama pull llama3
-aider --model ollama/llama3
+export OPENAI_API_KEY="sk-..."
+pip install aider-chat
+aider
 ```
 
 See `ai-assistants/provider-setup/README.md` for detailed setup instructions.

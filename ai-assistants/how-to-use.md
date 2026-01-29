@@ -10,6 +10,7 @@ This template includes configuration files that instruct AI assistants to follow
 |---------|-------------|---------|
 | Claude Code | `CLAUDE.md` | Instructions for Claude Code CLI |
 | Cursor | `.cursorrules` | Instructions for Cursor IDE |
+| Aider | `.aider.conf.yml` + `.aider.conventions.md` | Instructions for Aider CLI |
 
 These files ensure the AI **always starts as Product Owner** and follows the complete workflow.
 

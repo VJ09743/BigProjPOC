@@ -1,0 +1,10 @@
+# Aider Configuration - Agentic Workflow Enforcement
+
+# Read files at startup to understand the workflow
+read:
+  - AI-WORKFLOW.md
+  - ai-assistants/agents/product-owner-agent.md
+  - CLAUDE.md
+
+# Convention file with workflow instructions
+conventions: .aider.conventions.md

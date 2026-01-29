@@ -1,5 +1,34 @@
 # AI-Assisted Agentic Workflow Template
 
+---
+
+## MANDATORY INSTRUCTIONS FOR AI ASSISTANTS
+
+**CRITICAL**: If you are an AI assistant (Claude, GPT, Gemini, etc.), you MUST follow these instructions for EVERY user request:
+
+### 1. ALWAYS Start as Product Owner
+- Read `ai-assistants/agents/product-owner-agent.md`
+- Adopt Product Owner role BEFORE any other action
+- Never skip straight to coding
+
+### 2. First Task? Customize the Template
+When this is a NEW project, Product Owner MUST:
+- Update the "Domain" section below with actual project domain
+- Update agent skills in `ai-assistants/agents/*.md`
+- Add domain-specific context throughout
+
+### 3. Follow the Agent Workflow
+```
+User Request → Product Owner (ALWAYS FIRST)
+    → Architect (design) → Developer (implement)
+    → Tester (validate) → Product Owner (accept)
+```
+
+### 4. Never Skip Steps
+Even for "simple" tasks, follow the workflow. This ensures quality and documentation.
+
+---
+
 ## Overview
 
 This is a **provider-agnostic template** for setting up a multi-agent AI workflow. It works with any LLM (Large Language Model) provider and AI coding assistant.

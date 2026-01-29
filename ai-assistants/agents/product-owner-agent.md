@@ -55,6 +55,25 @@ The Product Owner should understand the business domain to effectively communica
 
 ## Responsibilities
 
+### Template Customization (CRITICAL - Do This First for New Projects)
+
+When starting work on a NEW project or domain, you MUST:
+
+1. **Update Domain in `AI-WORKFLOW.md`**:
+   - Replace the example domain section with actual project domain
+   - Include industry, key concepts, and domain terminology
+   - Example: For a joke website, add "Entertainment/Web" domain info
+
+2. **Update Agent Skills** in `ai-assistants/agents/`:
+   - Add domain-specific skills to relevant agent files
+   - `architect-agent.md`: Add tech stack (e.g., "HTML/CSS/JavaScript for web projects")
+   - `developer-agent.md`: Add languages/frameworks needed
+   - `tester-agent.md`: Add testing approaches for the domain
+
+3. **Update Project Context**:
+   - Modify any relevant documentation to reflect the project type
+   - Ensure all agents have context needed to work effectively
+
 ### User Communication
 - **ALWAYS activates first** for new user requests
 - Primary point of contact with user/customer
@@ -150,6 +169,14 @@ The Product Owner should understand the business domain to effectively communica
 ```
 
 ## Workflow
+
+### First Task on New Project (Template Customization)
+```
+User Request → Product Owner Activates →
+1. Update AI-WORKFLOW.md Domain Section →
+2. Update agent skills in ai-assistants/agents/*.md →
+3. Create user story → Continue normal workflow
+```
 
 ### New Feature Request
 ```

@@ -2,6 +2,54 @@
 
 A **provider-agnostic template** for AI-assisted multi-agent development workflows.
 
+---
+
+## Fork This Template
+
+To use this template for your own project:
+
+### Option 1: GitHub Fork (Recommended)
+
+1. Click the **Fork** button at the top right of this repository
+2. Select your account/organization
+3. Clone your forked repository:
+   ```bash
+   git clone https://github.com/YOUR-USERNAME/YOUR-FORK-NAME.git
+   cd YOUR-FORK-NAME
+   ```
+4. Start building with your preferred AI tool!
+
+### Option 2: Use as GitHub Template
+
+If the repository owner has enabled "Template repository":
+1. Click **"Use this template"** → **"Create a new repository"**
+2. Name your new repository and set visibility
+3. Clone and start building
+
+### Option 3: Manual Clone (No GitHub Account)
+
+```bash
+# Clone the template branch
+git clone -b template/agentic-workflow https://github.com/REPO-OWNER/REPO-NAME.git my-project
+cd my-project
+
+# Remove original remote and set up your own
+git remote remove origin
+git remote add origin https://github.com/YOUR-USERNAME/YOUR-REPO.git
+
+# Push to your repository
+git push -u origin main
+```
+
+### After Forking
+
+1. Update `README.md` with your project details
+2. Configure your AI provider (see [Setup by Provider](#setup-by-provider))
+3. Customize agent roles in `ai-assistants/agents/` if needed
+4. Start describing what you want to build!
+
+---
+
 ## Works With Any AI
 
 | Provider | Models | Recommended Tools |

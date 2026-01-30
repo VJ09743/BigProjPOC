@@ -1,243 +1,396 @@
 # Quick Start Guide
 
-Welcome! This guide will help you set up the AI-assisted workflow in **5 simple steps**.
+Welcome! This guide will help you set up the AI-assisted workflow.
 
-No programming experience required.
+**No programming experience required.**
 
 > **New here?** First, [fork this template](README.md#fork-this-template) to create your own copy, then follow the steps below.
 
 ---
 
-## Step 1: Get an AI API Key (5 minutes)
+## Choose Your Path
 
-You need an API key from an AI provider. Choose ONE:
+Pick ONE path based on which AI tool you want to use:
 
-### Option A: Anthropic Claude (Recommended - Best for software projects)
+| Path | AI Tool | Best For | Difficulty |
+|------|---------|----------|------------|
+| [Path A](#path-a-claude-code--anthropic) | Claude Code + Anthropic | Software projects | Easy (CLI) |
+| [Path B](#path-b-cursor-ide) | Cursor IDE | Beginners, visual interface | Easiest (GUI) |
+| [Path C](#path-c-windsurf-ide) | Windsurf IDE | Beginners, visual interface | Easiest (GUI) |
+| [Path D](#path-d-aider--google-gemini) | Aider + Google Gemini | Budget-conscious | Easy (CLI) |
+| [Path E](#path-e-aider--openai) | Aider + OpenAI | GPT-4 users | Easy (CLI) |
+| [Path F](#path-f-continue-extension) | Continue + VS Code | VS Code users | Easy (Extension) |
+
+**Recommended**: Path A (Claude Code) for best software development experience.
+
+---
+
+## Path A: Claude Code + Anthropic
+
+**Best for**: Software projects, most capable for coding tasks.
+
+### Step 1: Get Your Anthropic API Key
+
 1. Go to https://console.anthropic.com/
 2. Create an account (or sign in)
-3. Go to API Keys section
-4. Create a new key
+3. Go to **API Keys** section
+4. Click **Create Key**
 5. Copy the key (starts with `sk-ant-...`)
 
-### Option B: Google Gemini
-1. Go to https://aistudio.google.com/
-2. Create an account (or sign in with Google)
-3. Click **"Get API Key"**
-4. Create a new key
-5. Copy the key
+### Step 2: Save Your API Key
 
-### Option C: OpenAI (ChatGPT)
+**On Mac/Linux:**
+```bash
+echo 'export ANTHROPIC_API_KEY="your-key-here"' >> ~/.bashrc
+source ~/.bashrc
+```
+
+**On Windows:**
+1. Search for "Environment Variables" in Start menu
+2. Click "Edit the system environment variables"
+3. Click "Environment Variables" button
+4. Under "User variables", click "New"
+5. Variable name: `ANTHROPIC_API_KEY`
+6. Variable value: your API key
+7. Click OK
+
+### Step 3: Install Claude Code
+
+**On Mac:**
+```bash
+# Install Node.js if needed
+if ! command -v node &> /dev/null; then
+    brew install node || { /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)" && brew install node; }
+fi
+# Install Claude Code
+npm install -g @anthropic-ai/claude-code
+```
+
+**On Windows (PowerShell as Administrator):**
+```powershell
+# Install Node.js if needed
+if (!(Get-Command node -ErrorAction SilentlyContinue)) {
+    winget install OpenJS.NodeJS.LTS --accept-package-agreements --accept-source-agreements
+    $env:Path = [System.Environment]::GetEnvironmentVariable("Path","Machine") + ";" + [System.Environment]::GetEnvironmentVariable("Path","User")
+}
+# Install Claude Code
+npm install -g @anthropic-ai/claude-code
+```
+
+**On Linux (Ubuntu/Debian):**
+```bash
+# Install Node.js if needed
+if ! command -v node &> /dev/null; then
+    curl -fsSL https://deb.nodesource.com/setup_lts.x | sudo -E bash -
+    sudo apt install -y nodejs
+fi
+# Install Claude Code
+npm install -g @anthropic-ai/claude-code
+```
+
+### Step 4: Start Building
+
+```bash
+cd /path/to/your/project
+claude
+```
+
+Now describe what you want to build! [Jump to examples](#example-requests)
+
+---
+
+## Path B: Cursor IDE
+
+**Best for**: Beginners who prefer a visual interface. Works with any AI provider.
+
+### Step 1: Get an API Key
+
+Choose ONE provider:
+
+**Option 1 - Anthropic (Recommended):**
+1. Go to https://console.anthropic.com/
+2. Create account → API Keys → Create Key
+3. Copy the key (starts with `sk-ant-...`)
+
+**Option 2 - OpenAI:**
+1. Go to https://platform.openai.com/api-keys
+2. Create account → Create new secret key
+3. Copy the key (starts with `sk-...`)
+
+### Step 2: Install Cursor
+
+1. Go to https://cursor.sh
+2. Download for your operating system
+3. Install and open Cursor
+
+### Step 3: Configure API Key in Cursor
+
+1. Open Cursor Settings (Cmd+, on Mac, Ctrl+, on Windows)
+2. Go to **Models** section
+3. Add your API key for your chosen provider
+4. Select your preferred model
+
+### Step 4: Start Building
+
+1. Click **File** → **Open Folder**
+2. Select your project folder
+3. Press **Cmd+K** (Mac) or **Ctrl+K** (Windows) to chat with AI
+
+Now describe what you want to build! [Jump to examples](#example-requests)
+
+---
+
+## Path C: Windsurf IDE
+
+**Best for**: Beginners who prefer a visual interface with AI-first design.
+
+### Step 1: Get an API Key
+
+Choose ONE provider:
+
+**Option 1 - Anthropic (Recommended):**
+1. Go to https://console.anthropic.com/
+2. Create account → API Keys → Create Key
+3. Copy the key (starts with `sk-ant-...`)
+
+**Option 2 - OpenAI:**
+1. Go to https://platform.openai.com/api-keys
+2. Create account → Create new secret key
+3. Copy the key (starts with `sk-...`)
+
+### Step 2: Install Windsurf
+
+1. Go to https://codeium.com/windsurf
+2. Download for your operating system
+3. Install and open Windsurf
+
+### Step 3: Configure API Key
+
+1. Open Windsurf Settings
+2. Navigate to AI/Model settings
+3. Add your API key
+4. Select your preferred model
+
+### Step 4: Start Building
+
+1. Open your project folder in Windsurf
+2. Use the AI chat panel to describe what you want
+
+Now describe what you want to build! [Jump to examples](#example-requests)
+
+---
+
+## Path D: Aider + Google Gemini
+
+**Best for**: Budget-conscious users, Google ecosystem.
+
+### Step 1: Get Your Google API Key
+
+1. Go to https://aistudio.google.com/
+2. Sign in with Google account
+3. Click **"Get API Key"**
+4. Create and copy the key
+
+### Step 2: Save Your API Key
+
+**On Mac/Linux:**
+```bash
+echo 'export GOOGLE_API_KEY="your-key-here"' >> ~/.bashrc
+source ~/.bashrc
+```
+
+**On Windows:**
+1. Search for "Environment Variables" in Start menu
+2. Click "Edit the system environment variables"
+3. Click "Environment Variables" → "New"
+4. Variable name: `GOOGLE_API_KEY`
+5. Variable value: your API key
+6. Click OK
+
+### Step 3: Install Aider
+
+**On Mac:**
+```bash
+# Install Python if needed
+if ! command -v python3 &> /dev/null; then
+    brew install python3 || { /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)" && brew install python3; }
+fi
+pip3 install aider-chat
+```
+
+**On Windows (PowerShell as Administrator):**
+```powershell
+# Install Python if needed
+if (!(Get-Command python -ErrorAction SilentlyContinue)) {
+    winget install Python.Python.3.11 --accept-package-agreements --accept-source-agreements
+    $env:Path = [System.Environment]::GetEnvironmentVariable("Path","Machine") + ";" + [System.Environment]::GetEnvironmentVariable("Path","User")
+}
+pip install aider-chat
+```
+
+**On Linux (Ubuntu/Debian):**
+```bash
+# Install Python if needed
+if ! command -v python3 &> /dev/null; then
+    sudo apt update && sudo apt install -y python3 python3-pip
+fi
+pip3 install aider-chat
+```
+
+### Step 4: Start Building
+
+```bash
+cd /path/to/your/project
+aider --model gemini/gemini-1.5-pro-latest
+```
+
+Now describe what you want to build! [Jump to examples](#example-requests)
+
+---
+
+## Path E: Aider + OpenAI
+
+**Best for**: GPT-4 users, OpenAI ecosystem.
+
+### Step 1: Get Your OpenAI API Key
+
 1. Go to https://platform.openai.com/signup
 2. Create an account (or sign in)
 3. Go to https://platform.openai.com/api-keys
 4. Click **"Create new secret key"**
 5. Copy the key (starts with `sk-...`)
 
----
+### Step 2: Save Your API Key
 
-## Step 2: Save Your API Key (2 minutes)
-
-Your API key needs to be saved so the AI tools can use it.
-
-### On Mac/Linux:
-Open Terminal and run:
+**On Mac/Linux:**
 ```bash
-# For Anthropic Claude (recommended):
-echo 'export ANTHROPIC_API_KEY="your-key-here"' >> ~/.bashrc
-source ~/.bashrc
-
-# For Google Gemini:
-echo 'export GOOGLE_API_KEY="your-key-here"' >> ~/.bashrc
-source ~/.bashrc
-
-# For OpenAI:
 echo 'export OPENAI_API_KEY="your-key-here"' >> ~/.bashrc
 source ~/.bashrc
 ```
 
-### On Windows:
+**On Windows:**
 1. Search for "Environment Variables" in Start menu
 2. Click "Edit the system environment variables"
-3. Click "Environment Variables" button
-4. Under "User variables", click "New"
-5. Variable name: `ANTHROPIC_API_KEY`, `GOOGLE_API_KEY`, or `OPENAI_API_KEY`
-6. Variable value: your API key
-7. Click OK
+3. Click "Environment Variables" → "New"
+4. Variable name: `OPENAI_API_KEY`
+5. Variable value: your API key
+6. Click OK
 
----
-
-## Step 3: Install an AI Coding Tool (5 minutes)
-
-Choose ONE tool to interact with the AI:
-
-### Option A: Claude Code (Recommended - Best for software projects)
-
-Claude Code is Anthropic's official CLI tool, optimized for software development.
-
-First, check if Node.js is installed and install it if needed, then install Claude Code:
+### Step 3: Install Aider
 
 **On Mac:**
 ```bash
-# This script checks for Node.js and installs if needed
-if command -v node &> /dev/null; then
-    echo "Node.js is already installed: $(node --version)"
-else
-    echo "Node.js not found. Installing..."
-    if command -v brew &> /dev/null; then
-        brew install node
-    else
-        echo "Installing Homebrew first..."
-        /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
-        brew install node
-    fi
+# Install Python if needed
+if ! command -v python3 &> /dev/null; then
+    brew install python3 || { /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)" && brew install python3; }
 fi
-# Now install Claude Code
-npm install -g @anthropic-ai/claude-code
-```
-
-**On Windows (PowerShell - Run as Administrator):**
-```powershell
-# This script checks for Node.js and installs if needed
-$nodeInstalled = Get-Command node -ErrorAction SilentlyContinue
-if ($nodeInstalled) {
-    Write-Host "Node.js is already installed: $(node --version)"
-} else {
-    Write-Host "Node.js not found. Installing..."
-    winget install OpenJS.NodeJS.LTS --accept-package-agreements --accept-source-agreements
-    # Refresh PATH
-    $env:Path = [System.Environment]::GetEnvironmentVariable("Path","Machine") + ";" + [System.Environment]::GetEnvironmentVariable("Path","User")
-}
-# Now install Claude Code
-npm install -g @anthropic-ai/claude-code
-```
-
-**On Linux (Ubuntu/Debian):**
-```bash
-# This script checks for Node.js and installs if needed
-if command -v node &> /dev/null; then
-    echo "Node.js is already installed: $(node --version)"
-else
-    echo "Node.js not found. Installing..."
-    curl -fsSL https://deb.nodesource.com/setup_lts.x | sudo -E bash -
-    sudo apt install -y nodejs
-fi
-# Now install Claude Code
-npm install -g @anthropic-ai/claude-code
-```
-
-**On Linux (Fedora/RHEL):**
-```bash
-# This script checks for Node.js and installs if needed
-if command -v node &> /dev/null; then
-    echo "Node.js is already installed: $(node --version)"
-else
-    echo "Node.js not found. Installing..."
-    sudo dnf install -y nodejs
-fi
-# Now install Claude Code
-npm install -g @anthropic-ai/claude-code
-```
-
-### Option B: Aider (Works with Google Gemini and OpenAI)
-
-First, check if Python is installed and install it if needed:
-
-**On Mac:**
-```bash
-# This script checks for Python and installs if needed
-if command -v python3 &> /dev/null; then
-    echo "Python is already installed: $(python3 --version)"
-else
-    echo "Python not found. Installing..."
-    if command -v brew &> /dev/null; then
-        brew install python3
-    else
-        echo "Installing Homebrew first..."
-        /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
-        brew install python3
-    fi
-fi
-# Now install Aider
 pip3 install aider-chat
 ```
 
-**On Windows (PowerShell - Run as Administrator):**
+**On Windows (PowerShell as Administrator):**
 ```powershell
-# This script checks for Python and installs if needed
-$pythonInstalled = Get-Command python -ErrorAction SilentlyContinue
-if ($pythonInstalled) {
-    Write-Host "Python is already installed: $(python --version)"
-} else {
-    Write-Host "Python not found. Installing..."
+# Install Python if needed
+if (!(Get-Command python -ErrorAction SilentlyContinue)) {
     winget install Python.Python.3.11 --accept-package-agreements --accept-source-agreements
-    # Refresh PATH
     $env:Path = [System.Environment]::GetEnvironmentVariable("Path","Machine") + ";" + [System.Environment]::GetEnvironmentVariable("Path","User")
 }
-# Now install Aider
 pip install aider-chat
 ```
 
 **On Linux (Ubuntu/Debian):**
 ```bash
-# This script checks for Python and installs if needed
-if command -v python3 &> /dev/null; then
-    echo "Python is already installed: $(python3 --version)"
-else
-    echo "Python not found. Installing..."
-    sudo apt update
-    sudo apt install -y python3 python3-pip
+# Install Python if needed
+if ! command -v python3 &> /dev/null; then
+    sudo apt update && sudo apt install -y python3 python3-pip
 fi
-# Now install Aider
 pip3 install aider-chat
 ```
 
-**On Linux (Fedora/RHEL):**
-```bash
-# This script checks for Python and installs if needed
-if command -v python3 &> /dev/null; then
-    echo "Python is already installed: $(python3 --version)"
-else
-    echo "Python not found. Installing..."
-    sudo dnf install -y python3 python3-pip
-fi
-# Now install Aider
-pip3 install aider-chat
-```
+### Step 4: Start Building
 
-### Option C: Cursor IDE (Easiest for beginners - No installation scripts needed)
-1. Go to https://cursor.sh
-2. Download and install
-3. Open your project folder in Cursor
-4. Use Cmd+K (Mac) or Ctrl+K (Windows) to chat with AI
-
----
-
-## Step 4: Open Your Project (1 minute)
-
-### If using Claude Code (recommended):
-```bash
-cd /path/to/your/project
-claude
-```
-
-### If using Aider:
 ```bash
 cd /path/to/your/project
 aider
 ```
 
-### If using Cursor:
-1. Open Cursor
-2. Click "Open Folder"
-3. Select your project folder
+Now describe what you want to build! [Jump to examples](#example-requests)
 
 ---
 
-## Step 5: Start Building! (Now the fun begins)
+## Path F: Continue Extension
 
-Just describe what you want to build in plain English!
+**Best for**: VS Code users who want AI assistance in their existing editor.
 
-### Example Requests:
+### Step 1: Get an API Key
+
+Choose ONE provider:
+
+**Option 1 - Anthropic (Recommended):**
+1. Go to https://console.anthropic.com/
+2. Create account → API Keys → Create Key
+3. Copy the key (starts with `sk-ant-...`)
+
+**Option 2 - OpenAI:**
+1. Go to https://platform.openai.com/api-keys
+2. Create account → Create new secret key
+3. Copy the key (starts with `sk-...`)
+
+### Step 2: Install Continue
+
+1. Open VS Code
+2. Go to Extensions (Cmd+Shift+X on Mac, Ctrl+Shift+X on Windows)
+3. Search for "Continue"
+4. Click Install
+
+### Step 3: Configure Continue
+
+1. Click the Continue icon in the sidebar
+2. Go to Settings
+3. Add your API key
+4. Select your preferred model
+
+### Step 4: Start Building
+
+1. Open your project folder in VS Code
+2. Use the Continue panel to chat with AI
+
+Now describe what you want to build! [Jump to examples](#example-requests)
+
+---
+
+## After Setup: How the Agentic Workflow Works
+
+Once you're set up, the AI follows a structured workflow:
+
+```
+You describe what you want
+         ↓
+   Product Owner
+   (Understands your request, creates plan)
+         ↓
+      Architect
+   (Designs the solution)
+         ↓
+      Developer
+   (Writes the code)
+         ↓
+       Tester
+   (Validates it works)
+         ↓
+   Product Owner
+   (Reviews and presents to you)
+```
+
+**Important**: The AI will automatically:
+1. Start as **Product Owner** to understand your request
+2. Update project documentation with your domain info
+3. Follow the complete workflow for quality results
+
+---
+
+## Example Requests
+
+Just describe what you want in plain English!
 
 **Building something new:**
 > "I want to create a simple todo list application where users can add, complete, and delete tasks"
@@ -253,23 +406,7 @@ Just describe what you want to build in plain English!
 
 ---
 
-## What Happens Next?
-
-When you describe what you want, the AI agents will:
-
-1. **Product Owner** - Understands your request and creates a plan
-2. **Architect** - Designs the technical solution
-3. **Developer** - Writes the code
-4. **Tester** - Makes sure it works
-5. **IT** - Prepares it for release
-
-You'll be asked to review changes before they're applied.
-
----
-
 ## Quick Reference
-
-### Useful Commands
 
 | What you want | What to say |
 |---------------|-------------|
@@ -279,15 +416,24 @@ You'll be asked to review changes before they're applied.
 | Improve something | "Make [feature] faster/better/simpler" |
 | Add tests | "Add tests for [feature]" |
 
-### Project Structure
+---
+
+## Project Structure
 
 ```
 your-project/
-├── ai-assistants/        ← AI configuration (don't modify unless needed)
-├── project-management/   ← Documentation and task tracking
-├── modules/              ← Your software code goes here
-├── output/               ← Built software appears here
-└── QUICK-START.md        ← You are here!
+├── CLAUDE.md             ← AI workflow instructions (Claude Code)
+├── .cursorrules          ← AI workflow instructions (Cursor)
+├── .windsurfrules        ← AI workflow instructions (Windsurf)
+├── .continuerules        ← AI workflow instructions (Continue)
+├── .aider.conf.yml       ← AI workflow instructions (Aider)
+│
+├── ai-assistants/        ← AI configuration
+├── project-management/   ← Documentation and tasks
+│   └── tasks/backlog/    ← User stories go here
+├── modules/              ← Your software code
+├── output/               ← Built software
+└── AI-WORKFLOW.md        ← Full workflow documentation
 ```
 
 ---
@@ -295,14 +441,18 @@ your-project/
 ## Troubleshooting
 
 ### "API key not found" error
-- Make sure you saved the key in Step 2
-- Try closing and reopening your terminal
-- Check the key is correct (no extra spaces)
+- Make sure you saved the key correctly
+- Close and reopen your terminal
+- Check for extra spaces in the key
 
 ### "Command not found" error
-- Make sure you installed the tool in Step 3
-- Try closing and reopening your terminal
-- On Windows, try running as Administrator
+- Make sure you installed the tool
+- Close and reopen your terminal
+- On Windows, run as Administrator
+
+### AI doesn't follow the workflow
+- The AI config files (CLAUDE.md, .cursorrules, etc.) instruct the AI
+- If issues persist, tell the AI: "Please follow the agentic workflow in AI-WORKFLOW.md"
 
 ### AI gives wrong answers
 - Be more specific in your request
@@ -310,8 +460,8 @@ your-project/
 - Break big requests into smaller steps
 
 ### Need more help?
-- Check `ai-assistants/how-to-use.md` for detailed guide
-- Check `AI-WORKFLOW.md` for full documentation
+- See `ai-assistants/how-to-use.md` for detailed guide
+- See `AI-WORKFLOW.md` for full workflow documentation
 
 ---
 
@@ -330,11 +480,9 @@ The **Cost Analyst** agent will warn you before expensive operations.
 
 ## You're Ready!
 
-That's it! You're now set up to build software with AI assistance.
-
 Remember:
 - **Be specific** about what you want
 - **Review changes** before accepting
 - **Ask questions** if something is unclear
 
-Happy building! 🚀
+Happy building!

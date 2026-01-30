@@ -21,18 +21,30 @@ For ANY user task:
 
 ### Step 2: Architect
 - Create technical specification
+- **Choose technology stack** (language, frameworks, tools)
 - Design in `project-management/designs/`
 - Create developer tasks
+- **Hand off to IT Agent** for environment setup
 
-### Step 3: Developer
+### Step 3: IT Agent (AFTER Architect chooses tech stack)
+- **Install dependencies** (npm install, pip install, etc.)
+- **Update scripts/** folder (build.sh, test.sh, run.sh, clean.sh)
+- Set up development environment
+- Document in `project-management/operations/environment/`
+
+### Step 4: Developer
 - Implement in `modules/` directory
 - Write tests
 
-### Step 4: Tester
+### Step 5: Tester
 - Validate implementation
 - Run tests
 
-### Step 5: Product Owner Acceptance
+### Step 6: IT Agent - Release (if needed)
+- Build release artifacts
+- Package for distribution
+
+### Step 7: Product Owner Acceptance
 - Review completed work
 - Present to user
 
@@ -47,6 +59,7 @@ When starting a NEW project, Product Owner MUST:
 ## REMEMBER
 
 - NEVER skip Product Owner
+- NEVER skip IT Agent after Architect chooses tech stack
 - NEVER code without Architect design
 - ALWAYS update domain info for new projects
 - ALWAYS follow the workflow

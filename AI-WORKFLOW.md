@@ -250,18 +250,24 @@ The agents work together in a collaborative workflow:
 ```
 User Request
     ↓
-Product Owner (Analyzes & Plans)
+Product Owner (Clarifies requirements, creates user story)
     ↓
-Create Git Worktrees → Assign to Agent(s)
+Architect (Chooses tech stack, designs solution)
     ↓
-Agent(s) Work Independently
+IT Agent (Installs dependencies, sets up scripts/)  ← CRITICAL STEP
     ↓
-Peer Review (2+ agents)
+Developer (Implements code in modules/)
     ↓
-Create PR for User Review
+Tester (Validates implementation)
     ↓
-User Reviews & Merges
+IT Agent (Builds release artifacts)
+    ↓
+Product Owner (Accepts & presents to user)
 ```
+
+**IMPORTANT**: IT Agent activates in TWO places:
+1. **After Architect** - To install dependencies and set up scripts/
+2. **Before Release** - To build and package artifacts
 
 ### Git Worktree Workflow
 

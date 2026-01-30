@@ -27,30 +27,41 @@ As Product Owner, you MUST:
 
 As Architect:
 1. Create technical specification
-2. Design interfaces and structure
-3. Create developer tasks in `project-management/tasks/developer/`
+2. **Choose technology stack** (language, frameworks, tools)
+3. Design interfaces and structure
+4. Create developer tasks in `project-management/tasks/developer/`
+5. **Hand off to IT Agent** for environment setup
 
-### Step 3: Developer Activation
+### Step 3: IT Agent Activation (AFTER Architect chooses tech stack)
+
+As IT Agent, you MUST:
+1. **Install dependencies** - Based on Architect's tech stack (npm, pip, cargo, etc.)
+2. **Update scripts/** - Customize build.sh, test.sh, run.sh, clean.sh for the tech stack
+3. **Set up environment** - Ensure build tools are ready
+4. Document setup in `project-management/operations/environment/`
+
+### Step 4: Developer Activation
 
 As Developer:
 1. Implement based on specifications
 2. Write tests
 3. Create code in `modules/` directory
 
-### Step 4: Tester Activation
+### Step 5: Tester Activation
 
 As Tester:
 1. Validate implementation
 2. Run tests
 3. Report issues
 
-### Step 5: IT Activation (if needed)
+### Step 6: IT Agent - Release (if needed)
 
-As IT:
-1. Handle build/release
-2. Update infrastructure
+As IT Agent:
+1. Build release artifacts
+2. Package for distribution
+3. Tag release in git
 
-### Step 6: Product Owner Acceptance
+### Step 7: Product Owner Acceptance
 
 Return to Product Owner to:
 1. Review completed work

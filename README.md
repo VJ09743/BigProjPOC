@@ -113,6 +113,12 @@ cursor .         # For Cursor IDE
 ## Structure
 
 ```
+├── CLAUDE.md                # Claude Code workflow instructions
+├── .cursorrules             # Cursor IDE workflow instructions
+├── .windsurfrules           # Windsurf IDE workflow instructions
+├── .continuerules           # Continue extension workflow instructions
+├── .aider.conf.yml          # Aider CLI configuration
+│
 ├── ai-assistants/           # AI setup and configuration
 │   ├── agents/              # Agent role definitions
 │   ├── provider-setup/      # LLM provider configuration
@@ -120,25 +126,16 @@ cursor .         # For Cursor IDE
 │
 ├── project-management/      # Project documentation
 │   ├── tasks/               # Task assignments
+│   │   └── backlog/         # User stories (Product Owner)
 │   ├── designs/             # Architecture docs
 │   ├── requirements/        # Feature requirements
 │   ├── quality/             # Test plans and QA
 │   └── operations/          # Releases and infrastructure
 │
 ├── modules/                 # Software modules
-│   ├── module-name/         # Each module is self-contained
-│   │   ├── src/             # Source code
-│   │   ├── test/            # Tests
-│   │   ├── release/         # Module release output
-│   │   ├── debug/           # Module debug output
-│   │   ├── build-config/    # Build configuration
-│   │   └── Makefile         # Module build script
-│   └── another-module/      # Add more modules as needed
+│   └── [module-name]/       # Each module is self-contained
 │
 ├── output/                  # Combined build output (all modules)
-│   ├── release/             # Combined release builds
-│   └── debug/               # Combined debug builds
-│
 ├── Makefile                 # Top-level build script
 ├── .github/workflows/       # GitHub Actions
 └── AI-WORKFLOW.md           # Main workflow documentation

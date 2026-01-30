@@ -1,16 +1,19 @@
 # Task Management System
 
-This directory contains tasks for all four agent types in the BigProjPOC project.
+This directory contains tasks for all agent types.
 
 ## Structure
 
 ```
-docs/tasks/
+project-management/tasks/
+├── backlog/     # User stories (Product Owner Agent)
 ├── it/          # Tasks for IT Agent
 ├── architect/   # Tasks for Architect Agent
 ├── developer/   # Tasks for Developer Agent
 └── tester/      # Tasks for Tester Agent
 ```
+
+**Note**: Product Owner creates user stories in `backlog/` first, then other agents create their tasks.
 
 ## How It Works
 

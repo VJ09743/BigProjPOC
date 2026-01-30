@@ -286,6 +286,7 @@ Before PRs go to user review:
 
 ### Task Folders
 
+- `project-management/tasks/backlog/` - User stories (Product Owner)
 - `project-management/tasks/it/` - Infrastructure tasks
 - `project-management/tasks/architect/` - Design tasks
 - `project-management/tasks/developer/` - Implementation tasks

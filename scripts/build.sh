@@ -1,9 +1,23 @@
 #!/bin/bash
 # =============================================================================
-# Build Script
+# Build Script - TEMPLATE
 # =============================================================================
-# Builds all modules in the project.
-# Customize this script for your technology stack.
+# IT Agent: Customize this script for your project's technology stack.
+#
+# Instructions:
+# 1. Identify the project's build system (from Architect's tech stack decision)
+# 2. Add the appropriate build commands below
+# 3. Remove these instructions when done
+#
+# Examples by technology:
+# - Node.js:    npm run build
+# - Python:     pip install -e . OR python setup.py build
+# - Go:         go build ./...
+# - Rust:       cargo build --release
+# - Java:       mvn package OR gradle build
+# - C/C++:      make release
+# - Web/Static: No build needed, or use bundler (webpack, vite, etc.)
+#
 # =============================================================================
 
 set -e  # Exit on error
@@ -12,45 +26,7 @@ echo "=========================================="
 echo "Building project..."
 echo "=========================================="
 
-# Option 1: Use Makefile (default)
-if [ -f "Makefile" ]; then
-    make release
-    exit 0
-fi
-
-# Option 2: Node.js project
-if [ -f "package.json" ]; then
-    npm install
-    npm run build
-    exit 0
-fi
-
-# Option 3: Python project
-if [ -f "setup.py" ] || [ -f "pyproject.toml" ]; then
-    pip install -e .
-    exit 0
-fi
-
-# Option 4: Go project
-if [ -f "go.mod" ]; then
-    go build ./...
-    exit 0
-fi
-
-# Option 5: Rust project
-if [ -f "Cargo.toml" ]; then
-    cargo build --release
-    exit 0
-fi
-
-# Build individual modules if no project-level config
-echo "Building modules..."
-for module_dir in modules/*/; do
-    if [ -f "${module_dir}Makefile" ]; then
-        echo "Building ${module_dir}..."
-        make -C "$module_dir" release
-    fi
-done
-
-echo ""
-echo "Build complete!"
+# TODO: IT Agent - Add build commands here based on tech stack
+echo "ERROR: Build script not configured."
+echo "IT Agent must customize this script for the project's technology stack."
+exit 1

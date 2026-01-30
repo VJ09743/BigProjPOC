@@ -1,74 +1,35 @@
 #!/bin/bash
 # =============================================================================
-# Clean Script
+# Clean Script - TEMPLATE
 # =============================================================================
-# Removes build artifacts and temporary files.
-# Customize this script for your technology stack.
+# IT Agent: Customize this script to clean build artifacts.
+#
+# Instructions:
+# 1. Identify what build artifacts the project creates
+# 2. Add the appropriate clean commands below
+# 3. Remove these instructions when done
+#
+# Examples by technology:
+# - Node.js:    rm -rf node_modules dist .next
+# - Python:     rm -rf __pycache__ *.egg-info .pytest_cache dist build
+# - Go:         go clean OR rm -rf bin/
+# - Rust:       cargo clean
+# - Java:       mvn clean OR gradle clean
+# - C/C++:      make clean
+#
+# Common directories to clean:
+# - output/release/*
+# - output/debug/*
+# - modules/*/release/*
+# - modules/*/debug/*
+#
 # =============================================================================
 
 echo "=========================================="
 echo "Cleaning build artifacts..."
 echo "=========================================="
 
-# Option 1: Use Makefile
-if [ -f "Makefile" ]; then
-    make clean
-fi
-
-# Option 2: Node.js project
-if [ -d "node_modules" ]; then
-    echo "Removing node_modules..."
-    rm -rf node_modules
-fi
-if [ -d "dist" ]; then
-    echo "Removing dist..."
-    rm -rf dist
-fi
-
-# Option 3: Python project
-if [ -d "__pycache__" ]; then
-    echo "Removing Python cache..."
-    find . -type d -name "__pycache__" -exec rm -rf {} + 2>/dev/null || true
-    find . -type f -name "*.pyc" -delete 2>/dev/null || true
-fi
-if [ -d ".pytest_cache" ]; then
-    rm -rf .pytest_cache
-fi
-if [ -d "*.egg-info" ]; then
-    rm -rf *.egg-info
-fi
-
-# Option 4: Go project
-if [ -d "go.mod" ]; then
-    go clean
-fi
-
-# Option 5: Rust project
-if [ -f "Cargo.toml" ]; then
-    cargo clean
-fi
-
-# Clean output directories
-if [ -d "output/release" ]; then
-    echo "Removing output/release..."
-    rm -rf output/release/*
-fi
-if [ -d "output/debug" ]; then
-    echo "Removing output/debug..."
-    rm -rf output/debug/*
-fi
-
-# Clean module build artifacts
-for module_dir in modules/*/; do
-    if [ -d "${module_dir}release" ]; then
-        echo "Cleaning ${module_dir}release..."
-        rm -rf "${module_dir}release/"*
-    fi
-    if [ -d "${module_dir}debug" ]; then
-        echo "Cleaning ${module_dir}debug..."
-        rm -rf "${module_dir}debug/"*
-    fi
-done
-
-echo ""
-echo "Clean complete!"
+# TODO: IT Agent - Add clean commands here based on tech stack
+echo "ERROR: Clean script not configured."
+echo "IT Agent must customize this script for the project."
+exit 1

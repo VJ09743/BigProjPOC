@@ -68,6 +68,60 @@ Return to Product Owner to:
 2. Accept or request changes
 3. Present to user
 
+## Git Workflow (ALWAYS FOLLOW)
+
+### Branch Naming Convention
+
+All agent work uses branches with pattern: `claude/{agent}-{project}-{sessionID}`
+
+Examples:
+- `claude/developer-myproject-abc123`
+- `claude/architect-myproject-abc123`
+
+### Git Worktree Workflow (for parallel work)
+
+```bash
+# Product Owner creates worktrees for agents
+git worktree add ../worktree-architect claude/architect-{project}-{sessionID}
+git worktree add ../worktree-developer claude/developer-{project}-{sessionID}
+
+# Each agent works independently in their worktree
+# When done, create PR to merge back
+```
+
+### Pull Request Process
+
+1. **Complete work** in your branch/worktree
+2. **Commit changes** with clear messages
+3. **Push to remote**: `git push -u origin claude/{agent}-{project}-{sessionID}`
+4. **Create Pull Request** to main/master branch
+
+## Peer Review Process (BEFORE User Review)
+
+**CRITICAL**: All PRs must be peer-reviewed by other agents BEFORE user reviews.
+
+### Review Assignment
+
+| PR Author | Required Reviewers |
+|-----------|-------------------|
+| Developer | Architect, Tester |
+| Architect | Developer |
+| Tester | Developer |
+| IT | Architect |
+
+### Review Checklist
+
+Each reviewer checks:
+- [ ] Code follows project standards
+- [ ] Design patterns correctly applied
+- [ ] Tests are present and pass
+- [ ] Documentation updated
+
+### Two-Phase Review
+
+1. **Phase 1 - Peer Review**: Agents review each other (2+ approvals required)
+2. **Phase 2 - User Review**: After peer approval, user reviews and merges
+
 ## Template Customization (Product Owner Responsibility)
 
 When starting a NEW project type, Product Owner MUST update:

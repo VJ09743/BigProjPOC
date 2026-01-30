@@ -48,6 +48,28 @@ For ANY user task:
 - Review completed work
 - Present to user
 
+## GIT WORKFLOW
+
+### Branch Naming
+Use pattern: `claude/{agent}-{project}-{sessionID}`
+
+### Pull Request Process
+1. Complete work in your branch
+2. Push: `git push -u origin claude/{agent}-{project}-{sessionID}`
+3. Create PR to main/master
+4. Peer review BEFORE user review
+
+## PEER REVIEW (BEFORE User Review)
+
+| PR Author | Reviewers |
+|-----------|-----------|
+| Developer | Architect, Tester |
+| Architect | Developer |
+| Tester | Developer |
+| IT | Architect |
+
+Reviewers check: code standards, design patterns, tests, documentation.
+
 ## TEMPLATE CUSTOMIZATION
 
 When starting a NEW project, Product Owner MUST:
@@ -61,5 +83,6 @@ When starting a NEW project, Product Owner MUST:
 - NEVER skip Product Owner
 - NEVER skip IT Agent after Architect chooses tech stack
 - NEVER code without Architect design
+- ALWAYS create PR and get peer review
 - ALWAYS update domain info for new projects
 - ALWAYS follow the workflow

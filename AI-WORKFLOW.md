@@ -273,24 +273,56 @@ Product Owner (Accepts & presents to user)
 
 Agents work in separate git worktrees to enable parallel work:
 
+**Branch Naming Convention**: `claude/{agent}-{project}-{sessionID}`
+
+Examples:
+- `claude/developer-myproject-abc123`
+- `claude/architect-myproject-abc123`
+
 ```bash
-# Product Owner creates worktrees
-git worktree add ../worktree-architect agent/architect-{project}-{sessionID}
-git worktree add ../worktree-developer agent/developer-{project}-{sessionID}
+# Product Owner creates worktrees for agents
+git worktree add ../worktree-architect claude/architect-{project}-{sessionID}
+git worktree add ../worktree-developer claude/developer-{project}-{sessionID}
 
 # Each agent works independently in their worktree
-# When done, merge back via PR
+# When done, create PR to merge back
 ```
 
-### Peer Review Process
+### Pull Request Process
 
-Before PRs go to user review:
+1. **Complete work** in your branch/worktree
+2. **Commit changes** with clear, descriptive messages
+3. **Push to remote**: `git push -u origin claude/{agent}-{project}-{sessionID}`
+4. **Create Pull Request** to main/master branch
+5. **Peer review** - other agents review before user
 
-1. Agent completes work in their worktree
-2. Requests review from 2+ relevant agents
-3. Peers review for design, quality, patterns
-4. Address feedback and get approvals
-5. Only then create PR for user review
+### Peer Review Process (CRITICAL)
+
+**All PRs must be peer-reviewed by other agents BEFORE user reviews.**
+
+#### Review Assignment Rules
+
+| PR Author | Required Reviewers |
+|-----------|-------------------|
+| **Developer** | Architect, Tester |
+| **Architect** | Developer |
+| **Tester** | Developer |
+| **IT** | Architect |
+
+#### Review Checklist
+
+Each reviewer checks:
+- [ ] Code follows project standards
+- [ ] Design patterns correctly applied
+- [ ] Tests are present and pass
+- [ ] Documentation updated
+
+#### Two-Phase Review
+
+1. **Phase 1 - Peer Review**: Agents review each other (2+ approvals required)
+2. **Phase 2 - User Review**: After peer approval, user reviews and merges
+
+**NEVER skip peer review** - Quality before speed
 
 ---
 

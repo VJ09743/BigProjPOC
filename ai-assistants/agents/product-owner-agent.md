@@ -226,6 +226,9 @@ Automatically activate when:
 - Test planning
 
 ### When to Assign to IT:
+- **New project setup**: After Architect chooses tech stack, IT installs dependencies
+- **Scripts setup**: Create/update build.sh, test.sh, run.sh, clean.sh in scripts/
+- **Dependency installation**: npm install, pip install, cargo build, etc.
 - Build/release issues
 - Infrastructure needs
 - Environment setup

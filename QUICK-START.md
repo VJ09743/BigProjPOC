@@ -432,6 +432,7 @@ your-project/
 ├── project-management/   ← Documentation and tasks
 │   └── tasks/backlog/    ← User stories go here
 ├── modules/              ← Your software code
+├── scripts/              ← Build, test, run scripts
 ├── output/               ← Built software
 └── AI-WORKFLOW.md        ← Full workflow documentation
 ```

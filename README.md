@@ -135,6 +135,12 @@ cursor .         # For Cursor IDE
 ├── modules/                 # Software modules
 │   └── [module-name]/       # Each module is self-contained
 │
+├── scripts/                 # Build, test, run scripts
+│   ├── build.sh             # Build all modules
+│   ├── test.sh              # Run all tests
+│   ├── run.sh               # Run the application
+│   └── clean.sh             # Clean build artifacts
+│
 ├── output/                  # Combined build output (all modules)
 ├── Makefile                 # Top-level build script
 ├── .github/workflows/       # GitHub Actions

@@ -155,6 +155,12 @@ YourProject/
 │   ├── release/                 # Combined release (all modules)
 │   └── debug/                   # Combined debug (all modules)
 │
+├── scripts/                     # Build, test, run scripts
+│   ├── build.sh                 # Build all modules
+│   ├── test.sh                  # Run all tests
+│   ├── run.sh                   # Run the application
+│   └── clean.sh                 # Clean build artifacts
+│
 ├── Makefile                     # Top-level build script
 ├── .github/                     # GitHub configuration
 │   ├── workflows/               # GitHub Actions

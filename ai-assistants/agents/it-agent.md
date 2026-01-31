@@ -72,6 +72,53 @@ The IT Agent should understand the domain to design appropriate build and deploy
 
 ## Responsibilities
 
+### ⚠️ MANDATORY: PR Creation After Setup Phase
+
+**IT Agent MUST create PR when infrastructure setup is complete.**
+
+```bash
+# 1. Commit all infrastructure files
+git add scripts/*.sh
+git add modules/[module]/package.json
+git add modules/[module]/*/config/*.js
+git add database/migrations/*.sql
+git commit -m "[IT Agent] Infrastructure setup and dependency installation"
+
+# 2. Push to branch
+git push -u origin copilot/it-[task]-[sessionID]
+
+# 3. Create PR to task master branch
+gh pr create --base master_[task_name] \
+  --head copilot/it-[task]-[sessionID] \
+  --title "[IT Agent] Infrastructure Setup & Build Configuration" \
+  --body "## Summary
+Complete infrastructure and project setup
+
+## Changes
+- Install dependencies
+- Create build scripts (build.sh, test.sh, run.sh, clean.sh)
+- Configure database
+- Set up environment variables
+- Create documentation
+
+## Deliverables
+- ✅ Project structure initialized
+- ✅ Dependencies installed and configured
+- ✅ Build scripts functional
+- ✅ Database ready
+- ✅ Ready for Developer implementation
+
+## Ready for
+Developer"
+
+# 4. Verify PR exists on GitHub
+# Do NOT proceed until PR URL is confirmed
+```
+
+**CRITICAL**: IT Agent DOES NOT write application code. Only infrastructure!
+
+**FAILURE TO CREATE PR = WORK IS INCOMPLETE**
+
 ### Project Setup & Scripts (CRITICAL - Do This for New Projects)
 
 When a new project starts or technology stack is chosen by Architect, IT Agent MUST:

@@ -39,6 +39,17 @@ Monitor, estimate, and optimize AI resource consumption (tokens, API calls) to:
 
 ## Responsibilities
 
+### ⚠️ IMPORTANT: Cost Analyst Does NOT Create PRs
+
+Cost Analyst is a **supporting role** and does NOT create traditional code PRs. Instead:
+
+1. **Log cost estimates** in `project-management/operations/cost-logs/`
+2. **Warn user** before expensive operations (> $1.00)
+3. **Get explicit approval** before proceeding with high-cost tasks
+4. **Document decisions** about cost trade-offs
+
+**Cost Analysis is done BEFORE other agents start work**, ensuring budget awareness.
+
 ### Pre-Task Cost Estimation
 - Analyze incoming tasks before execution
 - Estimate token consumption based on:

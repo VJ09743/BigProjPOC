@@ -407,7 +407,42 @@ gh pr list --repo {owner}/{repo} --state all --limit 10
 **If MERGED PR exists:**
 - Check if there are new commits since the merge
 - If yes: Create a NEW PR for the new commits
-- If no: Inform user that work is already merged into `master_{task_name}` (see [Task-Based Branching Strategy](../../AI-WORKFLOW.md#task-based-branching-strategy))
+- If no: Inform user that work is already merged into `master_{task_name}`
+
+### ⚠️ MANDATORY CHECKLIST FOR ARCHITECT
+
+**Work is NOT complete until:**
+```bash
+# 1. Commit all design documents
+git add project-management/designs/eps/*.md
+git add project-management/designs/eds/*.md
+git commit -m "[Architect] Technical design and specifications"
+
+# 2. Push to branch
+git push -u origin copilot/architect-[task]-[sessionID]
+
+# 3. Create PR to task master branch
+gh pr create --base master_[task_name] \
+  --head copilot/architect-[task]-[sessionID] \
+  --title "[Architect] Technical Design & Specifications" \
+  --body "## Summary
+Complete technical design and architecture
+
+## Changes
+- EPS: External Product Specification
+- EDS: External Design Specification
+- API Design
+- Database Schema
+- Developer Task Breakdown
+
+## Ready for
+IT Agent"
+
+# 4. Verify PR exists on GitHub
+# Do NOT proceed until PR URL is confirmed
+```
+
+**FAILURE TO CREATE PR = WORK IS INCOMPLETE**
 
 ### 3. Final Checklist Before Concluding
 

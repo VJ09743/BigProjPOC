@@ -53,6 +53,33 @@ When configuring this template for your project, add domain-specific business kn
 
 The Product Owner should understand the business domain to effectively communicate with stakeholders.
 
+## ⚠️ MANDATORY: PR Creation After Each Phase
+
+**Product Owner is responsible for final PR creation when accepting completed work.**
+
+### When Accepting Developer Work:
+1. Verify implementation meets acceptance criteria
+2. Merge Developer PR when complete
+3. For final acceptance, create acceptance PR to main branch:
+```bash
+git add project-management/tasks/backlog/[task].md
+git commit -m "[Product Owner] Acceptance of [task] - all criteria met"
+git push -u origin copilot/product-owner-acceptance-[task]-[sessionID]
+gh pr create --base main --head copilot/product-owner-acceptance-[task]-[sessionID] \
+  --title "[Product Owner] Acceptance - [task]" \
+  --body "## User Story
+[Link to user story]
+
+## Acceptance Verification
+- [x] Acceptance criterion 1 verified
+- [x] Acceptance criterion 2 verified
+- [x] All tests passing
+- [x] Documentation updated
+
+## Ready for
+Release/Deployment"
+```
+
 ## Responsibilities
 
 ### Template Customization (CRITICAL - Do This First for New Projects)

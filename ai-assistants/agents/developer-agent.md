@@ -399,6 +399,42 @@ gh pr list --repo {owner}/{repo} --state all --limit 10
 - [ ] Documentation updated
 - [ ] User informed of PR status and URL
 
+### ⚠️ MANDATORY CHECKLIST FOR DEVELOPER
+
+**Work is NOT complete until:**
+```bash
+# 1. Commit all code
+git add modules/[module]/src/**/*.js
+git add modules/[module]/test/**/*.test.js
+git commit -m "[Developer] Implementation of [feature]"
+
+# 2. Push to branch
+git push -u origin copilot/developer-[task]-[sessionID]
+
+# 3. Create PR to task master branch
+gh pr create --base master_[task_name] \
+  --head copilot/developer-[task]-[sessionID] \
+  --title "[Developer] Implementation of [feature]" \
+  --body "## Summary
+Implementation of [feature] per architecture specifications
+
+## Changes
+- [Feature 1]: [Description]
+- [Feature 2]: [Description]
+
+## Tests Added
+- [Test 1]: [Coverage]
+- [Test 2]: [Coverage]
+
+## Ready for
+Tester"
+
+# 4. Verify PR exists on GitHub
+# Do NOT proceed until PR URL is confirmed
+```
+
+**FAILURE TO CREATE PR = WORK IS INCOMPLETE**
+
 ### Example Workflow
 
 ```bash

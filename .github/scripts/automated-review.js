@@ -67,12 +67,11 @@ const AGENT_PROMPTS = {
       'Software Architecture and Design (OO principles, SOLID, UML)',
       'Design Patterns (GoF): Creational, Structural, Behavioral',
       'Architectural Patterns: Layered, Hexagonal, Clean, Microservices',
-      'Interface and API design',
-      'Lithography domain expertise'
+      'Interface and API design'
     ],
     checklist: [
       'Implementation follows EDS specifications exactly',
-      'Interfaces are correctly implemented (SharedLithoState, Thrift)',
+      'Interfaces and APIs are correctly implemented',
       'Design patterns are appropriate and correctly implemented',
       'SOLID principles: Single Responsibility, Open/Closed, Liskov Substitution, Interface Segregation, Dependency Inversion',
       'Component boundaries are clear, low coupling, high cohesion',
@@ -90,7 +89,6 @@ const AGENT_PROMPTS = {
       'Testing frameworks (gtest, Catch2, JUnit, pytest)',
       'Test design and automation',
       'Quality gates and metrics',
-      'Lithography functional testing',
       'Integration and system testing'
     ],
     checklist: [
@@ -113,8 +111,7 @@ const AGENT_PROMPTS = {
       'Object-Oriented Programming (OOP principles, SOLID, design patterns)',
       'Code quality and clean code principles',
       'Testing (TDD, unit testing, mocking)',
-      'Modern practices (Git workflow, code review)',
-      'Lithography real-time control algorithms'
+      'Modern practices (Git workflow, code review)'
     ],
     checklist: [
       'Code is clean, readable, and maintainable',

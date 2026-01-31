@@ -61,12 +61,13 @@ router.post('/generate', async (req, res) => {
     
     games.set(gameId, game);
     
-    // Return game data (without solution)
+    // Return game data (including solution for completion checking)
     res.status(201).json({
       gameId: game.id,
       userId: user.id,
       difficulty: game.difficulty,
       puzzle: game.puzzle,
+      solution: game.solution, // Include for client-side completion check
       status: game.status,
       hintsUsed: game.hintsUsed,
       createdAt: game.createdAt

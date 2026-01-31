@@ -57,12 +57,13 @@ jobs:
             console.log(`Branch: ${branchName}`);
             console.log(`Author: ${prAuthor}`);
 
-            // Extract agent type from branch name pattern: agent/{agent}-{project}-{sessionID}
-            const branchPattern = /^agent\/([a-z-]+)-([a-z-]+)-([a-zA-Z0-9]+)$/;
+            // Extract agent type from branch name pattern: agent/{agent}-{project}-{sessionID} or claude/{agent}-{project}-{sessionID}
+            const branchPattern = /^(?:agent|claude)\/([a-z-]+)-([a-z-]+(?:-[a-z-]+)*)-([a-zA-Z0-9]+)$/;
             const match = branchName.match(branchPattern);
 
             if (!match) {
-              console.log('Branch does not match expected pattern. Skipping review assignment.');
+              console.log('Branch does not match expected pattern (agent/... or claude/...). Skipping review assignment.');
+              console.log('Expected: agent/{agent}-{project}-{sessionID} or claude/{agent}-{project}-{sessionID}');
               return;
             }
 

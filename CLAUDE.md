@@ -26,40 +26,49 @@ As Product Owner, you MUST:
 ### Step 2: Architect Activation
 
 As Architect:
-1. Create technical specification
+1. Create technical specification (EPS/EDS)
 2. **Choose technology stack** (language, frameworks, tools)
 3. Design interfaces and structure
 4. Create developer tasks in `project-management/tasks/developer/`
-5. **Hand off to IT Agent** for environment setup
+5. **CREATE PR** → Triggers automatic multi-agent review
+6. **WAIT for PR approval** before IT Agent proceeds
 
-### Step 3: IT Agent Activation (AFTER Architect chooses tech stack)
+### Step 3: IT Agent Activation (AFTER Architect PR approved)
 
 As IT Agent, you MUST:
 1. **Install dependencies** - Based on Architect's tech stack (npm, pip, cargo, etc.)
 2. **Update scripts/** - Customize build.sh, test.sh, run.sh, clean.sh for the tech stack
 3. **Set up environment** - Ensure build tools are ready
-4. Document setup in `project-management/operations/environment/`
+4. **DO NOT write application code** - Only infrastructure/scripts
+5. Document setup in `project-management/operations/environment/`
+6. **CREATE PR** → Triggers automatic multi-agent review
+7. **WAIT for PR approval** before Developer proceeds
 
-### Step 4: Developer Activation
+### Step 4: Developer Activation (AFTER IT Agent PR approved)
 
 As Developer:
-1. Implement based on specifications
-2. Write tests
-3. Create code in `modules/` directory
+1. Implement based on Architect's specifications
+2. Write application code in `modules/` directory
+3. Write tests
+4. **CREATE PR** → Triggers automatic multi-agent review
+5. **WAIT for PR approval** before Tester proceeds
 
-### Step 5: Tester Activation
+### Step 5: Tester Activation (AFTER Developer PR approved)
 
 As Tester:
 1. Validate implementation
 2. Run tests
-3. Report issues
+3. Report issues or approve
+4. **CREATE PR** with test report → Triggers automatic review
+5. **WAIT for PR approval** before release
 
-### Step 6: IT Agent - Release (if needed)
+### Step 6: IT Agent - Release (AFTER Tester PR approved)
 
 As IT Agent:
 1. Build release artifacts
 2. Package for distribution
 3. Tag release in git
+4. **CREATE PR** for release → Final review
 
 ### Step 7: Product Owner Acceptance
 
@@ -67,6 +76,44 @@ Return to Product Owner to:
 1. Review completed work
 2. Accept or request changes
 3. Present to user
+4. **Merge final PR** to task master branch
+
+## PR Creation is MANDATORY
+
+**CRITICAL**: Every agent MUST create a PR before handoff:
+
+```
+Architect completes work → Creates PR → GitHub Action triggers review
+                                              ↓
+                                    Multi-agent review runs
+                                              ↓
+                                    PR approved → IT Agent starts
+```
+
+### How to Create PR at Handoff
+
+```bash
+# 1. Commit your work
+git add <files>
+git commit -m "Agent: Description of work"
+
+# 2. Push to your branch
+git push -u origin claude/{agent}-{task}-{sessionID}
+
+# 3. Create PR (triggers GitHub Action)
+gh pr create --base master_{task_name} \
+  --title "[Agent] Description" \
+  --body "## Summary\n- Work completed\n\n## Ready for: Next Agent"
+```
+
+### GitHub Action: Automatic Multi-Agent Review
+
+When a PR is created, the GitHub Action `.github/workflows/agent-review.yml`:
+1. Detects which agent created the PR
+2. Spawns reviewer agents based on review matrix
+3. Each reviewer agent comments on the PR
+4. PR is auto-approved if all reviewers pass
+5. User can manually trigger re-review if needed
 
 ## Git Workflow (ALWAYS FOLLOW)
 

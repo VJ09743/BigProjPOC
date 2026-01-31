@@ -269,31 +269,54 @@ Product Owner (Accepts & presents to user)
 1. **After Architect** - To install dependencies and set up scripts/
 2. **Before Release** - To build and package artifacts
 
+### Task-Based Branching Strategy
+
+When user gives ANY new task, Product Owner MUST first create a task master branch:
+
+```bash
+# Step 1: Create task master branch from template
+git checkout template/agentic-workflow
+git checkout -b master_{task_name}
+git push -u origin master_{task_name}
+```
+
+**Examples of task master branches**:
+- `master_joke-website`
+- `master_user-authentication`
+- `master_shopping-cart`
+
+### Branch Naming Convention
+
+| Branch Type | Pattern | Example |
+|-------------|---------|---------|
+| Task Master | `master_{task_name}` | `master_joke-website` |
+| Agent Branch | `claude/{agent}-{task_name}-{sessionID}` | `claude/developer-joke-website-abc123` |
+
 ### Git Worktree Workflow
 
 Agents work in separate git worktrees to enable parallel work:
 
-**Branch Naming Convention**: `claude/{agent}-{project}-{sessionID}`
-
-Examples:
-- `claude/developer-myproject-abc123`
-- `claude/architect-myproject-abc123`
-
 ```bash
-# Product Owner creates worktrees for agents
-git worktree add ../worktree-architect claude/architect-{project}-{sessionID}
-git worktree add ../worktree-developer claude/developer-{project}-{sessionID}
+# Product Owner creates task master branch first
+git checkout template/agentic-workflow
+git checkout -b master_{task_name}
+git push -u origin master_{task_name}
+
+# Then creates worktrees for agents (branching from task master)
+git checkout master_{task_name}
+git worktree add ../worktree-architect claude/architect-{task_name}-{sessionID}
+git worktree add ../worktree-developer claude/developer-{task_name}-{sessionID}
 
 # Each agent works independently in their worktree
-# When done, create PR to merge back
+# When done, create PR to master_{task_name} (NOT main/master)
 ```
 
 ### Pull Request Process
 
-1. **Complete work** in your branch/worktree
+1. **Complete work** in your agent branch
 2. **Commit changes** with clear, descriptive messages
-3. **Push to remote**: `git push -u origin claude/{agent}-{project}-{sessionID}`
-4. **Create Pull Request** to main/master branch
+3. **Push to remote**: `git push -u origin claude/{agent}-{task_name}-{sessionID}`
+4. **Create Pull Request** to `master_{task_name}` branch (NOT main/master)
 5. **Peer review** - other agents review before user
 
 ### Peer Review Process (CRITICAL)

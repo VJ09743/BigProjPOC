@@ -43,6 +43,11 @@ jobs:
         with:
           node-version: '20'
 
+      - name: Install system dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y jq
+
       - name: Install dependencies
         run: |
           cd .github/scripts
@@ -146,57 +151,44 @@ jobs:
 
             return prDetails;
 
-      - name: Review as Team Leader
-        id: review_team_leader
-        if: steps.reviewers.outputs.skip != 'true' && contains(fromJSON(steps.reviewers.outputs.reviewers), 'team-leader')
+      - name: Run Sequential Agent Reviews
+        id: run_reviews
+        if: steps.reviewers.outputs.skip != 'true'
         env:
           LLM_API_KEY: ${{ secrets.LLM_API_KEY }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          node .github/scripts/automated-review.js \
-            --agent "team-leader" \
-            --pr-number "${{ inputs.pr_number }}" \
-            --repo "${{ github.repository }}" \
-            --pr-details-file "pr_details.json"
-
-      - name: Review as Architect
-        id: review_architect
-        if: steps.reviewers.outputs.skip != 'true' && contains(fromJSON(steps.reviewers.outputs.reviewers), 'architect')
-        env:
-          LLM_API_KEY: ${{ secrets.LLM_API_KEY }}
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: |
-          node .github/scripts/automated-review.js \
-            --agent "architect" \
-            --pr-number "${{ inputs.pr_number }}" \
-            --repo "${{ github.repository }}" \
-            --pr-details-file "pr_details.json"
-
-      - name: Review as Tester
-        id: review_tester
-        if: steps.reviewers.outputs.skip != 'true' && contains(fromJSON(steps.reviewers.outputs.reviewers), 'tester')
-        env:
-          LLM_API_KEY: ${{ secrets.LLM_API_KEY }}
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: |
-          node .github/scripts/automated-review.js \
-            --agent "tester" \
-            --pr-number "${{ inputs.pr_number }}" \
-            --repo "${{ github.repository }}" \
-            --pr-details-file "pr_details.json"
-
-      - name: Review as Developer (if assigned)
-        id: review_developer
-        if: steps.reviewers.outputs.skip != 'true' && contains(fromJSON(steps.reviewers.outputs.reviewers), 'developer')
-        env:
-          LLM_API_KEY: ${{ secrets.LLM_API_KEY }}
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: |
-          node .github/scripts/automated-review.js \
-            --agent "developer" \
-            --pr-number "${{ inputs.pr_number }}" \
-            --repo "${{ github.repository }}" \
-            --pr-details-file "pr_details.json"
+          # Parse reviewers list
+          REVIEWERS='${{ steps.reviewers.outputs.reviewers }}'
+          echo "Reviewers to run: $REVIEWERS"
+          
+          # Convert JSON array to bash array
+          REVIEWER_LIST=$(echo $REVIEWERS | jq -r '.[]')
+          
+          # Loop through each reviewer agent
+          for agent in $REVIEWER_LIST; do
+            echo "================================================"
+            echo "Running review as: $agent"
+            echo "================================================"
+            
+            node .github/scripts/automated-review.js \
+              --agent "$agent" \
+              --pr-number "${{ inputs.pr_number }}" \
+              --repo "${{ github.repository }}" \
+              --pr-details-file "pr_details.json"
+            
+            review_exit_code=$?
+            
+            if [ $review_exit_code -ne 0 ]; then
+              echo "⚠️  Review by $agent encountered an error (exit code: $review_exit_code)"
+            else
+              echo "✅ Review by $agent completed successfully"
+            fi
+            
+            echo ""
+          done
+          
+          echo "All reviews completed!"
 
       - name: Check Approval Status
         id: approval_status
@@ -217,18 +209,14 @@ jobs:
             let approvals = 0;
             let changesRequested = 0;
 
-            const agentMarkers = [
-              '**Team Leader Agent Review**',
-              '**Architect Agent Review**',
-              '**Tester Agent Review**',
-              '**Developer Agent Review**'
-            ];
+            // Generic marker for any agent review
+            const agentReviewPattern = /\*\*(.+?) Agent Review\*\*/;
 
             for (const comment of comments.data) {
               const body = comment.body;
 
-              // Check if this is an agent review comment
-              const isAgentReview = agentMarkers.some(marker => body.includes(marker));
+              // Check if this is an agent review comment (generic pattern)
+              const isAgentReview = agentReviewPattern.test(body);
 
               if (isAgentReview) {
                 if (body.includes('✅ **APPROVED**')) {
@@ -276,11 +264,13 @@ jobs:
               }
 
               // Post approval summary comment
+              const reviewersList = reviewers.map(r => r.charAt(0).toUpperCase() + r.slice(1)).join(', ');
+              
               await github.rest.issues.createComment({
                 owner: context.repo.owner,
                 repo: context.repo.repo,
                 issue_number: prNumber,
-                body: `## ✅ Peer Review Approved\n\n**${approvals}/${requiredApprovals}** required approvals obtained!\n\n✨ This PR has passed all peer reviews and is **ready for user review and merge**.\n\n---\n*Automated peer review by Team Leader, Architect, and Tester agents*`
+                body: `## ✅ Peer Review Approved\n\n**${approvals}/${requiredApprovals}** required approvals obtained!\n\n✨ This PR has passed all peer reviews and is **ready for user review and merge**.\n\n**Reviewers:** ${reviewersList}\n\n---\n*Automated peer review by multi-agent system*`
               });
 
               console.log('✅ PR approved by peers!');

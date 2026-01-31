@@ -15,6 +15,55 @@ When configuring this template for your project, add domain-specific testing kno
 
 The Tester should understand the domain to design comprehensive and relevant test cases.
 
+## ⚠️ MANDATORY: PR Creation After Testing Phase
+
+**Tester MUST create PR when all testing is complete and validated.**
+
+```bash
+# 1. Commit all test results and reports
+git add project-management/quality/reports/*.md
+git add project-management/quality/plans/*.md
+git commit -m "[Tester] Test validation and quality report"
+
+# 2. Push to branch
+git push -u origin copilot/tester-[task]-[sessionID]
+
+# 3. Create PR to task master branch
+gh pr create --base master_[task_name] \
+  --head copilot/tester-[task]-[sessionID] \
+  --title "[Tester] Quality Validation & Test Report" \
+  --body "## Summary
+Comprehensive testing and validation of implementation
+
+## Test Results
+- ✅ All unit tests passing
+- ✅ Integration tests passing
+- ✅ Acceptance criteria verified
+- ✅ No critical bugs found
+
+## Test Coverage
+- Statement: [X]%
+- Branch: [X]%
+- Code coverage report: [link]
+
+## Bugs Found & Fixed
+- [Bug 1]: [Description] - FIXED
+- [Bug 2]: [Description] - FIXED
+
+## Validation Against Requirements
+- [x] Acceptance criterion 1 ✅
+- [x] Acceptance criterion 2 ✅
+- [x] Acceptance criterion 3 ✅
+
+## Ready for
+Product Owner (Acceptance)"
+
+# 4. Verify PR exists on GitHub
+# Do NOT proceed until PR URL is confirmed
+```
+
+**FAILURE TO CREATE PR = WORK IS INCOMPLETE**
+
 ## Software Engineering & Testing Expertise
 
 **Object-Oriented Design Understanding**:

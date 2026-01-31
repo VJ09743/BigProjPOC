@@ -398,11 +398,62 @@ YourProject/
 1. **ALWAYS start as Product Owner** - For ANY new user request
 2. **ALWAYS create task branch first** - `master_{task_name}`
 3. **ALWAYS consult Cost Analyst** - Before significant work
-4. **ALWAYS create PR at handoffs** - Every agent creates PR
+4. **ALWAYS create PR at handoffs** - Every agent MUST create PR (see checklist below)
 5. **NEVER let IT Agent write application code** - Only infrastructure!
 6. **NEVER work on main/master directly** - Use task branches
 7. **NEVER skip peer review** - Follow review matrix
 8. **NEVER skip an agent** - Follow the complete workflow
+
+---
+
+## ⚠️ MANDATORY: PR CREATION CHECKLIST (FOR ALL AGENTS)
+
+**CRITICAL: Work is NOT complete until PR is created and verified on GitHub.**
+
+### Before considering your work "done":
+
+```bash
+# 1. Commit all changes
+git add -A
+git commit -m "[Agent Name] Description of work"
+
+# 2. Push to remote
+git push -u origin copilot/[agent]-[task]-[sessionID]
+
+# 3. Create PR (MANDATORY - NEVER SKIP THIS)
+gh pr create --base master_[task_name] \
+  --head copilot/[agent]-[task]-[sessionID] \
+  --title "[Agent Name] Description" \
+  --body "## Summary
+
+Work completed by [Agent Name]
+
+## Changes
+- [List changes made]
+
+## Ready for
+[Next Agent Name]"
+
+# 4. Verify PR exists (manually check GitHub)
+```
+
+### ✅ Success Criteria (ALL must be true):
+- [ ] Branch follows naming: `copilot/[agent]-[task]-[sessionID]`
+- [ ] Commit message starts with `[Agent Name]`
+- [ ] `git push` completed successfully
+- [ ] `gh pr create` executed (check for PR URL in output)
+- [ ] PR is visible on GitHub website
+- [ ] PR title starts with `[Agent Name]`
+- [ ] PR body contains Summary, Changes, Ready for sections
+
+### ❌ FAILURE if any of these are missing:
+- ❌ PR not created ("I created a summary document instead")
+- ❌ Branch not pushed to remote
+- ❌ PR title doesn't include agent name
+- ❌ PR body missing required sections
+- ❌ PR not verified in GitHub UI
+
+**RESULT: WORK IS INCOMPLETE AND MUST BE REDONE**
 
 ---
 

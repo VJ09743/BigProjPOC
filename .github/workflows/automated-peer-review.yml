@@ -70,12 +70,14 @@ jobs:
             const branchName = pr.data.head.ref;
             // Generic pattern: {llm-agent-name}/{agent-type}-{project}-{sessionID}
             // Examples: copilot/developer-sudoku-webapp-123, claude/architect-app-456, gemini/tester-web-789
+            // Agent types are known: developer, architect, tester, it, product-owner
             // Project name can contain hyphens, sessionID is numeric at the end
-            const branchPattern = /^([a-z-]+)\/([a-z-]+)-(.+)-(\d+)$/;
+            const branchPattern = /^([a-z-]+)\/(developer|architect|tester|it|product-owner)-(.+)-(\d+)$/;
             const match = branchName.match(branchPattern);
 
             if (!match) {
               console.log(`Branch "${branchName}" does not match expected pattern. Expected: {llm-name}/{agent-type}-{project}-{sessionID}`);
+              console.log(`Valid agent types: developer, architect, tester, it, product-owner`);
               core.setOutput('skip', 'true');
               return;
             }

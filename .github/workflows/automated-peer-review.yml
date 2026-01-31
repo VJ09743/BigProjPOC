@@ -63,11 +63,12 @@ jobs:
             });
 
             const branchName = pr.data.head.ref;
-            const branchPattern = /^agent\/([a-z-]+)-([a-z-]+)-([a-zA-Z0-9]+)$/;
+            // Support both agent/ and copilot/ prefixes
+            const branchPattern = /^(?:agent|copilot)\/([a-z-]+)-([a-z-]+)-([a-zA-Z0-9]+)$/;
             const match = branchName.match(branchPattern);
 
             if (!match) {
-              console.log('Branch does not match expected pattern. Skipping.');
+              console.log(`Branch "${branchName}" does not match expected pattern. Skipping.`);
               core.setOutput('skip', 'true');
               return;
             }

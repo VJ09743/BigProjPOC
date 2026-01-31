@@ -19,6 +19,7 @@
  */
 
 const OpenAI = require('openai');
+// const Anthropic = require('@anthropic-ai/sdk');  // Alternative: Uncomment to use Anthropic/Claude
 const { Octokit } = require('octokit');
 const fs = require('fs');
 const path = require('path');
@@ -348,6 +349,7 @@ INLINE_COMMENT: path/to/file.ext:123
 
 // Call LLM API for review
 async function callClaudeForReview(agentType, prDetails, previousReview = null) {
+  // Using OpenAI
   const openai = new OpenAI({
     apiKey: process.env.LLM_API_KEY
   });
@@ -369,6 +371,30 @@ async function callClaudeForReview(agentType, prDetails, previousReview = null) 
   });
 
   const review = completion.choices[0].message.content;
+
+  /* Alternative: Use Anthropic/Claude instead
+  const anthropic = new Anthropic({
+    apiKey: process.env.LLM_API_KEY
+  });
+
+  const prompt = constructReviewPrompt(agentType, prDetails, previousReview);
+
+  console.log(`\nCalling Anthropic API as ${agentType}...`);
+
+  const message = await anthropic.messages.create({
+    model: 'claude-sonnet-4-20250514',
+    max_tokens: 4096,
+    temperature: 0.2,
+    messages: [
+      {
+        role: 'user',
+        content: prompt
+      }
+    ]
+  });
+
+  const review = message.content[0].text;
+  */
 
   console.log(`Review received (${review.length} chars)`);
 

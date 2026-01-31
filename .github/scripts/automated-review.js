@@ -14,7 +14,7 @@
  *     --pr-details-file <path>
  *
  * Environment variables:
- *   ANTHROPIC_API_KEY - Required for Claude API
+ *   LLM_API_KEY - Required for LLM API (supports Anthropic, OpenAI, etc.)
  *   GITHUB_TOKEN - Required for GitHub API
  */
 
@@ -329,7 +329,7 @@ INLINE_COMMENT: path/to/file.ext:123
 // Call Claude API for review
 async function callClaudeForReview(agentType, prDetails, previousReview = null) {
   const anthropic = new Anthropic({
-    apiKey: process.env.ANTHROPIC_API_KEY
+    apiKey: process.env.LLM_API_KEY
   });
 
   const prompt = constructReviewPrompt(agentType, prDetails, previousReview);
@@ -571,8 +571,8 @@ async function main() {
   }
 
   // Validate environment variables
-  if (!process.env.ANTHROPIC_API_KEY) {
-    console.error('ANTHROPIC_API_KEY environment variable is required');
+  if (!process.env.LLM_API_KEY) {
+    console.error('LLM_API_KEY environment variable is required');
     process.exit(1);
   }
 

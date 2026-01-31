@@ -4,28 +4,250 @@
 
 ## MANDATORY INSTRUCTIONS FOR AI ASSISTANTS
 
-**CRITICAL**: If you are an AI assistant (Claude, GPT, Gemini, etc.), you MUST follow these instructions for EVERY user request:
+**CRITICAL**: If you are an AI assistant (Claude, GPT, Gemini, etc.), you MUST follow these instructions for EVERY user request.
 
-### 1. ALWAYS Start as Product Owner
-- Read `ai-assistants/agents/product-owner-agent.md`
-- Adopt Product Owner role BEFORE any other action
-- Never skip straight to coding
+---
 
-### 2. First Task? Customize the Template
-When this is a NEW project, Product Owner MUST:
-- Update the "Domain" section below with actual project domain
-- Update agent skills in `ai-assistants/agents/*.md`
-- Add domain-specific context throughout
+## STEP 0: MANDATORY FILE READING (BEFORE ANY TASK)
 
-### 3. Follow the Agent Workflow
+**STOP!** Before starting ANY new task, you MUST read ALL of these files:
+
+### Required Reading Checklist
 ```
-User Request → Product Owner (ALWAYS FIRST)
-    → Architect (design) → Developer (implement)
-    → Tester (validate) → Product Owner (accept)
+[ ] 1. AI-WORKFLOW.md (this file) - Complete workflow instructions
+[ ] 2. ai-assistants/agents/product-owner-agent.md - You ALWAYS start here
+[ ] 3. ai-assistants/agents/cost-analyst-agent.md - Cost estimation rules
+[ ] 4. ai-assistants/agents/architect-agent.md - Design responsibilities
+[ ] 5. ai-assistants/agents/developer-agent.md - Implementation rules
+[ ] 6. ai-assistants/agents/it-agent.md - Infrastructure rules
+[ ] 7. ai-assistants/agents/tester-agent.md - Testing rules
+[ ] 8. .github/MULTI_AGENT_REVIEW_GUIDE.md - PR review process
 ```
 
-### 4. Never Skip Steps
-Even for "simple" tasks, follow the workflow. This ensures quality and documentation.
+**WHY?** Each file contains critical rules that prevent mistakes. Skipping files leads to:
+- Missing PR creation at handoffs
+- Skipping Cost Analyst warnings
+- Wrong branching strategy
+- IT Agent writing application code (forbidden!)
+
+---
+
+## STEP 1: TASK-BASED BRANCHING (MANDATORY FOR NEW TASKS)
+
+**CRITICAL**: When user gives ANY new task, Product Owner MUST FIRST create the task branch structure:
+
+```bash
+# 1. Checkout from template branch
+git fetch origin template/agentic-workflow
+git checkout template/agentic-workflow
+
+# 2. Create task master branch
+git checkout -b master_{task_name}
+git push -u origin master_{task_name}
+
+# 3. Create your working branch FROM task master
+git checkout -b claude/{agent}-{task_name}-{sessionID}
+```
+
+**Example for "joke-website" task:**
+```bash
+git checkout template/agentic-workflow
+git checkout -b master_joke-website
+git push -u origin master_joke-website
+git checkout -b claude/product-owner-joke-website-abc123
+```
+
+### Branch Naming Rules
+
+| Branch Type | Pattern | Example |
+|-------------|---------|---------|
+| Task Master | `master_{task_name}` | `master_joke-website` |
+| Agent Working | `claude/{agent}-{task_name}-{sessionID}` | `claude/architect-joke-website-abc123` |
+
+**NEVER** work directly on `main`, `master`, or any branch not following this pattern!
+
+---
+
+## STEP 2: AGENT WORKFLOW WITH MANDATORY PR HANDOFFS
+
+### Complete Workflow Diagram
+
+```
+User Request
+     ↓
+┌─────────────────────────────────────────────────────────────────┐
+│ PRODUCT OWNER                                                    │
+│ 1. Read ALL mandatory files (Step 0)                            │
+│ 2. Create task master branch (Step 1)                           │
+│ 3. Clarify requirements with user                               │
+│ 4. Consult COST ANALYST for estimate ← MANDATORY                │
+│ 5. Create user story                                            │
+│ 6. Assign to Architect                                          │
+└─────────────────────────────────────────────────────────────────┘
+     ↓
+┌─────────────────────────────────────────────────────────────────┐
+│ ARCHITECT                                                        │
+│ 1. Create technical specification (EPS/EDS)                     │
+│ 2. Choose technology stack                                      │
+│ 3. Create developer tasks                                       │
+│ 4. Consult COST ANALYST for implementation estimate             │
+│ 5. CREATE PR → Triggers multi-agent review                      │
+│ 6. WAIT for PR approval                                         │
+└─────────────────────────────────────────────────────────────────┘
+     ↓ (ONLY after PR approved)
+┌─────────────────────────────────────────────────────────────────┐
+│ IT AGENT (Environment Setup)                                     │
+│ 1. Install dependencies (npm, pip, cargo, etc.)                 │
+│ 2. Update scripts/ folder (build.sh, test.sh, run.sh, clean.sh) │
+│ 3. Set up build environment                                     │
+│ 4. ⚠️  DO NOT WRITE APPLICATION CODE - Only infrastructure!     │
+│ 5. CREATE PR → Triggers multi-agent review                      │
+│ 6. WAIT for PR approval                                         │
+└─────────────────────────────────────────────────────────────────┘
+     ↓ (ONLY after PR approved)
+┌─────────────────────────────────────────────────────────────────┐
+│ DEVELOPER                                                        │
+│ 1. Implement code in modules/ directory                         │
+│ 2. Write tests                                                  │
+│ 3. Follow Architect's specifications                            │
+│ 4. CREATE PR → Triggers multi-agent review                      │
+│ 5. WAIT for PR approval                                         │
+└─────────────────────────────────────────────────────────────────┘
+     ↓ (ONLY after PR approved)
+┌─────────────────────────────────────────────────────────────────┐
+│ TESTER                                                           │
+│ 1. Validate implementation                                      │
+│ 2. Run tests                                                    │
+│ 3. Create test report                                           │
+│ 4. CREATE PR → Triggers multi-agent review                      │
+│ 5. WAIT for PR approval                                         │
+└─────────────────────────────────────────────────────────────────┘
+     ↓ (ONLY after PR approved)
+┌─────────────────────────────────────────────────────────────────┐
+│ IT AGENT (Release)                                               │
+│ 1. Build release artifacts                                      │
+│ 2. Package for distribution                                     │
+│ 3. Tag release in git                                           │
+│ 4. CREATE PR → Final review                                     │
+└─────────────────────────────────────────────────────────────────┘
+     ↓ (ONLY after PR approved)
+┌─────────────────────────────────────────────────────────────────┐
+│ PRODUCT OWNER (Acceptance)                                       │
+│ 1. Review completed work                                        │
+│ 2. Verify acceptance criteria                                   │
+│ 3. Present to user                                              │
+│ 4. MERGE final PR to task master branch                         │
+└─────────────────────────────────────────────────────────────────┘
+```
+
+---
+
+## STEP 3: PR CREATION IS MANDATORY AT EVERY HANDOFF
+
+**CRITICAL**: Every agent MUST create a PR before handing off to the next agent.
+
+### How to Create PR at Handoff
+
+```bash
+# 1. Stage and commit your work
+git add <specific-files>
+git commit -m "[Agent] Description of work completed"
+
+# 2. Push to your branch
+git push -u origin claude/{agent}-{task_name}-{sessionID}
+
+# 3. Create PR to task master branch (NOT main/master!)
+gh pr create --base master_{task_name} \
+  --title "[Agent] Description" \
+  --body "## Summary
+- Work completed by [Agent Name]
+
+## Changes
+- [List of changes]
+
+## Ready for: [Next Agent Name]
+
+## Cost Estimate
+- Estimated tokens: [amount]
+- Estimated cost: $[amount]"
+```
+
+### Triggering Multi-Agent Review
+
+After creating PR, user triggers review via GitHub Actions:
+1. Go to GitHub → Actions tab
+2. Select "Automated Multi-Agent Peer Review"
+3. Click "Run workflow"
+4. Enter PR number
+5. Wait for AI agents to review
+
+See `.github/MULTI_AGENT_REVIEW_GUIDE.md` for detailed instructions.
+
+---
+
+## STEP 4: COST ANALYST INTEGRATION (MANDATORY)
+
+**CRITICAL**: Cost Analyst MUST be consulted before any significant work.
+
+### When to Consult Cost Analyst
+
+| Trigger | Action |
+|---------|--------|
+| New user task | Product Owner consults Cost Analyst for initial estimate |
+| Before Architect design | Estimate design complexity |
+| Before Developer implementation | Estimate implementation cost |
+| Large file operations | Warn user before proceeding |
+| Cost > $1.00 | MUST get explicit user approval |
+
+### Cost Warning Format
+
+```
+⚠️ COST WARNING ⚠️
+
+Task: [task description]
+Estimated tokens: [input] + [output] = [total]
+Estimated cost: $[amount]
+Threshold: [LOW/MEDIUM/HIGH/CRITICAL]
+
+Do you want to proceed? (yes/no)
+```
+
+---
+
+## AGENT ROLES SUMMARY
+
+| Agent | Primary Responsibility | Creates PR? |
+|-------|----------------------|-------------|
+| **Product Owner** | Requirements, coordination, acceptance | Final merge only |
+| **Cost Analyst** | Cost estimation, warnings | No (advisory) |
+| **Architect** | Technical design, tech stack | YES - before IT |
+| **IT Agent** | Environment, scripts, releases | YES - before Developer |
+| **Developer** | Implementation, code | YES - before Tester |
+| **Tester** | Validation, testing | YES - before IT Release |
+
+---
+
+## PEER REVIEW MATRIX
+
+| PR Author | Required Reviewers |
+|-----------|-------------------|
+| Architect | Developer, Tester |
+| IT Agent | Architect |
+| Developer | Architect, Tester |
+| Tester | Developer, Product Owner |
+
+---
+
+## CRITICAL RULES - NEVER VIOLATE
+
+1. **NEVER skip reading mandatory files** - Read all files in Step 0
+2. **NEVER skip Product Owner** - Always start there
+3. **NEVER skip task branching** - Create master_{task} branch first
+4. **NEVER skip Cost Analyst** - Always get cost estimate
+5. **NEVER skip PR creation** - Every agent creates PR before handoff
+6. **NEVER let IT Agent write application code** - Only infrastructure
+7. **NEVER work on main/master directly** - Use task branches
+8. **NEVER merge without peer review** - Follow review matrix
 
 ---
 
@@ -116,10 +338,11 @@ All agents should understand the entertainment/news domain to make informed deci
 YourProject/
 ├── ai-assistants/               # AI configuration
 │   ├── agents/                  # Agent role definitions
-│   │   ├── team-leader-agent.md     # Orchestrator and planner
-│   │   ├── it-agent.md              # Infrastructure specialist
+│   │   ├── product-owner-agent.md   # Requirements & coordination
+│   │   ├── cost-analyst-agent.md    # Cost estimation & warnings
 │   │   ├── architect-agent.md       # System designer
 │   │   ├── developer-agent.md       # Implementation specialist
+│   │   ├── it-agent.md              # Infrastructure specialist
 │   │   └── tester-agent.md          # QA specialist
 │   ├── provider-setup/          # LLM provider configuration
 │   │   ├── config.template.json     # Config template

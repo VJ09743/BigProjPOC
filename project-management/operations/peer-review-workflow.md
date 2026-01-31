@@ -32,7 +32,7 @@ The BigProjPOC project uses an **automated peer review workflow** to ensure qual
 - **Design Validation**: Architect ensures design adherence
 - **Implementation Quality**: Developer ensures code quality
 - **Test Coverage**: Tester ensures testability and quality gates
-- **Process Oversight**: Team Leader ensures overall project alignment
+- **Process Oversight**: Product Owner ensures overall project alignment
 
 ### Automation Components
 
@@ -66,7 +66,7 @@ Every PR goes through rigorous peer review **before** user review. This ensures:
 ### Agent Collaboration
 
 Agents review each other's work:
-- **Team Leader**: Ensures overall quality and project alignment
+- **Product Owner**: Ensures overall quality and project alignment
 - **Architect**: Validates design patterns, SOLID principles, specifications
 - **Developer**: Reviews implementation quality, code cleanliness, unit tests
 - **Tester**: Ensures testability, coverage, and quality gates
@@ -96,19 +96,19 @@ Examples:
 
 | PR Author | Required Reviewers | Minimum Approvals |
 |-----------|-------------------|-------------------|
-| **Developer** | Team Leader, Architect, Tester | 3 |
-| **Architect** | Team Leader, Developer | 2 |
-| **Tester** | Team Leader, Developer | 2 |
-| **IT** | Team Leader, Architect | 2 |
-| **Team Leader** | Architect, Developer, Tester | 3 |
+| **Developer** | Product Owner, Architect, Tester | 3 |
+| **Architect** | Product Owner, Developer | 2 |
+| **Tester** | Product Owner, Developer | 2 |
+| **IT** | Product Owner, Architect | 2 |
+| **Product Owner** | Architect, Developer, Tester | 3 |
 
 ### Rationale
 
-- **Developer PRs** (implementation): Need architectural validation (Architect), quality oversight (Team Leader), and testability review (Tester)
-- **Architect PRs** (design): Need implementation feasibility check (Developer) and orchestration approval (Team Leader)
-- **Tester PRs** (QA): Need code review (Developer) and process approval (Team Leader)
-- **IT PRs** (infrastructure): Need architectural alignment (Architect) and oversight (Team Leader)
-- **Team Leader PRs** (coordination): Need technical validation from all technical leads
+- **Developer PRs** (implementation): Need architectural validation (Architect), quality oversight (Product Owner), and testability review (Tester)
+- **Architect PRs** (design): Need implementation feasibility check (Developer) and orchestration approval (Product Owner)
+- **Tester PRs** (QA): Need code review (Developer) and process approval (Product Owner)
+- **IT PRs** (infrastructure): Need architectural alignment (Architect) and oversight (Product Owner)
+- **Product Owner PRs** (coordination): Need technical validation from all technical leads
 
 ---
 
@@ -149,8 +149,8 @@ Ready for User Review & Merge
 
 For each PR, the workflow:
 1. **Adds Labels**:
-   - `peer-review:developer` (or architect, tester, it, team-leader)
-   - `awaiting-team-leader-review`
+   - `peer-review:developer` (or architect, tester, it, product-owner)
+   - `awaiting-product-owner-review`
    - `awaiting-architect-review`
    - `awaiting-tester-review` (etc.)
 
@@ -207,7 +207,7 @@ For each PR, the workflow:
 
 ## 6. Review Checklist
 
-### Team Leader Review Checklist
+### Product Owner Review Checklist
 
 **Overall Quality**:
 - [ ] Code follows project standards and conventions
@@ -355,13 +355,13 @@ For each PR, the workflow:
 | `peer-review:architect` | PR from Architect Agent | Architect creates PR |
 | `peer-review:tester` | PR from Tester Agent | Tester creates PR |
 | `peer-review:it` | PR from IT Agent | IT creates PR |
-| `peer-review:team-leader` | PR from Team Leader Agent | Team Leader creates PR |
+| `peer-review:product-owner` | PR from Product Owner Agent | Product Owner creates PR |
 
 ### Review Status Labels
 
 | Label | Description | Applied When |
 |-------|-------------|--------------|
-| `awaiting-team-leader-review` | Waiting for Team Leader review | Team Leader is assigned as reviewer |
+| `awaiting-product-owner-review` | Waiting for Product Owner review | Product Owner is assigned as reviewer |
 | `awaiting-architect-review` | Waiting for Architect review | Architect is assigned as reviewer |
 | `awaiting-developer-review` | Waiting for Developer review | Developer is assigned as reviewer |
 | `awaiting-tester-review` | Waiting for Tester review | Tester is assigned as reviewer |
@@ -379,10 +379,10 @@ Labels should be created in the GitHub repository:
 - Name: `peer-review:architect`, Color: `#1D76DB` (blue)
 - Name: `peer-review:tester`, Color: `#FBCA04` (yellow)
 - Name: `peer-review:it`, Color: `#D93F0B` (orange)
-- Name: `peer-review:team-leader`, Color: `#5319E7` (purple)
+- Name: `peer-review:product-owner`, Color: `#5319E7` (purple)
 
 **Review Status Labels**:
-- Name: `awaiting-team-leader-review`, Color: `#EDEDED` (gray)
+- Name: `awaiting-product-owner-review`, Color: `#EDEDED` (gray)
 - Name: `awaiting-architect-review`, Color: `#EDEDED` (gray)
 - Name: `awaiting-developer-review`, Color: `#EDEDED` (gray)
 - Name: `awaiting-tester-review`, Color: `#EDEDED` (gray)
@@ -437,7 +437,7 @@ Labels should be created in the GitHub repository:
 **Solution**:
 1. Check branch name: `git branch --show-current`
 2. Ensure format is `agent/{agent}-{project}-{sessionID}`
-3. Agent must be: developer, architect, tester, it, or team-leader
+3. Agent must be: developer, architect, tester, it, or product-owner
 4. Recreate branch with correct name if needed
 
 ### Workflow Permission Errors
@@ -466,10 +466,10 @@ Labels should be created in the GitHub repository:
 
 4. **Workflow triggers automatically**:
    - Detects agent type: `developer`
-   - Applies labels: `peer-review:developer`, `awaiting-team-leader-review`, `awaiting-architect-review`, `awaiting-tester-review`
+   - Applies labels: `peer-review:developer`, `awaiting-product-owner-review`, `awaiting-architect-review`, `awaiting-tester-review`
    - Creates comment with review request and checklist
 
-5. **Reviewers are notified** (Team Leader, Architect, Tester)
+5. **Reviewers are notified** (Product Owner, Architect, Tester)
 
 6. **Architect reviews first**:
    - Checks design adherence to `rtdcs-modulea-eds.md`
@@ -478,7 +478,7 @@ Labels should be created in the GitHub repository:
    - Verifies SOLID principles
    - **Approves**: ✅
 
-7. **Team Leader reviews**:
+7. **Product Owner reviews**:
    - Checks overall code quality
    - Validates commit messages
    - Ensures documentation is updated
@@ -494,7 +494,7 @@ Labels should be created in the GitHub repository:
 
 10. **User reviews** and **merges** PR
 
-11. **Worktree cleaned up** by Team Leader
+11. **Worktree cleaned up** by Product Owner
 
 ---
 

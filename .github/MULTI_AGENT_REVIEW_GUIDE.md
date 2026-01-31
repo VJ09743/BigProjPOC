@@ -58,7 +58,7 @@ The workflow will:
 |-----------|-----------|
 | Developer | Architect, Tester |
 | Architect | Developer, Tester |
-| Tester | Developer, Team Leader |
+| Tester | Developer, Product Owner |
 | IT | Architect |
 
 3. Run each reviewer agent sequentially
@@ -166,7 +166,7 @@ Ensure your branch follows the pattern:
 - `claude/{agent}-{project}-{sessionID}`
 - `agent/{agent}-{project}-{sessionID}`
 
-Valid agent names: `architect`, `developer`, `it`, `tester`, `team-leader`
+Valid agent names: `architect`, `developer`, `it`, `tester`, `product-owner`
 
 ### "ANTHROPIC_API_KEY not set"
 

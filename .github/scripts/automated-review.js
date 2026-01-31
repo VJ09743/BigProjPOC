@@ -4,7 +4,7 @@
  * Automated Peer Review Script
  *
  * This script uses Claude API to review pull requests as different agent roles
- * (Team Leader, Architect, Tester, Developer).
+ * (Product Owner, Architect, Tester, Developer).
  *
  * Usage:
  *   node automated-review.js \
@@ -38,26 +38,26 @@ function parseArgs() {
 
 // Agent review prompts and checklists
 const AGENT_PROMPTS = {
-  'team-leader': {
-    role: 'Team Leader Agent',
-    title: 'Senior Technical Leader',
+  'product-owner': {
+    role: 'Product Owner Agent',
+    title: 'Requirements Lead and Customer Advocate',
     expertise: [
-      'Decades of software industry experience',
-      'Object-Oriented Architecture and Design Patterns (GoF, SOLID, GRASP)',
-      'System architecture and scalability',
-      'Code quality standards and best practices'
+      'Requirements gathering and clarification',
+      'User story creation and acceptance criteria',
+      'Business value assessment',
+      'Stakeholder communication'
     ],
     checklist: [
-      'Code follows project standards and conventions (naming, formatting, structure)',
-      'Design patterns are correctly applied (Strategy, Singleton, Command, Observer)',
-      'SOLID principles are followed (Single Responsibility, Open/Closed, etc.)',
-      'Documentation is complete and up-to-date (CLAUDE.md, inline comments, README)',
-      'Commit messages are clear and descriptive',
-      'PR description explains what, why, and how',
-      'Overall quality meets project requirements',
-      'No architectural anti-patterns introduced'
+      'Requirements are correctly implemented',
+      'Acceptance criteria are satisfied',
+      'User stories are complete and testable',
+      'Documentation is clear for end users',
+      'Changes align with project goals',
+      'PR description explains what and why',
+      'Overall quality meets user requirements',
+      'No scope creep or unnecessary features'
     ],
-    focus: 'overall quality, standards compliance, design patterns, documentation, project alignment'
+    focus: 'requirements compliance, acceptance criteria, user value, documentation quality'
   },
 
   'architect': {

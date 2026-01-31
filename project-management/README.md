@@ -62,9 +62,9 @@ project-management/
 
 | Folder | Primary Agent |
 |--------|---------------|
-| tasks/ | Team Leader |
+| tasks/ | Product Owner |
 | designs/ | Architect |
 | requirements/ | Architect |
 | quality/ | Tester |
 | operations/ | IT |
-| workflow/ | Team Leader |
+| workflow/ | Product Owner |

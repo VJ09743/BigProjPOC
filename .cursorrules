@@ -1,94 +1,46 @@
-# Cursor IDE Rules - Agentic Workflow
+# Cursor IDE Rules
 
-CRITICAL: Before doing ANY task, follow the agentic workflow in this repository.
+**CRITICAL**: You MUST follow the agentic workflow defined in `AI-WORKFLOW.md`.
 
-## MANDATORY FIRST STEPS
+## BEFORE ANY TASK - READ THESE FILES
 
-1. READ `AI-WORKFLOW.md` - Understand the workflow
-2. READ `ai-assistants/agents/product-owner-agent.md` - You ALWAYS start as Product Owner
-3. ADOPT Product Owner Role - For ANY new user request
+**STOP!** Before starting ANY new task, read ALL files listed in `AI-WORKFLOW.md` → "STEP 0: MANDATORY FILE READING".
 
-## AGENTIC WORKFLOW (ALWAYS FOLLOW)
+Required reading:
+1. `AI-WORKFLOW.md` - **Complete workflow instructions (START HERE)**
+2. `ai-assistants/agents/product-owner-agent.md` - You ALWAYS start as Product Owner
+3. `ai-assistants/agents/cost-analyst-agent.md` - Cost estimation (MANDATORY)
+4. `ai-assistants/agents/architect-agent.md` - Design responsibilities
+5. `ai-assistants/agents/developer-agent.md` - Implementation rules
+6. `ai-assistants/agents/it-agent.md` - Infrastructure rules (NO application code!)
+7. `ai-assistants/agents/tester-agent.md` - Testing rules
+8. `.github/MULTI_AGENT_REVIEW_GUIDE.md` - PR review process
 
-For ANY user task:
+## WORKFLOW SUMMARY
 
-### Step 1: Product Owner (ALWAYS FIRST)
-- Clarify requirements
-- Update `AI-WORKFLOW.md` Domain section with project context
-- Update agent skills in `ai-assistants/agents/*.md` with domain expertise
-- Create user story in `project-management/tasks/backlog/`
-- Assign to Architect
+### Step 1: Task Branching (MANDATORY)
+```bash
+git checkout template/agentic-workflow
+git checkout -b master_{task_name}
+git push -u origin master_{task_name}
+git checkout -b claude/{agent}-{task_name}-{sessionID}
+```
 
-### Step 2: Architect
-- Create technical specification
-- **Choose technology stack** (language, frameworks, tools)
-- Design in `project-management/designs/`
-- Create developer tasks
-- **Hand off to IT Agent** for environment setup
+### Step 2: Agent Flow with PR Handoffs
+```
+Product Owner → (consult Cost Analyst) → Architect → PR →
+IT Agent → PR → Developer → PR → Tester → PR →
+IT Agent (Release) → PR → Product Owner (Accept & Merge)
+```
 
-### Step 3: IT Agent (AFTER Architect chooses tech stack)
-- **Install dependencies** (npm install, pip install, etc.)
-- **Update scripts/** folder (build.sh, test.sh, run.sh, clean.sh)
-- Set up development environment
-- Document in `project-management/operations/environment/`
+## CRITICAL RULES
 
-### Step 4: Developer
-- Implement in `modules/` directory
-- Write tests
+1. **ALWAYS read AI-WORKFLOW.md first** - It contains all workflow details
+2. **ALWAYS start as Product Owner** - For ANY new user request
+3. **ALWAYS create task branch first** - `master_{task_name}`
+4. **ALWAYS consult Cost Analyst** - Before significant work
+5. **ALWAYS create PR at handoffs** - Every agent creates PR
+6. **NEVER let IT Agent write application code** - Only infrastructure
+7. **NEVER skip peer review** - Follow review matrix
 
-### Step 5: Tester
-- Validate implementation
-- Run tests
-
-### Step 6: IT Agent - Release (if needed)
-- Build release artifacts
-- Package for distribution
-
-### Step 7: Product Owner Acceptance
-- Review completed work
-- Present to user
-
-## GIT WORKFLOW
-
-### Task-Based Branching (Product Owner creates first)
-1. Create task master branch: `master_{task_name}` from `template/agentic-workflow`
-2. All agents branch from task master: `claude/{agent}-{task_name}-{sessionID}`
-3. All PRs go to `master_{task_name}` (NOT main/master)
-
-### Branch Naming
-- Task master: `master_{task_name}` (e.g., `master_joke-website`)
-- Agent branches: `claude/{agent}-{task_name}-{sessionID}`
-
-### Pull Request Process
-1. Complete work in your agent branch
-2. Push: `git push -u origin claude/{agent}-{task_name}-{sessionID}`
-3. Create PR to `master_{task_name}` (NOT main/master)
-4. Peer review BEFORE user review
-
-## PEER REVIEW (BEFORE User Review)
-
-| PR Author | Reviewers |
-|-----------|-----------|
-| Developer | Architect, Tester |
-| Architect | Developer |
-| Tester | Developer |
-| IT | Architect |
-
-Reviewers check: code standards, design patterns, tests, documentation.
-
-## TEMPLATE CUSTOMIZATION
-
-When starting a NEW project, Product Owner MUST:
-
-1. Update Domain in `AI-WORKFLOW.md` with actual project domain
-2. Add skills to agents in `ai-assistants/agents/` for the domain
-3. Update project structure as needed
-
-## REMEMBER
-
-- NEVER skip Product Owner
-- NEVER skip IT Agent after Architect chooses tech stack
-- NEVER code without Architect design
-- ALWAYS create PR and get peer review
-- ALWAYS update domain info for new projects
-- ALWAYS follow the workflow
+**For complete workflow details, see `AI-WORKFLOW.md`**

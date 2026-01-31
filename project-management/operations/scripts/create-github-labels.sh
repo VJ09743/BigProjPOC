@@ -35,15 +35,15 @@ create_label() {
 }
 
 echo "=== Peer Review Type Labels ==="
-create_label "peer-review:developer" "0E8A16" "Pull request from Developer Agent (requires Team Leader, Architect, Tester review)"
-create_label "peer-review:architect" "1D76DB" "Pull request from Architect Agent (requires Team Leader, Developer review)"
-create_label "peer-review:tester" "FBCA04" "Pull request from Tester Agent (requires Team Leader, Developer review)"
-create_label "peer-review:it" "D93F0B" "Pull request from IT Agent (requires Team Leader, Architect review)"
-create_label "peer-review:team-leader" "5319E7" "Pull request from Team Leader Agent (requires Architect, Developer, Tester review)"
+create_label "peer-review:developer" "0E8A16" "Pull request from Developer Agent (requires Product Owner, Architect, Tester review)"
+create_label "peer-review:architect" "1D76DB" "Pull request from Architect Agent (requires Product Owner, Developer review)"
+create_label "peer-review:tester" "FBCA04" "Pull request from Tester Agent (requires Product Owner, Developer review)"
+create_label "peer-review:it" "D93F0B" "Pull request from IT Agent (requires Product Owner, Architect review)"
+create_label "peer-review:product-owner" "5319E7" "Pull request from Product Owner Agent (requires Architect, Developer, Tester review)"
 
 echo ""
 echo "=== Review Status Labels ==="
-create_label "awaiting-team-leader-review" "EDEDED" "Waiting for Team Leader Agent review"
+create_label "awaiting-product-owner-review" "EDEDED" "Waiting for Product Owner Agent review"
 create_label "awaiting-architect-review" "EDEDED" "Waiting for Architect Agent review"
 create_label "awaiting-developer-review" "EDEDED" "Waiting for Developer Agent review"
 create_label "awaiting-tester-review" "EDEDED" "Waiting for Tester Agent review"

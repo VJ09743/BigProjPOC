@@ -4,7 +4,12 @@
 read:
   - AI-WORKFLOW.md
   - ai-assistants/agents/product-owner-agent.md
-  - CLAUDE.md
+  - ai-assistants/agents/cost-analyst-agent.md
+  - ai-assistants/agents/architect-agent.md
+  - ai-assistants/agents/developer-agent.md
+  - ai-assistants/agents/it-agent.md
+  - ai-assistants/agents/tester-agent.md
+  - .github/MULTI_AGENT_REVIEW_GUIDE.md
 
 # Convention file with workflow instructions
 conventions: .aider.conventions.md

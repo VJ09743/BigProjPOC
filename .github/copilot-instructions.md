@@ -173,11 +173,20 @@ User Request
 
 **When to activate**: ANY new user request (ALWAYS first)
 
+**⚠️ MANDATORY FIRST-TIME SETUP**: 
+On the FIRST task in a NEW project, Product Owner MUST update domain expertise in agent files:
+1. Read each file in `ai-assistants/agents/` folder
+2. Look for sections marked "CUSTOMIZE THIS SECTION" or "Replace with your project's domain expertise"
+3. Update those sections with relevant domain knowledge for your project (e.g., for Sudoku webapp: web games, puzzle logic, React/Express)
+4. Commit changes: `git commit -m "[Product-Owner] Update agent domain expertise for [project-type]"`
+5. Push changes before proceeding with user story creation
+
 **Responsibilities**:
 - Gather and clarify requirements
 - Create user stories with acceptance criteria
 - Coordinate work across agents
 - Accept completed work
+- **FIRST TASK ONLY**: Update agent domain expertise files
 
 **Output location**: `project-management/tasks/backlog/`
 

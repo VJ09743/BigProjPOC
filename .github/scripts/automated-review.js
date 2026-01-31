@@ -21,6 +21,19 @@
 const OpenAI = require('openai');
 const { Octokit } = require('octokit');
 const fs = require('fs');
+const path = require('path');
+
+// Read agent .md files for context
+function loadAgentContext(agentType) {
+  const agentFilePath = path.join(process.cwd(), 'ai-assistants', 'agents', `${agentType}-agent.md`);
+  
+  if (fs.existsSync(agentFilePath)) {
+    return fs.readFileSync(agentFilePath, 'utf8');
+  }
+  
+  console.warn(`Warning: Agent file not found at ${agentFilePath}`);
+  return null;
+}
 
 // Parse command line arguments
 function parseArgs() {
@@ -177,10 +190,20 @@ async function getPreviousReview(octokit, repo, prNumber, agentType) {
 // Construct review prompt for Claude
 function constructReviewPrompt(agentType, prDetails, previousReview = null) {
   const agent = AGENT_PROMPTS[agentType];
+  const agentContext = loadAgentContext(agentType);
 
   const prompt = `You are the ${agent.title} reviewing a pull request in the YourProject repository.
 
 **Your Role**: ${agent.role}
+
+${agentContext ? `
+## Your Complete Agent Definition
+
+${agentContext}
+
+---
+
+` : ''}
 
 **Your Expertise**:
 ${agent.expertise.map(e => `- ${e}`).join('\n')}

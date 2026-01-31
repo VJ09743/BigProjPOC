@@ -59,6 +59,30 @@ Software Developer and Implementation Specialist
 
 ## Domain Expertise
 
+**Web Game Development**:
+- Interactive game UI with React components
+- Real-time user input handling and validation
+- Game state management (hooks, context)
+- Visual feedback and user experience
+
+**Puzzle Logic Implementation**:
+- Sudoku rule validation algorithms
+- Backtracking algorithm for puzzle generation
+- Constraint satisfaction problem solving
+- Efficient data structure choices for 9x9 grids
+
+**Full-Stack JavaScript**:
+- Node.js/Express backend services
+- Axios for HTTP client communication
+- Async/await patterns and promise handling
+- Error handling in async operations
+
+**Modern Web Technologies**:
+- React functional components and hooks
+- Vite build tool and development server
+- Tailwind CSS for styling
+- Jest for testing
+
 **CUSTOMIZE THIS SECTION**: Replace with your project's domain expertise.
 
 When configuring this template for your project, add domain-specific implementation knowledge here. For example:

@@ -429,6 +429,58 @@ gh pr create --base master --head <branch> \
   --body "Description"
 ```
 
+### If `gh` CLI is Not Available
+
+If the `gh` CLI is not installed or authentication fails, follow these steps:
+
+#### Option 1: Install gh CLI (Recommended)
+
+```bash
+# Ubuntu/Debian
+sudo apt-get update && sudo apt-get install -y gh
+
+# macOS
+brew install gh
+
+# Then authenticate
+gh auth login
+```
+
+#### Option 2: Manual PR Creation via GitHub Web UI
+
+1. **Push your branch first**:
+   ```bash
+   git push -u origin claude/{agent}-{task_name}-{sessionID}
+   ```
+
+2. **Create PR via web**:
+   - Go to: `https://github.com/{owner}/{repo}/pull/new/{branch-name}`
+   - Or: Repository → Pull requests → New pull request
+   - Set base branch (e.g., `template/agentic-workflow` or `master_{task_name}`)
+   - Set compare branch to your pushed branch
+   - Add title and description
+   - Click "Create pull request"
+
+#### Option 3: Use GitHub API with curl
+
+```bash
+# Set your token
+export GITHUB_TOKEN="your_token"
+
+# Create PR via API
+curl -X POST "https://api.github.com/repos/{owner}/{repo}/pulls" \
+  -H "Authorization: token $GITHUB_TOKEN" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "title": "PR Title",
+    "head": "branch-name",
+    "base": "target-branch",
+    "body": "PR description"
+  }'
+```
+
+**Note for AI Agents**: If `gh` fails, always provide the user with the manual PR creation URL so they can create the PR themselves.
+
 ---
 
 ## Customization Guide

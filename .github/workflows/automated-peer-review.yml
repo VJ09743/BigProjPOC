@@ -90,9 +90,9 @@ jobs:
             const reviewRules = {
               'developer': ['architect', 'tester'],           // 2 reviewers
               'architect': ['developer', 'tester'],           // 2 reviewers
-              'tester': ['developer', 'team-leader'],         // 2 reviewers
-              'it': ['architect'],                             // 1 reviewer
-              'team-leader': ['architect']                     // 1 reviewer
+              'tester': ['developer', 'product-owner'],       // 2 reviewers
+              'it': ['architect'],                            // 1 reviewer
+              'product-owner': ['architect']                  // 1 reviewer
             };
 
             const reviewers = reviewRules[agentType] || [];

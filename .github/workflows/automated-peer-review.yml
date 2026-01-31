@@ -68,17 +68,23 @@ jobs:
             });
 
             const branchName = pr.data.head.ref;
-            // Support both agent/ and copilot/ prefixes
-            const branchPattern = /^(?:agent|copilot)\/([a-z-]+)-([a-z-]+)-([a-zA-Z0-9]+)$/;
+            // Generic pattern: {llm-agent-name}/{agent-type}-{project}-{sessionID}
+            // Examples: copilot/developer-sudoku-123, claude/architect-app-456, gemini/tester-web-789
+            const branchPattern = /^([a-z-]+)\/([a-z-]+)-([a-z-]+)-([a-zA-Z0-9]+)$/;
             const match = branchName.match(branchPattern);
 
             if (!match) {
-              console.log(`Branch "${branchName}" does not match expected pattern. Skipping.`);
+              console.log(`Branch "${branchName}" does not match expected pattern. Expected: {llm-name}/{agent-type}-{project}-{sessionID}`);
               core.setOutput('skip', 'true');
               return;
             }
 
-            const agentType = match[1];
+            const llmAgentName = match[1];  // e.g., "copilot", "claude", "gemini"
+            const agentType = match[2];     // e.g., "developer", "architect", "tester"
+            const projectName = match[3];   // e.g., "sudoku", "app"
+            const sessionId = match[4];     // e.g., "1769889815"
+            
+            console.log(`LLM Agent: ${llmAgentName}, Agent Type: ${agentType}, Project: ${projectName}, Session: ${sessionId}`);
 
             // Define review assignment rules (reduced reviewers to save costs)
             const reviewRules = {

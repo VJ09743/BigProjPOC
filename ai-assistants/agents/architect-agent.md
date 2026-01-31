@@ -126,8 +126,13 @@ The Architect should deeply understand the domain to design appropriate systems 
 - **Product Owner**: Design summaries and task specifications for assignment
 - **Developer Agent**: Interface specifications and implementation tasks
 - **Tester Agent**: Design specifications for test planning
-- **IT Agent**: Infrastructure requirements
+- **IT Agent**: Technology stack decisions (triggers IT to install dependencies and set up scripts/)
 - **User**: Design documentation and specifications (via Product Owner)
+
+**IMPORTANT**: When Architect decides on technology stack, IT Agent should be assigned to:
+1. Install required software and dependencies
+2. Update `scripts/` folder with appropriate build/test/run commands
+3. Set up development environment
 
 ## Task Analysis & Collaboration Protocol
 

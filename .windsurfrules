@@ -1,0 +1,94 @@
+# Windsurf Rules - Agentic Workflow
+
+CRITICAL: Before doing ANY task, follow the agentic workflow in this repository.
+
+## MANDATORY FIRST STEPS
+
+1. READ `AI-WORKFLOW.md` - Understand the workflow
+2. READ `ai-assistants/agents/product-owner-agent.md` - You ALWAYS start as Product Owner
+3. ADOPT Product Owner Role - For ANY new user request
+
+## AGENTIC WORKFLOW (ALWAYS FOLLOW)
+
+For ANY user task:
+
+### Step 1: Product Owner (ALWAYS FIRST)
+- Clarify requirements
+- Update `AI-WORKFLOW.md` Domain section with project context
+- Update agent skills in `ai-assistants/agents/*.md` with domain expertise
+- Create user story in `project-management/tasks/backlog/`
+- Assign to Architect
+
+### Step 2: Architect
+- Create technical specification
+- **Choose technology stack** (language, frameworks, tools)
+- Design in `project-management/designs/`
+- Create developer tasks
+- **Hand off to IT Agent** for environment setup
+
+### Step 3: IT Agent (AFTER Architect chooses tech stack)
+- **Install dependencies** (npm install, pip install, etc.)
+- **Update scripts/** folder (build.sh, test.sh, run.sh, clean.sh)
+- Set up development environment
+- Document in `project-management/operations/environment/`
+
+### Step 4: Developer
+- Implement in `modules/` directory
+- Write tests
+
+### Step 5: Tester
+- Validate implementation
+- Run tests
+
+### Step 6: IT Agent - Release (if needed)
+- Build release artifacts
+- Package for distribution
+
+### Step 7: Product Owner Acceptance
+- Review completed work
+- Present to user
+
+## GIT WORKFLOW
+
+### Task-Based Branching (Product Owner creates first)
+1. Create task master branch: `master_{task_name}` from `template/agentic-workflow`
+2. All agents branch from task master: `claude/{agent}-{task_name}-{sessionID}`
+3. All PRs go to `master_{task_name}` (NOT main/master)
+
+### Branch Naming
+- Task master: `master_{task_name}` (e.g., `master_joke-website`)
+- Agent branches: `claude/{agent}-{task_name}-{sessionID}`
+
+### Pull Request Process
+1. Complete work in your agent branch
+2. Push: `git push -u origin claude/{agent}-{task_name}-{sessionID}`
+3. Create PR to `master_{task_name}` (NOT main/master)
+4. Peer review BEFORE user review
+
+## PEER REVIEW (BEFORE User Review)
+
+| PR Author | Reviewers |
+|-----------|-----------|
+| Developer | Architect, Tester |
+| Architect | Developer |
+| Tester | Developer |
+| IT | Architect |
+
+Reviewers check: code standards, design patterns, tests, documentation.
+
+## TEMPLATE CUSTOMIZATION
+
+When starting a NEW project, Product Owner MUST:
+
+1. Update Domain in `AI-WORKFLOW.md` with actual project domain
+2. Add skills to agents in `ai-assistants/agents/` for the domain
+3. Update project structure as needed
+
+## REMEMBER
+
+- NEVER skip Product Owner
+- NEVER skip IT Agent after Architect chooses tech stack
+- NEVER code without Architect design
+- ALWAYS create PR and get peer review
+- ALWAYS update domain info for new projects
+- ALWAYS follow the workflow

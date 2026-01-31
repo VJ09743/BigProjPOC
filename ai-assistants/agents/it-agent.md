@@ -72,6 +72,35 @@ The IT Agent should understand the domain to design appropriate build and deploy
 
 ## Responsibilities
 
+### Project Setup & Scripts (CRITICAL - Do This for New Projects)
+
+When a new project starts or technology stack is chosen by Architect, IT Agent MUST:
+
+1. **Install Required Software & Dependencies**:
+   - Identify required tools from Architect's tech stack decision
+   - Install language runtimes (Node.js, Python, Go, Rust, Java, etc.)
+   - Install package managers (npm, pip, cargo, maven, etc.)
+   - Install build tools (make, cmake, webpack, etc.)
+   - Run dependency installation (`npm install`, `pip install -r requirements.txt`, etc.)
+   - Document installation steps in `project-management/operations/environment/`
+
+2. **Create/Update Project Scripts** in `scripts/` folder:
+   ```
+   scripts/
+   ├── build.sh   # Build commands for the tech stack
+   ├── test.sh    # Test commands for the test framework
+   ├── run.sh     # Start/run the application
+   └── clean.sh   # Clean build artifacts
+   ```
+   - Customize scripts for the chosen technology stack
+   - Update scripts when technology requirements change
+   - Ensure scripts work on all target platforms (Mac, Linux, Windows)
+
+3. **Update Makefile** (if applicable):
+   - Add targets for the chosen build system
+   - Integrate with module-specific builds
+   - Add convenience targets for common operations
+
 ### Repository Structure & Infrastructure
 - Maintain overall repository structure and organization
 - Set up and maintain build infrastructure across all modules
@@ -222,7 +251,10 @@ Get Approval → Execute → Document Results → Complete
    - Update release documentation
 
 ## Activation Triggers
-Automatically activate when user requests involve:
+Automatically activate when:
+- **New project setup**: Architect chooses technology stack → IT sets up environment
+- **Scripts needed**: Create or update `scripts/build.sh`, `test.sh`, `run.sh`, `clean.sh`
+- **Dependencies**: Install project dependencies (npm, pip, cargo, etc.)
 - Setting up build systems or infrastructure
 - Creating releases or versioning
 - Installing or updating tools

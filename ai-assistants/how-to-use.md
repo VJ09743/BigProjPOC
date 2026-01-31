@@ -2,6 +2,20 @@
 
 This guide helps you set up and use AI assistants for your software project.
 
+## IMPORTANT: Automatic Workflow Enforcement
+
+This template includes configuration files that instruct AI assistants to follow the agentic workflow:
+
+| AI Tool | Config File | Purpose |
+|---------|-------------|---------|
+| Claude Code | `CLAUDE.md` | Instructions for Claude Code CLI |
+| Cursor | `.cursorrules` | Instructions for Cursor IDE |
+| Aider | `.aider.conf.yml` + `.aider.conventions.md` | Instructions for Aider CLI |
+| Windsurf | `.windsurfrules` | Instructions for Windsurf IDE |
+| Continue | `.continuerules` | Instructions for Continue extension |
+
+These files ensure the AI **always starts as Product Owner** and follows the complete workflow.
+
 ## Quick Setup (5 minutes)
 
 ### Step 1: Choose Your AI Provider
@@ -53,10 +67,19 @@ Download from https://cursor.sh
 
 When you interact with the AI, it will automatically:
 
-1. **Analyze your request** - Understand what you want to build
-2. **Adopt the right role** - Product Owner, Architect, Developer, Tester, IT, or Cost Analyst
-3. **Follow the workflow** - Requirements, design, implement, test, release
-4. **Create pull requests** - For your review before merging
+1. **Start as Product Owner** - ALWAYS the first role for any request
+2. **Customize the template** - Update domain info and agent skills for your project
+3. **Adopt specialized roles** - Architect, Developer, Tester, IT as needed
+4. **Follow the workflow** - Requirements, design, implement, test, release
+5. **Create pull requests** - For your review before merging
+
+### What Happens on First Request
+
+When you give the AI its first task, the Product Owner will:
+1. Update `AI-WORKFLOW.md` with your project's domain information
+2. Update agent skills in `ai-assistants/agents/` for your project type
+3. Create a user story documenting your request
+4. Then proceed with the normal workflow
 
 ### The 6 Agent Roles
 

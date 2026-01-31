@@ -1,5 +1,34 @@
 # AI-Assisted Agentic Workflow Template
 
+---
+
+## MANDATORY INSTRUCTIONS FOR AI ASSISTANTS
+
+**CRITICAL**: If you are an AI assistant (Claude, GPT, Gemini, etc.), you MUST follow these instructions for EVERY user request:
+
+### 1. ALWAYS Start as Product Owner
+- Read `ai-assistants/agents/product-owner-agent.md`
+- Adopt Product Owner role BEFORE any other action
+- Never skip straight to coding
+
+### 2. First Task? Customize the Template
+When this is a NEW project, Product Owner MUST:
+- Update the "Domain" section below with actual project domain
+- Update agent skills in `ai-assistants/agents/*.md`
+- Add domain-specific context throughout
+
+### 3. Follow the Agent Workflow
+```
+User Request → Product Owner (ALWAYS FIRST)
+    → Architect (design) → Developer (implement)
+    → Tester (validate) → Product Owner (accept)
+```
+
+### 4. Never Skip Steps
+Even for "simple" tasks, follow the workflow. This ensures quality and documentation.
+
+---
+
 ## Overview
 
 This is a **provider-agnostic template** for setting up a multi-agent AI workflow. It works with any LLM (Large Language Model) provider and AI coding assistant.
@@ -126,6 +155,12 @@ YourProject/
 │   ├── release/                 # Combined release (all modules)
 │   └── debug/                   # Combined debug (all modules)
 │
+├── scripts/                     # Build, test, run scripts
+│   ├── build.sh                 # Build all modules
+│   ├── test.sh                  # Run all tests
+│   ├── run.sh                   # Run the application
+│   └── clean.sh                 # Clean build artifacts
+│
 ├── Makefile                     # Top-level build script
 ├── .github/                     # GitHub configuration
 │   ├── workflows/               # GitHub Actions
@@ -215,41 +250,102 @@ The agents work together in a collaborative workflow:
 ```
 User Request
     ↓
-Product Owner (Analyzes & Plans)
+Product Owner (Clarifies requirements, creates user story)
     ↓
-Create Git Worktrees → Assign to Agent(s)
+Architect (Chooses tech stack, designs solution)
     ↓
-Agent(s) Work Independently
+IT Agent (Installs dependencies, sets up scripts/)  ← CRITICAL STEP
     ↓
-Peer Review (2+ agents)
+Developer (Implements code in modules/)
     ↓
-Create PR for User Review
+Tester (Validates implementation)
     ↓
-User Reviews & Merges
+IT Agent (Builds release artifacts)
+    ↓
+Product Owner (Accepts & presents to user)
 ```
+
+**IMPORTANT**: IT Agent activates in TWO places:
+1. **After Architect** - To install dependencies and set up scripts/
+2. **Before Release** - To build and package artifacts
+
+### Task-Based Branching Strategy
+
+When user gives ANY new task, Product Owner MUST first create a task master branch:
+
+```bash
+# Step 1: Create task master branch from template
+git checkout template/agentic-workflow
+git checkout -b master_{task_name}
+git push -u origin master_{task_name}
+```
+
+**Examples of task master branches**:
+- `master_joke-website`
+- `master_user-authentication`
+- `master_shopping-cart`
+
+### Branch Naming Convention
+
+| Branch Type | Pattern | Example |
+|-------------|---------|---------|
+| Task Master | `master_{task_name}` | `master_joke-website` |
+| Agent Branch | `claude/{agent}-{task_name}-{sessionID}` | `claude/developer-joke-website-abc123` |
 
 ### Git Worktree Workflow
 
 Agents work in separate git worktrees to enable parallel work:
 
 ```bash
-# Product Owner creates worktrees
-git worktree add ../worktree-architect agent/architect-{project}-{sessionID}
-git worktree add ../worktree-developer agent/developer-{project}-{sessionID}
+# Product Owner creates task master branch first
+git checkout template/agentic-workflow
+git checkout -b master_{task_name}
+git push -u origin master_{task_name}
+
+# Then creates worktrees for agents (branching from task master)
+git checkout master_{task_name}
+git worktree add ../worktree-architect claude/architect-{task_name}-{sessionID}
+git worktree add ../worktree-developer claude/developer-{task_name}-{sessionID}
 
 # Each agent works independently in their worktree
-# When done, merge back via PR
+# When done, create PR to master_{task_name} (NOT main/master)
 ```
 
-### Peer Review Process
+### Pull Request Process
 
-Before PRs go to user review:
+1. **Complete work** in your agent branch
+2. **Commit changes** with clear, descriptive messages
+3. **Push to remote**: `git push -u origin claude/{agent}-{task_name}-{sessionID}`
+4. **Create Pull Request** to `master_{task_name}` branch (NOT main/master)
+5. **Peer review** - other agents review before user
 
-1. Agent completes work in their worktree
-2. Requests review from 2+ relevant agents
-3. Peers review for design, quality, patterns
-4. Address feedback and get approvals
-5. Only then create PR for user review
+### Peer Review Process (CRITICAL)
+
+**All PRs must be peer-reviewed by other agents BEFORE user reviews.**
+
+#### Review Assignment Rules
+
+| PR Author | Required Reviewers |
+|-----------|-------------------|
+| **Developer** | Architect, Tester |
+| **Architect** | Developer |
+| **Tester** | Developer |
+| **IT** | Architect |
+
+#### Review Checklist
+
+Each reviewer checks:
+- [ ] Code follows project standards
+- [ ] Design patterns correctly applied
+- [ ] Tests are present and pass
+- [ ] Documentation updated
+
+#### Two-Phase Review
+
+1. **Phase 1 - Peer Review**: Agents review each other (2+ approvals required)
+2. **Phase 2 - User Review**: After peer approval, user reviews and merges
+
+**NEVER skip peer review** - Quality before speed
 
 ---
 
@@ -257,6 +353,7 @@ Before PRs go to user review:
 
 ### Task Folders
 
+- `project-management/tasks/backlog/` - User stories (Product Owner)
 - `project-management/tasks/it/` - Infrastructure tasks
 - `project-management/tasks/architect/` - Design tasks
 - `project-management/tasks/developer/` - Implementation tasks

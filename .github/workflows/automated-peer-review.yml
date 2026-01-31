@@ -63,7 +63,7 @@ jobs:
             });
 
             const branchName = pr.data.head.ref;
-            const branchPattern = /^agent\/([a-z-]+)-([a-z-]+)-([a-zA-Z0-9]+)$/;
+            const branchPattern = /^([a-z-]+)\/([a-z-]+)-([a-z-]+)-([a-zA-Z0-9]+)$/;
             const match = branchName.match(branchPattern);
 
             if (!match) {
@@ -72,7 +72,7 @@ jobs:
               return;
             }
 
-            const agentType = match[1];
+            const agentType = match[2];  // Second group is agent type
 
             // Define review assignment rules (reduced reviewers to save costs)
             const reviewRules = {

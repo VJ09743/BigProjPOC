@@ -8,6 +8,85 @@ Welcome! This guide will help you set up the AI-assisted workflow.
 
 ---
 
+## Prerequisites - IMPORTANT!
+
+Before choosing an AI tool path, you **MUST** set up these prerequisites:
+
+### 1. Git Installation
+- **Mac**: `brew install git`
+- **Windows**: Download from https://git-scm.com/
+- **Linux**: `sudo apt install git`
+
+### 2. GitHub Account
+- Go to https://github.com and sign up (or sign in)
+- You'll need this for automatic PR creation
+
+### 3. GitHub Token (REQUIRED for PR creation)
+
+The AI agents will automatically create Pull Requests, which requires GitHub authentication:
+
+1. Go to https://github.com/settings/tokens
+2. Click "Generate new token (classic)"
+3. Give it a name (e.g., "AI Agents")
+4. Select these scopes:
+   - ✅ `repo` - Full control of private repositories
+   - ✅ `workflow` - Update GitHub Actions workflows
+   - ✅ `admin:repo_hook` - Access to hooks
+5. Click "Generate token"
+6. **Copy the token immediately** (you won't see it again)
+
+### 4. Save GitHub Token to Environment
+
+**On Mac/Linux:**
+```bash
+echo 'export GITHUB_TOKEN="your_github_token_here"' >> ~/.bashrc
+source ~/.bashrc
+```
+
+**On Windows (PowerShell as Administrator):**
+```powershell
+[Environment]::SetEnvironmentVariable("GITHUB_TOKEN", "your_github_token_here", "User")
+$env:GITHUB_TOKEN = "your_github_token_here"
+```
+
+### 5. Install `gh` CLI (for automatic PR creation)
+
+**On Mac:**
+```bash
+brew install gh
+```
+
+**On Windows (PowerShell as Administrator):**
+```powershell
+winget install GitHub.cli --accept-package-agreements --accept-source-agreements
+```
+
+**On Linux (Ubuntu/Debian):**
+```bash
+sudo apt update && sudo apt install -y gh
+```
+
+**Verify installation:**
+```bash
+gh auth status
+```
+
+---
+
+## ✅ Setup Checklist
+
+Before proceeding to "Choose Your Path", verify:
+
+- [ ] Git is installed (`git --version`)
+- [ ] GitHub account created
+- [ ] GitHub token created and saved to `GITHUB_TOKEN` environment variable
+- [ ] `gh` CLI installed (`gh --version`)
+- [ ] `gh auth status` shows you're authenticated
+
+**If all checkboxes pass**, you're ready to proceed! 🚀
+
+---
+
 ## Choose Your Path
 
 Pick ONE path based on which AI tool you want to use:
@@ -385,6 +464,32 @@ You describe what you want
 1. Start as **Product Owner** to understand your request
 2. Update project documentation with your domain info
 3. Follow the complete workflow for quality results
+4. **Automatically create Pull Requests** using your GitHub token
+
+### Branching Strategy
+
+For each task, the AI uses this branch structure:
+
+- **Base branch**: `template/agentic-workflow` (template for all tasks)
+- **Task branch**: `master_{task_name}` (e.g., `master_login-feature`)
+  - Created once per task
+  - All agents work from this branch
+  - All PRs merge into this branch
+- **Agent branches**: `claude/{agent}-{task_name}-{sessionID}`
+  - Created per agent (Developer, Architect, Tester, etc.)
+  - Agent works on their task
+  - Creates PR to `master_{task_name}`
+
+**Example**: For "Create a login page" task:
+```
+template/agentic-workflow
+  └─→ master_login-page (Product Owner creates this)
+        ├─→ claude/architect-login-page-abc123 (Architect's work)
+        ├─→ claude/developer-login-page-abc123 (Developer's work)
+        └─→ claude/tester-login-page-abc123 (Tester's work)
+```
+
+See [Task-Based Branching Strategy](AI-WORKFLOW.md#task-based-branching-strategy) for details.
 
 ---
 
@@ -446,6 +551,25 @@ your-project/
 - Close and reopen your terminal
 - Check for extra spaces in the key
 
+### "GITHUB_TOKEN not set" error
+- GitHub token is required for automatic PR creation
+- Set it: `export GITHUB_TOKEN="your_token_here"`
+- Verify: `echo $GITHUB_TOKEN`
+- See [Prerequisites](#prerequisites---important) section
+
+### "`gh` command not found" error
+- `gh` CLI is required for automatic PR creation
+- Install it from [Prerequisites](#prerequisites---important) section
+- Verify: `gh --version`
+- Authenticate: `gh auth login`
+
+### "gh: authentication failed" error
+- Run: `gh auth login`
+- Select "GitHub.com"
+- Select "HTTPS" protocol
+- Select "Paste an authentication token"
+- Paste your GitHub token (from Prerequisites)
+
 ### "Command not found" error
 - Make sure you installed the tool
 - Close and reopen your terminal
@@ -459,6 +583,12 @@ your-project/
 - Be more specific in your request
 - Provide examples of what you want
 - Break big requests into smaller steps
+
+### PR creation fails
+- Verify `GITHUB_TOKEN` is set: `echo $GITHUB_TOKEN`
+- Verify `gh` is installed: `gh --version`
+- Verify authentication: `gh auth status`
+- See Prerequisites section if any fail
 
 ### Need more help?
 - See `ai-assistants/how-to-use.md` for detailed guide

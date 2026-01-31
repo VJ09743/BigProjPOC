@@ -18,7 +18,7 @@
  *   GITHUB_TOKEN - Required for GitHub API
  */
 
-const Anthropic = require('@anthropic-ai/sdk');
+const OpenAI = require('openai');
 const { Octokit } = require('octokit');
 const fs = require('fs');
 
@@ -326,18 +326,18 @@ INLINE_COMMENT: path/to/file.ext:123
   return prompt;
 }
 
-// Call Claude API for review
+// Call LLM API for review
 async function callClaudeForReview(agentType, prDetails, previousReview = null) {
-  const anthropic = new Anthropic({
+  const openai = new OpenAI({
     apiKey: process.env.LLM_API_KEY
   });
 
   const prompt = constructReviewPrompt(agentType, prDetails, previousReview);
 
-  console.log(`\nCalling Claude API as ${agentType}...`);
+  console.log(`\nCalling OpenAI API as ${agentType}...`);
 
-  const message = await anthropic.messages.create({
-    model: 'claude-sonnet-4-20250514',
+  const completion = await openai.chat.completions.create({
+    model: 'gpt-4o',
     max_tokens: 4096,
     temperature: 0.2, // Lower temperature for more consistent reviews
     messages: [
@@ -348,7 +348,7 @@ async function callClaudeForReview(agentType, prDetails, previousReview = null) 
     ]
   });
 
-  const review = message.content[0].text;
+  const review = completion.choices[0].message.content;
 
   console.log(`Review received (${review.length} chars)`);
 

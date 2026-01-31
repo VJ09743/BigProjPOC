@@ -296,18 +296,20 @@ Get Approval → Execute → Document Results → Complete
 
 When testing is complete and validation report is ready, MUST create PR before handing off to IT Agent (Release):
 
+**Note**: Replace `{llm-agent}` with your LLM identifier (e.g., `copilot`, `claude`, `gemini`).
+
 ```bash
 # Step 1: Ensure all test documentation is committed
 git add -A
 git commit -m "[Tester] Validation: All tests passing, test report created"
 
 # Step 2: Push to remote tester branch
-git push -u origin copilot/tester-{task-name}-{sessionID}
+git push -u origin {llm-agent}/tester-{task-name}-{sessionID}
 
 # Step 3: Create PR to task master branch
 gh pr create \
   --base master_{task_name} \
-  --head copilot/tester-{task-name}-{sessionID} \
+  --head {llm-agent}/tester-{task-name}-{sessionID} \
   --title "[Tester] Validation: {feature_name}" \
   --body "## Summary
 Quality assurance complete. All tests passing, no critical bugs found.

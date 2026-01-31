@@ -327,6 +327,14 @@ function handleLogin(req, res) {
 
 Every agent MUST create a GitHub PR before handing off to the next agent. If there is no PR, the work is not complete.
 
+### Note on Branch Naming (LLM-Agnostic)
+
+The examples below use `{llm-agent}` as a placeholder. Replace this with your actual LLM agent name:
+- GitHub Copilot: Use `copilot` → `copilot/architect-sudoku-webapp-123456`
+- Claude: Use `claude` → `claude/architect-sudoku-webapp-123456`
+- Gemini: Use `gemini` → `gemini/architect-sudoku-webapp-123456`
+- Other LLMs: Use appropriate identifier
+
 ### Step-by-Step PR Creation
 
 ```bash
@@ -335,12 +343,12 @@ git add -A
 git commit -m "[Agent Name] Description of work completed"
 
 # Step 2: Push to remote
-git push -u origin copilot/{agent}-{task-name}-{sessionID}
+git push -u origin {llm-agent}/{agent}-{task-name}-{sessionID}
 
 # Step 3: Create PR using GitHub CLI
 gh pr create \
   --base master_{task_name} \
-  --head copilot/{agent}-{task-name}-{sessionID} \
+  --head {llm-agent}/{agent}-{task-name}-{sessionID} \
   --title "[Agent Name] Work description" \
   --body "## Summary
 [What this PR accomplishes]

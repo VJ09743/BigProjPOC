@@ -241,18 +241,20 @@ Get Approval → Execute → Document Results → Complete
 
 When implementation tasks are complete, MUST create PR before handing off to Tester:
 
+**Note**: Replace `{llm-agent}` with your LLM identifier (e.g., `copilot`, `claude`, `gemini`).
+
 ```bash
 # Step 1: Ensure all code changes are committed
 git add -A
 git commit -m "[Developer] Implement: {feature_name} - tasks {1-8}"
 
 # Step 2: Push to remote developer branch
-git push -u origin copilot/developer-{task-name}-{sessionID}
+git push -u origin {llm-agent}/developer-{task-name}-{sessionID}
 
 # Step 3: Create PR to task master branch
 gh pr create \
   --base master_{task_name} \
-  --head copilot/developer-{task-name}-{sessionID} \
+  --head {llm-agent}/developer-{task-name}-{sessionID} \
   --title "[Developer] Implementation: {feature_name}" \
   --body "## Summary
 Implementation of {feature_name} complete with all tests passing.

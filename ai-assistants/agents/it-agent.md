@@ -254,18 +254,20 @@ Get Approval → Execute → Document Results → Complete
 
 When infrastructure setup is complete (dependencies installed, build scripts created), MUST create PR before handing off to Developer:
 
+**Note**: Replace `{llm-agent}` with your LLM identifier (e.g., `copilot`, `claude`, `gemini`).
+
 ```bash
 # Step 1: Ensure all infrastructure changes are committed
 git add -A
 git commit -m "[IT Agent] Infrastructure setup: dependencies and build scripts"
 
 # Step 2: Push to remote IT Agent branch
-git push -u origin copilot/it-{task-name}-{sessionID}
+git push -u origin {llm-agent}/it-{task-name}-{sessionID}
 
 # Step 3: Create PR to task master branch
 gh pr create \
   --base master_{task_name} \
-  --head copilot/it-{task-name}-{sessionID} \
+  --head {llm-agent}/it-{task-name}-{sessionID} \
   --title "[IT Agent] Infrastructure: {project_name}" \
   --body "## Summary
 Project infrastructure initialized with dependencies and build scripts.

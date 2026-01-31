@@ -244,18 +244,20 @@ Get Approval → Execute → Document Results → Complete
 
 When design specifications (EPS/EDS) are complete, MUST create PR before handing off to IT Agent:
 
+**Note**: Replace `{llm-agent}` with your LLM identifier (e.g., `copilot`, `claude`, `gemini`).
+
 ```bash
 # Step 1: Ensure all designs are committed
 git add -A
 git commit -m "[Architect] Design specifications: EPS-001 and EDS-001"
 
 # Step 2: Push to remote architect branch
-git push -u origin copilot/architect-{task-name}-{sessionID}
+git push -u origin {llm-agent}/architect-{task-name}-{sessionID}
 
 # Step 3: Create PR to task master branch
 gh pr create \
   --base master_{task_name} \
-  --head copilot/architect-{task-name}-{sessionID} \
+  --head {llm-agent}/architect-{task-name}-{sessionID} \
   --title "[Architect] Design: {feature_name}" \
   --body "## Summary
 External Product Specification (EPS) and External Design Specification (EDS) complete.

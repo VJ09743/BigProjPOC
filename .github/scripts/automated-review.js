@@ -19,7 +19,8 @@
  */
 
 const OpenAI = require('openai');
-// const Anthropic = require('@anthropic-ai/sdk');  // Alternative: Uncomment to use Anthropic/Claude
+const Anthropic = require('@anthropic-ai/sdk');
+// Note: Currently using OpenAI. To switch to Anthropic, modify callClaudeForReview function below.
 const { Octokit } = require('octokit');
 const fs = require('fs');
 const path = require('path');

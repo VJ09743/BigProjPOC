@@ -9,6 +9,7 @@
   "dependencies": {
     "openai": "^4.70.0",
     "octokit": "^4.0.0"
+    // "@anthropic-ai/sdk": "^0.30.0"  // Commented out - using OpenAI instead
   },
   "keywords": [
     "github",

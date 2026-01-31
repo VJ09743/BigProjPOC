@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Viral Content Hub</title>
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Viral Content Hub</h1>
+            <p class="tagline">Discover jokes, memes, and trending news!</p>
+        </header>
+
+        <nav class="button-panel">
+            <button id="btn-joke" class="content-btn" data-type="joke">Get Joke</button>
+            <button id="btn-meme" class="content-btn" data-type="meme">Get Meme</button>
+            <button id="btn-sports" class="content-btn" data-type="sports">Sports News</button>
+            <button id="btn-politics" class="content-btn" data-type="politics">Political News</button>
+            <button id="btn-tech" class="content-btn" data-type="tech">Tech News</button>
+        </nav>
+
+        <main class="content-area">
+            <div id="loading" class="loading hidden">
+                <div class="spinner"></div>
+                <p>Loading content...</p>
+            </div>
+
+            <div id="error" class="error hidden">
+                <p id="error-message"></p>
+                <button id="retry-btn">Try Again</button>
+            </div>
+
+            <div id="content" class="content">
+                <p class="welcome">Click a button above to discover something new!</p>
+            </div>
+
+            <div id="source" class="source hidden">
+                <p>Source: <a id="source-link" href="#" target="_blank" rel="noopener noreferrer"></a></p>
+            </div>
+        </main>
+
+        <footer>
+            <p>Content sourced from real websites. Safe for all ages.</p>
+        </footer>
+    </div>
+
+    <script type="module" src="js/app.js"></script>
+</body>
+</html>

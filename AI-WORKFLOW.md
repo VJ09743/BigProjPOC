@@ -78,41 +78,35 @@ aider --model gpt-4o  # or --model claude-3-opus
 
 ---
 
-## Domain: [Your Project Domain]
+## Domain: Entertainment & News Aggregation
 
-**CUSTOMIZE THIS SECTION** for your specific project.
+**Industry**: Digital Media / Content Aggregation
 
-Replace this section with your project's domain context. Examples:
+### Project: Viral Content Hub
 
-### Example: E-commerce Platform
-```
-**Industry**: Retail Technology
-- Online shopping systems
-- Payment processing and checkout flows
-- Inventory management and fulfillment
-- Customer experience and personalization
-```
+A family-friendly content aggregation website featuring:
+- **Jokes**: Random jokes from public joke APIs
+- **Memes**: Viral memes from accessible platforms (Reddit, Imgur, etc.)
+- **Sports News**: Trending sports news from real news sources
+- **Political News**: Trending political news from real news sources
+- **Technical News**: Trending tech news from real news sources
 
-### Example: Healthcare Application
-```
-**Industry**: Healthcare IT
-- Patient data management
-- HIPAA compliance requirements
-- Clinical workflow integration
-- Electronic health records (EHR)
-```
+### Content Requirements
+- **Age-Appropriate**: All content must be safe for ages 8+
+- **No Violence**: No violent or graphic content
+- **No Sexual Content**: No adult or sexual content
+- **Real Sources**: Content from real websites, not AI-generated
+- **Attribution**: Display source links for all content
 
-### Example: Financial Services
-```
-**Industry**: FinTech
-- Transaction processing
-- Regulatory compliance (SOX, PCI-DSS)
-- Real-time data processing
-- Risk management and fraud detection
-```
+### Key Concepts
+- Content moderation and filtering
+- API integration with third-party services
+- Rate limiting and caching
+- Responsive web design
+- User experience (single-button interactions)
 
 **Agent Domain Expertise**:
-All agents should understand your project's domain to make informed decisions. Update the agent files in `ai-assistants/agents/` to include relevant domain expertise.
+All agents should understand the entertainment/news domain to make informed decisions. Agents have been updated with relevant web development and content aggregation skills.
 
 ---
 

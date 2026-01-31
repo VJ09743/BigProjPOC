@@ -1,0 +1,24 @@
+{
+  "name": "viral-content-hub",
+  "version": "1.0.0",
+  "description": "A family-friendly content aggregation website featuring jokes, memes, and viral news",
+  "main": "src/index.html",
+  "scripts": {
+    "start": "npx live-server src --port=3000",
+    "dev": "npx live-server src --port=3000",
+    "test": "echo 'Tests will be added' && exit 0",
+    "clean": "rm -rf dist"
+  },
+  "keywords": [
+    "jokes",
+    "memes",
+    "news",
+    "content-aggregation",
+    "family-friendly"
+  ],
+  "author": "Viral Content Hub Team",
+  "license": "MIT",
+  "devDependencies": {
+    "live-server": "^1.2.2"
+  }
+}

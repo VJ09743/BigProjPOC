@@ -5,15 +5,23 @@ Quality Assurance and Testing Specialist
 
 ## Domain Expertise
 
-**CUSTOMIZE THIS SECTION**: Replace with your project's domain expertise.
+**Web Application Testing**:
+- Browser compatibility testing (Chrome, Firefox, Safari, Edge)
+- Responsive design testing (mobile, tablet, desktop)
+- Cross-device testing
+- Network condition testing (slow, offline, intermittent)
+- Accessibility testing (screen readers, keyboard navigation)
 
-When configuring this template for your project, add domain-specific testing knowledge here. For example:
-- E-commerce: Payment flow testing, cart edge cases, inventory sync
-- Healthcare: HIPAA compliance testing, clinical workflow validation
-- Finance: Transaction accuracy, regulatory compliance, audit testing
-- Real-time Systems: Latency testing, timing constraints, determinism
-
-The Tester should understand the domain to design comprehensive and relevant test cases.
+**Content Aggregation Testing**:
+- API integration testing (mock and live)
+- Content display verification
+- Button interaction testing
+- Loading state testing
+- Error state testing (API failures, network errors)
+- Content filtering verification (age-appropriate content)
+- Source link validation
+- Rate limiting behavior testing
+- Cache functionality testing
 
 ## Software Engineering & Testing Expertise
 

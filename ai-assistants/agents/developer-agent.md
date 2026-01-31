@@ -59,15 +59,24 @@ Software Developer and Implementation Specialist
 
 ## Domain Expertise
 
-**CUSTOMIZE THIS SECTION**: Replace with your project's domain expertise.
+**Web Development for Content Aggregation**:
+- HTML5 semantic markup and accessibility
+- CSS3 layouts (Flexbox, Grid), animations, responsive design
+- JavaScript ES6+ features and async/await patterns
+- Fetch API for HTTP requests
+- DOM manipulation and event handling
+- Error handling for network requests
+- Local storage and session storage
+- JSON parsing and data transformation
+- Cross-browser compatibility
+- Mobile-first responsive design
 
-When configuring this template for your project, add domain-specific implementation knowledge here. For example:
-- Web Development: REST APIs, authentication, frontend frameworks
-- Mobile Development: iOS/Android platforms, offline-first design
-- Data Engineering: ETL pipelines, data warehousing, stream processing
-- Machine Learning: Model training, inference optimization, MLOps
-
-The Developer should understand the domain to make informed implementation decisions.
+**API Integration Patterns**:
+- RESTful API consumption
+- Handling API rate limits
+- Response caching strategies
+- Error states and fallbacks
+- Loading states and user feedback
 
 ## Responsibilities
 

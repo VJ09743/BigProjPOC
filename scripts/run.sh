@@ -1,31 +1,39 @@
 #!/bin/bash
 # =============================================================================
-# Run Script - TEMPLATE
+# Run Script - Viral Content Hub
 # =============================================================================
-# IT Agent: Customize this script to start/run your application.
-#
-# Instructions:
-# 1. Identify how the application should be started
-# 2. Add the appropriate run commands below
-# 3. Remove these instructions when done
-#
-# Examples by technology:
-# - Node.js:    npm start OR node dist/index.js
-# - Python:     python main.py OR flask run OR uvicorn app:app
-# - Go:         go run . OR ./output/release/bin/app
-# - Rust:       cargo run OR ./target/release/app
-# - Java:       java -jar target/app.jar OR mvn spring-boot:run
-# - Web/Static: python -m http.server 8000 OR npx serve
-#
+# Starts a local development server with live reload.
 # =============================================================================
 
 set -e  # Exit on error
 
+PROJECT_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+MODULE_DIR="$PROJECT_ROOT/modules/viral-content-hub"
+
 echo "=========================================="
-echo "Starting application..."
+echo "Starting Viral Content Hub..."
 echo "=========================================="
 
-# TODO: IT Agent - Add run commands here based on tech stack
-echo "ERROR: Run script not configured."
-echo "IT Agent must customize this script for the project."
-exit 1
+# Check if npm is installed
+if ! command -v npm &> /dev/null; then
+    echo "ERROR: npm is not installed."
+    echo "Please install Node.js and npm first."
+    exit 1
+fi
+
+# Navigate to module directory
+cd "$MODULE_DIR"
+
+# Check if node_modules exists
+if [ ! -d "node_modules" ]; then
+    echo "Installing dependencies..."
+    npm install
+fi
+
+echo ""
+echo "Starting development server on http://localhost:3000"
+echo "Press Ctrl+C to stop."
+echo ""
+
+# Start the development server
+npm start

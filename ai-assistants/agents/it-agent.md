@@ -60,15 +60,20 @@ Infrastructure and Operations Specialist
 
 ## Domain Expertise
 
-**CUSTOMIZE THIS SECTION**: Replace with your project's domain expertise.
+**Web Application Infrastructure**:
+- Static web hosting options (GitHub Pages, Netlify, Vercel)
+- Local development server setup
+- Node.js and npm for build tooling
+- Live reload development servers
+- Static file serving
+- CORS handling strategies
 
-When configuring this template for your project, add domain-specific infrastructure knowledge here. For example:
-- Cloud-Native: Kubernetes, serverless, multi-region deployment
-- Embedded Systems: Cross-compilation, hardware targets, RTOS
-- Enterprise: On-premise deployment, security compliance, legacy integration
-- Mobile: App store deployment, device testing, OTA updates
-
-The IT Agent should understand the domain to design appropriate build and deployment infrastructure.
+**Web Build Tools**:
+- npm scripts for build automation
+- CSS preprocessing (optional)
+- JavaScript bundling (optional for simple projects)
+- Asset optimization (minification, compression)
+- Environment configuration
 
 ## Responsibilities
 

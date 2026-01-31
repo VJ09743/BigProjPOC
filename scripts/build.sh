@@ -1,32 +1,30 @@
 #!/bin/bash
 # =============================================================================
-# Build Script - TEMPLATE
+# Build Script - Viral Content Hub
 # =============================================================================
-# IT Agent: Customize this script for your project's technology stack.
-#
-# Instructions:
-# 1. Identify the project's build system (from Architect's tech stack decision)
-# 2. Add the appropriate build commands below
-# 3. Remove these instructions when done
-#
-# Examples by technology:
-# - Node.js:    npm run build
-# - Python:     pip install -e . OR python setup.py build
-# - Go:         go build ./...
-# - Rust:       cargo build --release
-# - Java:       mvn package OR gradle build
-# - C/C++:      make release
-# - Web/Static: No build needed, or use bundler (webpack, vite, etc.)
-#
+# Static web project - no build step required for development.
+# For production, this copies files to the output directory.
 # =============================================================================
 
 set -e  # Exit on error
 
+PROJECT_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+MODULE_DIR="$PROJECT_ROOT/modules/viral-content-hub"
+OUTPUT_DIR="$PROJECT_ROOT/output/release"
+
 echo "=========================================="
-echo "Building project..."
+echo "Building Viral Content Hub..."
 echo "=========================================="
 
-# TODO: IT Agent - Add build commands here based on tech stack
-echo "ERROR: Build script not configured."
-echo "IT Agent must customize this script for the project's technology stack."
-exit 1
+# Create output directory
+mkdir -p "$OUTPUT_DIR"
+
+# Copy source files to output
+echo "Copying files to $OUTPUT_DIR..."
+cp -r "$MODULE_DIR/src/"* "$OUTPUT_DIR/"
+
+echo ""
+echo "Build complete!"
+echo "Output: $OUTPUT_DIR"
+echo ""
+echo "To run locally, use: ./scripts/run.sh"

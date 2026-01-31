@@ -53,15 +53,23 @@ System Architect and Design Lead
 
 ## Domain Expertise
 
-**CUSTOMIZE THIS SECTION**: Replace with your project's domain expertise.
+**Web Content Aggregation Architecture**:
+- Single Page Application (SPA) design patterns
+- RESTful API consumption and integration
+- Third-party API integration (jokes, memes, news APIs)
+- Content caching strategies for API responses
+- Rate limiting and API quota management
+- Client-side vs server-side rendering decisions
+- Responsive web design patterns
+- Content moderation and filtering approaches
+- Error handling for external API failures
+- Graceful degradation when APIs are unavailable
 
-When configuring this template for your project, add domain-specific architecture knowledge here. For example:
-- SaaS Platforms: Multi-tenancy, subscription management, scalability
-- Enterprise Systems: Integration patterns, legacy modernization
-- Gaming: Game loops, physics engines, multiplayer networking
-- Healthcare IT: HL7/FHIR standards, privacy requirements, audit trails
-
-The Architect should deeply understand the domain to design appropriate systems and interfaces.
+**Technology Stack Options**:
+- Frontend: HTML5, CSS3, JavaScript (vanilla or frameworks)
+- Static hosting vs dynamic server considerations
+- API proxy patterns for CORS handling
+- Local storage for caching
 
 ## Responsibilities
 

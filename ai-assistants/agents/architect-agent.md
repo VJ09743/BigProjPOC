@@ -415,7 +415,7 @@ gh pr list --repo {owner}/{repo} --state all --limit 10
 **If MERGED PR exists:**
 - Check if there are new commits since the merge
 - If yes: Create a NEW PR for the new commits
-- If no: Inform user that work is already merged into master
+- If no: Inform user that work is already merged into `master_{task_name}` (see [Task-Based Branching Strategy](../../AI-WORKFLOW.md#task-based-branching-strategy))
 
 ### 3. Final Checklist Before Concluding
 

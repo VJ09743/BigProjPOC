@@ -313,17 +313,44 @@ git worktree add ../worktree-developer claude/developer-{task_name}-{sessionID}
 
 ### Pull Request Process
 
-**Agents automatically create PRs when work is complete.** The process is:
+**⚠️ CRITICAL: Agents MUST create PRs when work is complete. This is NOT optional.**
+
+The process is:
 
 1. **Complete work** in agent's task branch
-2. **Commit changes** with clear, descriptive messages
-3. **Agent automatically pushes** to remote branch
-4. **Agent automatically creates PR** to `master_{task_name}` branch (the task's main branch, created from `template/agentic-workflow`)
-   - PR title: `[Agent Name] Work description`
-   - PR body includes: Summary, Changes, Ready for: [Next Agent]
-5. **Peer review** - other agents review before user accepts
+2. **Commit changes** with clear, descriptive messages: `git add -A && git commit -m "[Agent Name] Description"`
+3. **Agent pushes** to remote branch: `git push -u origin [agent-branch]`
+4. **Agent CREATES PR** to `master_{task_name}` branch using:
+   ```bash
+   gh pr create --base master_{task_name} --head [agent-branch] \
+     --title "[Agent Name] Work description" \
+     --body "## Summary
 
-**Requirement**: Ensure `GITHUB_TOKEN` environment variable is set before starting work.
+   [Description]
+
+   ## Changes
+   - [List changes]
+
+   ## Ready for
+   [Next Agent Name]"
+   ```
+5. **Verify PR exists** on GitHub before considering work complete
+6. **Peer review** - other agents review before user accepts
+
+**REQUIREMENT**: Ensure `GITHUB_TOKEN` environment variable is set before starting work.
+
+### ⚠️ MANDATORY: PR Checklist for ALL Agents
+
+**Work is NOT complete until:**
+- [ ] All files committed: `git add -A && git commit -m "[Agent] Description"`
+- [ ] Branch pushed: `git push -u origin [branch-name]`
+- [ ] PR created on GitHub: `gh pr create ...`
+- [ ] PR URL verified in browser
+- [ ] PR has title: `[Agent Name] Description`
+- [ ] PR body includes Summary, Changes, and Ready for field
+- [ ] ONLY THEN can agent consider work "complete"
+
+**FAILURE TO CREATE PR = WORK IS INCOMPLETE**
 
 ### Peer Review Process (CRITICAL)
 

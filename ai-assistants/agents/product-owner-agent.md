@@ -315,6 +315,37 @@ or if any changes are required.
 - [ ] Accepted
 ```
 
+## PR Creation at Acceptance Phase
+
+When work is complete and ready for acceptance:
+
+```bash
+# Create acceptance PR that merges task master to main
+gh pr create \
+  --base main \
+  --head master_{task_name} \
+  --title "[Product Owner] Accept: {feature_name}" \
+  --body "## Summary
+All acceptance criteria met for {feature_name}.
+Task master branch ready for production.
+
+## Acceptance Criteria Verified
+- [x] Feature requirement: [description]
+- [x] Quality: Tests passing
+- [x] Documentation: Complete
+- [x] User feedback: Positive
+
+## Agent Work Summary
+- Architect: [what they designed]
+- Developer: [what they implemented]
+- Tester: [what they validated]"
+
+# Verify PR exists before merging
+gh pr view master_{task_name}
+```
+
+**CRITICAL**: Do NOT merge without creating PR. Work must go through peer review first.
+
 ## Best Practices
 
 ### Requirements Gathering

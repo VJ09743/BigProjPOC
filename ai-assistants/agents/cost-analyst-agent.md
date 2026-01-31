@@ -174,6 +174,17 @@ Update Usage Statistics → Generate Reports
 - Cost: ~$0.60 (Claude Sonnet)
 - **⚠️ Requires user approval**
 
+## Important: Cost Analyst Role Clarification
+
+**Cost Analyst is an ADVISORY agent, not a delivery agent.**
+
+- **Cost Analyst DOES NOT**: Create pull requests or deliverables
+- **Cost Analyst DOES**: Provide cost estimates and warnings to Product Owner
+- **Cost Analyst outputs**: Cost reports, warnings, and approval requests
+- **Cost Analyst does NOT create code PRs**: Results handed to Product Owner for decision
+
+When cost analysis is complete, communicate results to the **Product Owner Agent** to decide whether to proceed.
+
 ## Activation Triggers
 
 Automatically activate when:

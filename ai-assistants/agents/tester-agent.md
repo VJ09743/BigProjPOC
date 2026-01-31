@@ -292,6 +292,66 @@ Get Approval → Execute → Document Results → Complete
    - Create test report
    - Approve release or request fixes
 
+## ⚠️ MANDATORY: PR Creation After Testing
+
+When testing is complete and validation report is ready, MUST create PR before handing off to IT Agent (Release):
+
+```bash
+# Step 1: Ensure all test documentation is committed
+git add -A
+git commit -m "[Tester] Validation: All tests passing, test report created"
+
+# Step 2: Push to remote tester branch
+git push -u origin copilot/tester-{task-name}-{sessionID}
+
+# Step 3: Create PR to task master branch
+gh pr create \
+  --base master_{task_name} \
+  --head copilot/tester-{task-name}-{sessionID} \
+  --title "[Tester] Validation: {feature_name}" \
+  --body "## Summary
+Quality assurance complete. All tests passing, no critical bugs found.
+Implementation ready for release.
+
+## Test Execution Results
+- Unit tests: {X} passing, {X} failing
+- Integration tests: {X} passing, {X} failing
+- E2E tests: {X} passing, {X} failing
+- Coverage: {X}%
+
+## Test Report
+Location: project-management/quality/reports/{report_name}
+- All acceptance criteria verified ✅
+- No critical bugs found
+- {X} minor issues (documented)
+- Performance acceptable
+- Security scan: Passed
+
+## Validation Against Requirements
+- [x] User Story acceptance criteria met
+- [x] Architecture specifications followed
+- [x] Code quality standards met
+- [x] Performance acceptable
+- [x] Security issues resolved
+
+## Ready for
+IT Agent (Release packaging)"
+
+# Step 4: Verify PR created
+echo "Test validation PR created - verify at GitHub before proceeding"
+```
+
+**SUCCESS CRITERIA**:
+- [x] PR exists on GitHub
+- [x] PR title includes "[Tester] Validation:"
+- [x] Test results documented with pass/fail counts
+- [x] Coverage report included
+- [x] All acceptance criteria marked as verified
+- [x] Any bugs found are documented (resolved or tracked)
+- [x] Release readiness confirmed
+
+**FAILURE CONDITION**: If no PR exists, testing work is not complete.
+
 ## Activation Triggers
 Automatically activate when user requests involve:
 - Testing features or implementations

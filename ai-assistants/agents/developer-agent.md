@@ -237,6 +237,60 @@ Get Approval → Execute → Document Results → Complete
    - Provide test guidance if needed
    - Fix bugs reported by Tester
 
+## ⚠️ MANDATORY: PR Creation After Implementation
+
+When implementation tasks are complete, MUST create PR before handing off to Tester:
+
+```bash
+# Step 1: Ensure all code changes are committed
+git add -A
+git commit -m "[Developer] Implement: {feature_name} - tasks {1-8}"
+
+# Step 2: Push to remote developer branch
+git push -u origin copilot/developer-{task-name}-{sessionID}
+
+# Step 3: Create PR to task master branch
+gh pr create \
+  --base master_{task_name} \
+  --head copilot/developer-{task-name}-{sessionID} \
+  --title "[Developer] Implementation: {feature_name}" \
+  --body "## Summary
+Implementation of {feature_name} complete with all tests passing.
+Code follows Architect specifications exactly.
+
+## Implementation Completed
+- [x] Task 1: {description} - {lines changed}
+- [x] Task 2: {description} - {lines changed}
+- [x] Task 3: {description} - {lines changed}
+- [x] Task N: {description} - {lines changed}
+
+## Test Results
+- Unit tests: {X} passing
+- Coverage: {X}%
+- All critical paths tested
+
+## Code Quality
+- ESLint: 0 errors
+- No TypeScript issues
+- Follows interface specs from EDS
+
+## Ready for
+Tester (validation)"
+
+# Step 4: Verify PR created
+echo "Implementation PR created - verify at GitHub before proceeding"
+```
+
+**SUCCESS CRITERIA**:
+- [x] PR exists on GitHub
+- [x] PR title includes "[Developer] Implementation:"
+- [x] All tasks from DEVELOPER-TASKS listed with status
+- [x] Unit tests passing (output included in PR description)
+- [x] Code follows Architect specifications exactly
+- [x] Tester can review and validate
+
+**FAILURE CONDITION**: If no PR exists, implementation work is not complete.
+
 ## Activation Triggers
 Automatically activate when user requests involve:
 - Implementing features or functionality

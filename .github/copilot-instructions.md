@@ -321,40 +321,76 @@ function handleLogin(req, res) {
 
 ---
 
-## PR CREATION AT EVERY HANDOFF
+## ⚠️ MANDATORY: PR CREATION CHECKLIST FOR ALL AGENTS
 
-**CRITICAL**: Every agent MUST create a PR before handing off to the next agent.
+**This is THE most important rule. Work is INCOMPLETE without a PR.**
 
-### How to Create PR
+Every agent MUST create a GitHub PR before handing off to the next agent. If there is no PR, the work is not complete.
+
+### Step-by-Step PR Creation
 
 ```bash
-# 1. Commit your work
-git add <files>
-git commit -m "[Agent] Description of work"
+# Step 1: Ensure all changes are committed
+git add -A
+git commit -m "[Agent Name] Description of work completed"
 
-# 2. Push to your branch
-git push -u origin copilot/{agent}-{task_name}-{sessionID}
+# Step 2: Push to remote
+git push -u origin copilot/{agent}-{task-name}-{sessionID}
 
-# 3. Create PR to task master branch
-gh pr create --base master_{task_name} \
-  --title "[Agent] Work description" \
+# Step 3: Create PR using GitHub CLI
+gh pr create \
+  --base master_{task_name} \
+  --head copilot/{agent}-{task-name}-{sessionID} \
+  --title "[Agent Name] Work description" \
   --body "## Summary
-- Work completed by [Agent Name]
+[What this PR accomplishes]
 
 ## Changes
-- [List changes]
+- [Change 1]
+- [Change 2]
+- [Change 3]
 
-## Ready for: [Next Agent Name]"
+## Ready for
+[Next Agent Name]"
+
+# Step 4: Verify PR was created
+echo "PR created successfully - verify at GitHub"
 ```
 
-### Peer Review Matrix
+### ✓ Success Criteria
 
-| PR Author | Required Reviewers |
-|-----------|-------------------|
-| Architect | Developer, Tester |
-| IT Agent | Architect |
-| Developer | Architect, Tester |
-| Tester | Developer, Product Owner |
+Work is only complete when:
+- [x] All changes committed with `git commit -m "[Agent] Description"`
+- [x] Branch pushed with `git push -u origin [branch]`
+- [x] PR created with `gh pr create ...`
+- [x] PR exists and is visible on GitHub.com
+- [x] PR has clear title: `[Agent Name] Description`
+- [x] PR body includes: Summary, Changes, Ready for
+- [x] Next agent can see PR and understand what was done
+
+### ✗ Failure Condition
+
+**FAILURE TO CREATE PR = WORK IS NOT COMPLETE**
+
+If there is no PR:
+- Work cannot be reviewed
+- Next agent cannot proceed
+- Workflow is broken
+- Project is blocked
+
+### Environment Setup
+
+Before creating PRs, ensure GitHub CLI is configured:
+```bash
+# Install GitHub CLI (macOS)
+brew install gh
+
+# Authenticate
+gh auth login
+
+# Verify authentication
+gh auth status
+```
 
 ---
 

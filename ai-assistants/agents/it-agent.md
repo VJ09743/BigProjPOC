@@ -250,6 +250,65 @@ Get Approval → Execute → Document Results → Complete
    - Tag release in git
    - Update release documentation
 
+## ⚠️ MANDATORY: PR Creation After Infrastructure Setup
+
+When infrastructure setup is complete (dependencies installed, build scripts created), MUST create PR before handing off to Developer:
+
+```bash
+# Step 1: Ensure all infrastructure changes are committed
+git add -A
+git commit -m "[IT Agent] Infrastructure setup: dependencies and build scripts"
+
+# Step 2: Push to remote IT Agent branch
+git push -u origin copilot/it-{task-name}-{sessionID}
+
+# Step 3: Create PR to task master branch
+gh pr create \
+  --base master_{task_name} \
+  --head copilot/it-{task-name}-{sessionID} \
+  --title "[IT Agent] Infrastructure: {project_name}" \
+  --body "## Summary
+Project infrastructure initialized with dependencies and build scripts.
+Development environment ready for Developer implementation.
+
+## Infrastructure Setup Complete
+- [x] Dependencies installed (npm, pip, etc.)
+- [x] Build scripts created (build.sh, test.sh, run.sh, clean.sh)
+- [x] Database initialization scripts ready
+- [x] Environment configuration (.env.example)
+- [x] Project structure created
+- [x] All tools configured
+
+## Deliverables
+- Project directory structure in modules/{project-name}/
+- 6 build/test/run scripts in scripts/
+- Database initialization scripts
+- README and DEVELOPMENT documentation
+- .env.example for developers
+
+## Verification
+- npm install: ✅ All dependencies resolve
+- npm run build: ✅ Frontend builds without errors
+- npm run test: ✅ Test framework runs
+- ESLint: ✅ 0 errors
+
+## Ready for
+Developer (implementation)"
+
+# Step 4: Verify PR created
+echo "Infrastructure PR created - verify at GitHub before proceeding"
+```
+
+**SUCCESS CRITERIA**:
+- [x] PR exists on GitHub
+- [x] PR title includes "[IT Agent] Infrastructure:"
+- [x] All dependencies documented
+- [x] Build scripts verified working
+- [x] Developer can clone and run `npm install` immediately
+- [x] No manual steps required before development
+
+**FAILURE CONDITION**: If no PR exists, infrastructure work is not complete.
+
 ## Activation Triggers
 Automatically activate when:
 - **New project setup**: Architect chooses technology stack → IT sets up environment

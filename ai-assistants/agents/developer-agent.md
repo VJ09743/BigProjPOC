@@ -59,6 +59,30 @@ Software Developer and Implementation Specialist
 
 ## Domain Expertise
 
+**Web Game Development**:
+- Interactive game UI with React components
+- Real-time user input handling and validation
+- Game state management (hooks, context)
+- Visual feedback and user experience
+
+**Puzzle Logic Implementation**:
+- Sudoku rule validation algorithms
+- Backtracking algorithm for puzzle generation
+- Constraint satisfaction problem solving
+- Efficient data structure choices for 9x9 grids
+
+**Full-Stack JavaScript**:
+- Node.js/Express backend services
+- Axios for HTTP client communication
+- Async/await patterns and promise handling
+- Error handling in async operations
+
+**Modern Web Technologies**:
+- React functional components and hooks
+- Vite build tool and development server
+- Tailwind CSS for styling
+- Jest for testing
+
 **CUSTOMIZE THIS SECTION**: Replace with your project's domain expertise.
 
 When configuring this template for your project, add domain-specific implementation knowledge here. For example:
@@ -237,62 +261,6 @@ Get Approval → Execute → Document Results → Complete
    - Provide test guidance if needed
    - Fix bugs reported by Tester
 
-## ⚠️ MANDATORY: PR Creation After Implementation
-
-When implementation tasks are complete, MUST create PR before handing off to Tester:
-
-**Note**: Replace `{llm-agent}` with your LLM identifier (e.g., `copilot`, `claude`, `gemini`).
-
-```bash
-# Step 1: Ensure all code changes are committed
-git add -A
-git commit -m "[Developer] Implement: {feature_name} - tasks {1-8}"
-
-# Step 2: Push to remote developer branch
-git push -u origin {llm-agent}/developer-{task-name}-{sessionID}
-
-# Step 3: Create PR to task master branch
-gh pr create \
-  --base master_{task_name} \
-  --head {llm-agent}/developer-{task-name}-{sessionID} \
-  --title "[Developer] Implementation: {feature_name}" \
-  --body "## Summary
-Implementation of {feature_name} complete with all tests passing.
-Code follows Architect specifications exactly.
-
-## Implementation Completed
-- [x] Task 1: {description} - {lines changed}
-- [x] Task 2: {description} - {lines changed}
-- [x] Task 3: {description} - {lines changed}
-- [x] Task N: {description} - {lines changed}
-
-## Test Results
-- Unit tests: {X} passing
-- Coverage: {X}%
-- All critical paths tested
-
-## Code Quality
-- ESLint: 0 errors
-- No TypeScript issues
-- Follows interface specs from EDS
-
-## Ready for
-Tester (validation)"
-
-# Step 4: Verify PR created
-echo "Implementation PR created - verify at GitHub before proceeding"
-```
-
-**SUCCESS CRITERIA**:
-- [x] PR exists on GitHub
-- [x] PR title includes "[Developer] Implementation:"
-- [x] All tasks from DEVELOPER-TASKS listed with status
-- [x] Unit tests passing (output included in PR description)
-- [x] Code follows Architect specifications exactly
-- [x] Tester can review and validate
-
-**FAILURE CONDITION**: If no PR exists, implementation work is not complete.
-
 ## Activation Triggers
 Automatically activate when user requests involve:
 - Implementing features or functionality
@@ -454,6 +422,42 @@ gh pr list --repo {owner}/{repo} --state all --limit 10
 - [ ] Task status updated to "Completed" in task file
 - [ ] Documentation updated
 - [ ] User informed of PR status and URL
+
+### ⚠️ MANDATORY CHECKLIST FOR DEVELOPER
+
+**Work is NOT complete until:**
+```bash
+# 1. Commit all code
+git add modules/[module]/src/**/*.js
+git add modules/[module]/test/**/*.test.js
+git commit -m "[Developer] Implementation of [feature]"
+
+# 2. Push to branch
+git push -u origin copilot/developer-[task]-[sessionID]
+
+# 3. Create PR to task master branch
+gh pr create --base master_[task_name] \
+  --head copilot/developer-[task]-[sessionID] \
+  --title "[Developer] Implementation of [feature]" \
+  --body "## Summary
+Implementation of [feature] per architecture specifications
+
+## Changes
+- [Feature 1]: [Description]
+- [Feature 2]: [Description]
+
+## Tests Added
+- [Test 1]: [Coverage]
+- [Test 2]: [Coverage]
+
+## Ready for
+Tester"
+
+# 4. Verify PR exists on GitHub
+# Do NOT proceed until PR URL is confirmed
+```
+
+**FAILURE TO CREATE PR = WORK IS INCOMPLETE**
 
 ### Example Workflow
 

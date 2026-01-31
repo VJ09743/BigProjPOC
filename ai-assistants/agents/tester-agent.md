@@ -5,15 +5,79 @@ Quality Assurance and Testing Specialist
 
 ## Domain Expertise
 
-**CUSTOMIZE THIS SECTION**: Replace with your project's domain expertise.
+**Web Game Testing**:
+- Interactive UI testing (click, keyboard input, cell selection)
+- Game logic validation (rule checking, puzzle solving)
+- User experience testing (feedback, animations, error messages)
+- Cross-browser compatibility testing
 
-When configuring this template for your project, add domain-specific testing knowledge here. For example:
-- E-commerce: Payment flow testing, cart edge cases, inventory sync
-- Healthcare: HIPAA compliance testing, clinical workflow validation
-- Finance: Transaction accuracy, regulatory compliance, audit testing
-- Real-time Systems: Latency testing, timing constraints, determinism
+**Sudoku-Specific Testing**:
+- Puzzle generation validation (uniqueness, solvability)
+- Rule enforcement testing (no duplicates in row/column/box)
+- Hint system accuracy testing
+- Win condition detection testing
+- Edge cases: empty boards, invalid inputs, completed puzzles
 
-The Tester should understand the domain to design comprehensive and relevant test cases.
+**Full-Stack Testing**:
+- API endpoint testing (puzzle generation, moves, hints, reset)
+- Frontend-backend integration testing
+- Error handling across layers (network failures, validation errors)
+- State management testing (React hooks, game state consistency)
+
+**Modern Web Testing**:
+- Jest for unit and integration tests
+- Manual browser testing for UI/UX
+- Network request mocking
+- Async operation testing
+
+## ⚠️ MANDATORY: PR Creation After Testing Phase
+
+**Tester MUST create PR when all testing is complete and validated.**
+
+```bash
+# 1. Commit all test results and reports
+git add project-management/quality/reports/*.md
+git add project-management/quality/plans/*.md
+git commit -m "[Tester] Test validation and quality report"
+
+# 2. Push to branch
+git push -u origin copilot/tester-[task]-[sessionID]
+
+# 3. Create PR to task master branch
+gh pr create --base master_[task_name] \
+  --head copilot/tester-[task]-[sessionID] \
+  --title "[Tester] Quality Validation & Test Report" \
+  --body "## Summary
+Comprehensive testing and validation of implementation
+
+## Test Results
+- ✅ All unit tests passing
+- ✅ Integration tests passing
+- ✅ Acceptance criteria verified
+- ✅ No critical bugs found
+
+## Test Coverage
+- Statement: [X]%
+- Branch: [X]%
+- Code coverage report: [link]
+
+## Bugs Found & Fixed
+- [Bug 1]: [Description] - FIXED
+- [Bug 2]: [Description] - FIXED
+
+## Validation Against Requirements
+- [x] Acceptance criterion 1 ✅
+- [x] Acceptance criterion 2 ✅
+- [x] Acceptance criterion 3 ✅
+
+## Ready for
+Product Owner (Acceptance)"
+
+# 4. Verify PR exists on GitHub
+# Do NOT proceed until PR URL is confirmed
+```
+
+**FAILURE TO CREATE PR = WORK IS INCOMPLETE**
 
 ## Software Engineering & Testing Expertise
 
@@ -291,68 +355,6 @@ Get Approval → Execute → Document Results → Complete
    - Perform regression testing
    - Create test report
    - Approve release or request fixes
-
-## ⚠️ MANDATORY: PR Creation After Testing
-
-When testing is complete and validation report is ready, MUST create PR before handing off to IT Agent (Release):
-
-**Note**: Replace `{llm-agent}` with your LLM identifier (e.g., `copilot`, `claude`, `gemini`).
-
-```bash
-# Step 1: Ensure all test documentation is committed
-git add -A
-git commit -m "[Tester] Validation: All tests passing, test report created"
-
-# Step 2: Push to remote tester branch
-git push -u origin {llm-agent}/tester-{task-name}-{sessionID}
-
-# Step 3: Create PR to task master branch
-gh pr create \
-  --base master_{task_name} \
-  --head {llm-agent}/tester-{task-name}-{sessionID} \
-  --title "[Tester] Validation: {feature_name}" \
-  --body "## Summary
-Quality assurance complete. All tests passing, no critical bugs found.
-Implementation ready for release.
-
-## Test Execution Results
-- Unit tests: {X} passing, {X} failing
-- Integration tests: {X} passing, {X} failing
-- E2E tests: {X} passing, {X} failing
-- Coverage: {X}%
-
-## Test Report
-Location: project-management/quality/reports/{report_name}
-- All acceptance criteria verified ✅
-- No critical bugs found
-- {X} minor issues (documented)
-- Performance acceptable
-- Security scan: Passed
-
-## Validation Against Requirements
-- [x] User Story acceptance criteria met
-- [x] Architecture specifications followed
-- [x] Code quality standards met
-- [x] Performance acceptable
-- [x] Security issues resolved
-
-## Ready for
-IT Agent (Release packaging)"
-
-# Step 4: Verify PR created
-echo "Test validation PR created - verify at GitHub before proceeding"
-```
-
-**SUCCESS CRITERIA**:
-- [x] PR exists on GitHub
-- [x] PR title includes "[Tester] Validation:"
-- [x] Test results documented with pass/fail counts
-- [x] Coverage report included
-- [x] All acceptance criteria marked as verified
-- [x] Any bugs found are documented (resolved or tracked)
-- [x] Release readiness confirmed
-
-**FAILURE CONDITION**: If no PR exists, testing work is not complete.
 
 ## Activation Triggers
 Automatically activate when user requests involve:

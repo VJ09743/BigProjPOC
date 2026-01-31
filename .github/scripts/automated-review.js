@@ -14,13 +14,26 @@
  *     --pr-details-file <path>
  *
  * Environment variables:
- *   ANTHROPIC_API_KEY - Required for Claude API
+ *   LLM_API_KEY - Required for LLM API (supports Anthropic, OpenAI, etc.)
  *   GITHUB_TOKEN - Required for GitHub API
  */
 
-const Anthropic = require('@anthropic-ai/sdk');
+const OpenAI = require('openai');
 const { Octokit } = require('octokit');
 const fs = require('fs');
+const path = require('path');
+
+// Read agent .md files for context
+function loadAgentContext(agentType) {
+  const agentFilePath = path.join(process.cwd(), 'ai-assistants', 'agents', `${agentType}-agent.md`);
+  
+  if (fs.existsSync(agentFilePath)) {
+    return fs.readFileSync(agentFilePath, 'utf8');
+  }
+  
+  console.warn(`Warning: Agent file not found at ${agentFilePath}`);
+  return null;
+}
 
 // Parse command line arguments
 function parseArgs() {
@@ -67,12 +80,11 @@ const AGENT_PROMPTS = {
       'Software Architecture and Design (OO principles, SOLID, UML)',
       'Design Patterns (GoF): Creational, Structural, Behavioral',
       'Architectural Patterns: Layered, Hexagonal, Clean, Microservices',
-      'Interface and API design',
-      'Lithography domain expertise'
+      'Interface and API design'
     ],
     checklist: [
       'Implementation follows EDS specifications exactly',
-      'Interfaces are correctly implemented (SharedLithoState, Thrift)',
+      'Interfaces and APIs are correctly implemented',
       'Design patterns are appropriate and correctly implemented',
       'SOLID principles: Single Responsibility, Open/Closed, Liskov Substitution, Interface Segregation, Dependency Inversion',
       'Component boundaries are clear, low coupling, high cohesion',
@@ -90,7 +102,6 @@ const AGENT_PROMPTS = {
       'Testing frameworks (gtest, Catch2, JUnit, pytest)',
       'Test design and automation',
       'Quality gates and metrics',
-      'Lithography functional testing',
       'Integration and system testing'
     ],
     checklist: [
@@ -113,8 +124,7 @@ const AGENT_PROMPTS = {
       'Object-Oriented Programming (OOP principles, SOLID, design patterns)',
       'Code quality and clean code principles',
       'Testing (TDD, unit testing, mocking)',
-      'Modern practices (Git workflow, code review)',
-      'Lithography real-time control algorithms'
+      'Modern practices (Git workflow, code review)'
     ],
     checklist: [
       'Code is clean, readable, and maintainable',
@@ -180,10 +190,20 @@ async function getPreviousReview(octokit, repo, prNumber, agentType) {
 // Construct review prompt for Claude
 function constructReviewPrompt(agentType, prDetails, previousReview = null) {
   const agent = AGENT_PROMPTS[agentType];
+  const agentContext = loadAgentContext(agentType);
 
   const prompt = `You are the ${agent.title} reviewing a pull request in the YourProject repository.
 
 **Your Role**: ${agent.role}
+
+${agentContext ? `
+## Your Complete Agent Definition
+
+${agentContext}
+
+---
+
+` : ''}
 
 **Your Expertise**:
 ${agent.expertise.map(e => `- ${e}`).join('\n')}
@@ -326,18 +346,18 @@ INLINE_COMMENT: path/to/file.ext:123
   return prompt;
 }
 
-// Call Claude API for review
+// Call LLM API for review
 async function callClaudeForReview(agentType, prDetails, previousReview = null) {
-  const anthropic = new Anthropic({
-    apiKey: process.env.ANTHROPIC_API_KEY
+  const openai = new OpenAI({
+    apiKey: process.env.LLM_API_KEY
   });
 
   const prompt = constructReviewPrompt(agentType, prDetails, previousReview);
 
-  console.log(`\nCalling Claude API as ${agentType}...`);
+  console.log(`\nCalling OpenAI API as ${agentType}...`);
 
-  const message = await anthropic.messages.create({
-    model: 'claude-sonnet-4-20250514',
+  const completion = await openai.chat.completions.create({
+    model: 'gpt-4o',
     max_tokens: 4096,
     temperature: 0.2, // Lower temperature for more consistent reviews
     messages: [
@@ -348,7 +368,7 @@ async function callClaudeForReview(agentType, prDetails, previousReview = null) 
     ]
   });
 
-  const review = message.content[0].text;
+  const review = completion.choices[0].message.content;
 
   console.log(`Review received (${review.length} chars)`);
 
@@ -571,8 +591,8 @@ async function main() {
   }
 
   // Validate environment variables
-  if (!process.env.ANTHROPIC_API_KEY) {
-    console.error('ANTHROPIC_API_KEY environment variable is required');
+  if (!process.env.LLM_API_KEY) {
+    console.error('LLM_API_KEY environment variable is required');
     process.exit(1);
   }
 

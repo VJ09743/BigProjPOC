@@ -308,16 +308,22 @@ git worktree add ../worktree-architect claude/architect-{task_name}-{sessionID}
 git worktree add ../worktree-developer claude/developer-{task_name}-{sessionID}
 
 # Each agent works independently in their worktree
-# When done, create PR to master_{task_name} (NOT main/master)
+# When done, create PR to master_{task_name} (the task's main branch)
 ```
 
 ### Pull Request Process
 
-1. **Complete work** in your agent branch
+**Agents automatically create PRs when work is complete.** The process is:
+
+1. **Complete work** in agent's task branch
 2. **Commit changes** with clear, descriptive messages
-3. **Push to remote**: `git push -u origin claude/{agent}-{task_name}-{sessionID}`
-4. **Create Pull Request** to `master_{task_name}` branch (NOT main/master)
-5. **Peer review** - other agents review before user
+3. **Agent automatically pushes** to remote branch
+4. **Agent automatically creates PR** to `master_{task_name}` branch (the task's main branch, created from `template/agentic-workflow`)
+   - PR title: `[Agent Name] Work description`
+   - PR body includes: Summary, Changes, Ready for: [Next Agent]
+5. **Peer review** - other agents review before user accepts
+
+**Requirement**: Ensure `GITHUB_TOKEN` environment variable is set before starting work.
 
 ### Peer Review Process (CRITICAL)
 
@@ -390,8 +396,9 @@ pending → in-progress → completed → archived
 - Copy `modules/example-module/` to create new modules
 
 ### Git Workflow
-- Main branch: `master` or `main`
-- Feature branches follow your naming convention
+- **Base branch**: `template/agentic-workflow`
+- **Task branch**: `master_{task_name}` (created per task, see [Task-Based Branching Strategy](#task-based-branching-strategy))
+- **Agent branches**: `claude/{agent}-{task_name}-{sessionID}` (created per agent from task branch)
 - Always test before committing
 
 ### Testing Strategy
@@ -406,34 +413,34 @@ pending → in-progress → completed → archived
 
 ## GitHub Integration
 
-### Authentication
+### Authentication - REQUIRED
 
-Set up a GitHub token for automated PR creation:
+**AI agents will automatically create PRs. You must set up GitHub authentication first.**
+
+Before running any workflow, set up your GitHub token:
 
 ```bash
-# Store token as environment variable (recommended)
+# Set as environment variable (REQUIRED for automatic PR creation)
 export GITHUB_TOKEN="your_github_token"
-
-# Or store in a file (gitignored)
-echo "your_github_token" > .github_token
 ```
 
-### Creating Pull Requests
+**To create a GitHub token:**
+1. Go to https://github.com/settings/tokens
+2. Click "Generate new token (classic)"
+3. Select scopes: `repo`, `workflow`, `admin:repo_hook`
+4. Copy the token and set it as shown above
 
-Agents create PRs using:
+### Automated PR Creation
 
-```bash
-export GH_TOKEN=$GITHUB_TOKEN
-gh pr create --base master --head <branch> \
-  --title "Title" \
-  --body "Description"
-```
+Agents will automatically create PRs after completing their work. This requires:
 
-### If `gh` CLI is Not Available
+- ✅ GitHub token set in `GITHUB_TOKEN` environment variable
+- ✅ `gh` CLI installed and authenticated
+- ✅ All commits pushed to remote branch
 
-If the `gh` CLI is not installed or authentication fails, follow these steps:
+**If GitHub token is not set**: Agents will halt and request that you set it before continuing.
 
-#### Option 1: Install gh CLI (Recommended)
+### Installing `gh` CLI (If Not Already Installed)
 
 ```bash
 # Ubuntu/Debian
@@ -442,44 +449,14 @@ sudo apt-get update && sudo apt-get install -y gh
 # macOS
 brew install gh
 
-# Then authenticate
+# After installation, authenticate
 gh auth login
 ```
 
-#### Option 2: Manual PR Creation via GitHub Web UI
-
-1. **Push your branch first**:
-   ```bash
-   git push -u origin claude/{agent}-{task_name}-{sessionID}
-   ```
-
-2. **Create PR via web**:
-   - Go to: `https://github.com/{owner}/{repo}/pull/new/{branch-name}`
-   - Or: Repository → Pull requests → New pull request
-   - Set base branch (e.g., `template/agentic-workflow` or `master_{task_name}`)
-   - Set compare branch to your pushed branch
-   - Add title and description
-   - Click "Create pull request"
-
-#### Option 3: Use GitHub API with curl
-
+**Verify setup:**
 ```bash
-# Set your token
-export GITHUB_TOKEN="your_token"
-
-# Create PR via API
-curl -X POST "https://api.github.com/repos/{owner}/{repo}/pulls" \
-  -H "Authorization: token $GITHUB_TOKEN" \
-  -H "Content-Type: application/json" \
-  -d '{
-    "title": "PR Title",
-    "head": "branch-name",
-    "base": "target-branch",
-    "body": "PR description"
-  }'
+gh auth status
 ```
-
-**Note for AI Agents**: If `gh` fails, always provide the user with the manual PR creation URL so they can create the PR themselves.
 
 ---
 

@@ -2,17 +2,23 @@
 # =============================================================================
 # Run Script
 # =============================================================================
-# Always run the latest release artifact if present.
+# Automatically install dependencies for the latest release, then run it.
 # =============================================================================
 
 set -e
 
 ROOT_DIR=$(cd "$(dirname "$0")/.." && pwd)
-RELEASE_RUN="$ROOT_DIR/output/release/run.sh"
+RELEASE_DIR="$ROOT_DIR/output/release"
+RELEASE_INSTALL="$RELEASE_DIR/install.sh"
+RELEASE_RUN="$RELEASE_DIR/run.sh"
 
 echo "=========================================="
 echo "Starting application from latest release..."
 echo "=========================================="
+
+if [ -x "$RELEASE_INSTALL" ]; then
+	"$RELEASE_INSTALL"
+fi
 
 if [ -x "$RELEASE_RUN" ]; then
 	exec "$RELEASE_RUN"

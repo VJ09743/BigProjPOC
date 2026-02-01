@@ -12,10 +12,15 @@
 - Never skip straight to coding
 
 ### 2. First Task? Customize the Template
-When this is a NEW project, Product Owner MUST:
-- Update the "Domain" section below with actual project domain
-- Update agent skills in `ai-assistants/agents/*.md`
-- Add domain-specific context throughout
+**⚠️ MANDATORY FOR NEW PROJECTS**
+
+When this is the FIRST task in a NEW project, Product Owner MUST:
+1. **Read** `ai-assistants/agents/product-owner-agent.md` for detailed steps
+2. **Update domain expertise** in ALL agent files (`ai-assistants/agents/*.md`)
+3. **Commit changes** before creating user story
+4. This ensures all agents have project-specific context for reviews and work
+
+**Do NOT skip this step** - agents won't provide relevant guidance without domain expertise.
 
 ### 3. Follow the Agent Workflow
 ```

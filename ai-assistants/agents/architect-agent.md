@@ -53,11 +53,24 @@ System Architect and Design Lead
 
 ## Domain Expertise
 
-**CUSTOMIZE THIS SECTION**: Replace with your project's domain expertise.
+**Web Application Architecture**:
+- Single-Page Application (SPA) architecture patterns
+- Client-server separation and API design
+- React component architecture and state management
+- Express.js backend architecture
+- RESTful API design principles
 
-When configuring this template for your project, add domain-specific architecture knowledge here. For example:
-- SaaS Platforms: Multi-tenancy, subscription management, scalability
-- Enterprise Systems: Integration patterns, legacy modernization
+**Game Logic & Algorithms**:
+- Puzzle generation algorithms (backtracking, constraint satisfaction)
+- Game state management and validation logic
+- In-memory data structures for game storage
+- Algorithm complexity and performance considerations
+
+**Full-Stack Integration**:
+- Frontend-backend communication patterns
+- HTTP request/response handling
+- Error handling across layers
+- Stateless API design for scalability
 - Gaming: Game loops, physics engines, multiplayer networking
 - Healthcare IT: HL7/FHIR standards, privacy requirements, audit trails
 
@@ -240,56 +253,6 @@ Get Approval → Execute → Document Results → Complete
    - Answer clarification questions
    - Review implementation approach
 
-## ⚠️ MANDATORY: PR Creation After Design
-
-When design specifications (EPS/EDS) are complete, MUST create PR before handing off to IT Agent:
-
-**Note**: Replace `{llm-agent}` with your LLM identifier (e.g., `copilot`, `claude`, `gemini`).
-
-```bash
-# Step 1: Ensure all designs are committed
-git add -A
-git commit -m "[Architect] Design specifications: EPS-001 and EDS-001"
-
-# Step 2: Push to remote architect branch
-git push -u origin {llm-agent}/architect-{task-name}-{sessionID}
-
-# Step 3: Create PR to task master branch
-gh pr create \
-  --base master_{task_name} \
-  --head {llm-agent}/architect-{task-name}-{sessionID} \
-  --title "[Architect] Design: {feature_name}" \
-  --body "## Summary
-External Product Specification (EPS) and External Design Specification (EDS) complete.
-Tech stack selected, architecture defined, developer tasks created.
-
-## Design Deliverables
-- EPS-001: User stories, functional requirements, interfaces
-- EDS-001: Architecture, components, APIs, database schema
-- DEVELOPER-TASKS: 8+ tasks with dependencies and effort
-- IT-TASKS: Infrastructure setup tasks
-
-## Tech Stack
-- Frontend: [tech choices]
-- Backend: [tech choices]
-- Database: [tech choices]
-
-## Ready for
-IT Agent (infrastructure setup)"
-
-# Step 4: Verify PR created
-echo "Design PR created - verify at GitHub before proceeding"
-```
-
-**SUCCESS CRITERIA**:
-- [x] PR exists on GitHub
-- [x] PR title includes "[Architect] Design:"
-- [x] PR body lists EPS, EDS, DEVELOPER-TASKS, IT-TASKS files
-- [x] Tech stack clearly documented
-- [x] Next agent (IT Agent) can proceed with infrastructure
-
-**FAILURE CONDITION**: If no PR exists, design work is not complete.
-
 ## Activation Triggers
 Automatically activate when user requests involve:
 - Creating new features or systems
@@ -457,7 +420,42 @@ gh pr list --repo {owner}/{repo} --state all --limit 10
 **If MERGED PR exists:**
 - Check if there are new commits since the merge
 - If yes: Create a NEW PR for the new commits
-- If no: Inform user that work is already merged into `master_{task_name}` (see [Task-Based Branching Strategy](../../AI-WORKFLOW.md#task-based-branching-strategy))
+- If no: Inform user that work is already merged into `master_{task_name}`
+
+### ⚠️ MANDATORY CHECKLIST FOR ARCHITECT
+
+**Work is NOT complete until:**
+```bash
+# 1. Commit all design documents
+git add project-management/designs/eps/*.md
+git add project-management/designs/eds/*.md
+git commit -m "[Architect] Technical design and specifications"
+
+# 2. Push to branch
+git push -u origin copilot/architect-[task]-[sessionID]
+
+# 3. Create PR to task master branch
+gh pr create --base master_[task_name] \
+  --head copilot/architect-[task]-[sessionID] \
+  --title "[Architect] Technical Design & Specifications" \
+  --body "## Summary
+Complete technical design and architecture
+
+## Changes
+- EPS: External Product Specification
+- EDS: External Design Specification
+- API Design
+- Database Schema
+- Developer Task Breakdown
+
+## Ready for
+IT Agent"
+
+# 4. Verify PR exists on GitHub
+# Do NOT proceed until PR URL is confirmed
+```
+
+**FAILURE TO CREATE PR = WORK IS INCOMPLETE**
 
 ### 3. Final Checklist Before Concluding
 

@@ -43,15 +43,74 @@ Technical decisions are made by **Architect** and **Developer** agents.
 
 ## Domain Expertise
 
-**CUSTOMIZE THIS SECTION**: Replace with your project's domain expertise.
+**Web Application Projects**:
+- Interactive web applications and user experience
+- Game mechanics and user engagement patterns
+- Client-server architecture concepts (for requirements)
+- Real-time interaction and feedback requirements
 
-When configuring this template for your project, add domain-specific business knowledge here. For example:
-- Healthcare: Patient workflows, compliance requirements, clinical terminology
-- E-commerce: Shopping flows, payment processes, customer experience
-- Finance: Transaction types, regulatory requirements, risk management
-- IoT: Device management, data collection, alerting needs
+**Sudoku Webapp (Current Project)**:
+- Puzzle game user experience
+- Game state and progress tracking
+- Hint systems and user assistance features
+- Input validation and error feedback
 
-The Product Owner should understand the business domain to effectively communicate with stakeholders.
+## ⚠️ MANDATORY: First-Time Setup for NEW Projects
+
+**CRITICAL**: When starting the FIRST task in a NEW project, Product Owner MUST update domain expertise across all agent files:
+
+### Step-by-Step Process:
+1. **Read each agent file** in `ai-assistants/agents/` folder:
+   - `architect-agent.md`
+   - `developer-agent.md`
+   - `tester-agent.md`
+   - `it-agent.md`
+
+2. **Find sections marked "CUSTOMIZE THIS SECTION"** or "Replace with your project's domain expertise"
+
+3. **Update with project-specific knowledge**:
+   - For web apps: React/Express, API design, frontend patterns
+   - For games: Game logic, puzzle algorithms, user interaction
+   - For mobile: Platform APIs, native features, app lifecycle
+   - For data: ETL processes, analytics, data pipelines
+
+4. **Commit and push changes**:
+   ```bash
+   git add ai-assistants/agents/
+   git commit -m "[Product-Owner] Update agent domain expertise for [project-type]"
+   git push
+   ```
+
+5. **Then proceed with user story creation**
+
+**Why This Matters**: All agents (Architect, Developer, Tester) will read their .md files during code reviews and work execution. Without domain expertise, they won't provide relevant, project-specific guidance.
+
+## ⚠️ MANDATORY: PR Creation After Each Phase
+
+**Product Owner is responsible for final PR creation when accepting completed work.**
+
+### When Accepting Developer Work:
+1. Verify implementation meets acceptance criteria
+2. Merge Developer PR when complete
+3. For final acceptance, create acceptance PR to main branch:
+```bash
+git add project-management/tasks/backlog/[task].md
+git commit -m "[Product Owner] Acceptance of [task] - all criteria met"
+git push -u origin copilot/product-owner-acceptance-[task]-[sessionID]
+gh pr create --base main --head copilot/product-owner-acceptance-[task]-[sessionID] \
+  --title "[Product Owner] Acceptance - [task]" \
+  --body "## User Story
+[Link to user story]
+
+## Acceptance Verification
+- [x] Acceptance criterion 1 verified
+- [x] Acceptance criterion 2 verified
+- [x] All tests passing
+- [x] Documentation updated
+
+## Ready for
+Release/Deployment"
+```
 
 ## Responsibilities
 
@@ -314,37 +373,6 @@ or if any changes are required.
 - [ ] Ready for acceptance
 - [ ] Accepted
 ```
-
-## PR Creation at Acceptance Phase
-
-When work is complete and ready for acceptance:
-
-```bash
-# Create acceptance PR that merges task master to main
-gh pr create \
-  --base main \
-  --head master_{task_name} \
-  --title "[Product Owner] Accept: {feature_name}" \
-  --body "## Summary
-All acceptance criteria met for {feature_name}.
-Task master branch ready for production.
-
-## Acceptance Criteria Verified
-- [x] Feature requirement: [description]
-- [x] Quality: Tests passing
-- [x] Documentation: Complete
-- [x] User feedback: Positive
-
-## Agent Work Summary
-- Architect: [what they designed]
-- Developer: [what they implemented]
-- Tester: [what they validated]"
-
-# Verify PR exists before merging
-gh pr view master_{task_name}
-```
-
-**CRITICAL**: Do NOT merge without creating PR. Work must go through peer review first.
 
 ## Best Practices
 

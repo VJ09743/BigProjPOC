@@ -3,8 +3,8 @@
 /**
  * Automated Peer Review Script
  *
- * This script uses Claude API to review pull requests as different agent roles
- * (Team Leader, Architect, Tester, Developer).
+ * This script uses LLM API to review pull requests as different agent roles
+ * (Product Owner, Architect, Tester, Developer, IT).
  *
  * Usage:
  *   node automated-review.js \
@@ -14,13 +14,35 @@
  *     --pr-details-file <path>
  *
  * Environment variables:
- *   ANTHROPIC_API_KEY - Required for Claude API
+ *   LLM_PROVIDER - Provider name: openai, anthropic, gemini, azure, cohere, mistral (default: openai)
+ *   LLM_API_KEY - API key for your LLM provider
+ *   AZURE_OPENAI_ENDPOINT - Required for Azure OpenAI (e.g., https://your-resource.openai.azure.com)
  *   GITHUB_TOKEN - Required for GitHub API
+ *
+ * Supported LLM Providers:
+ *   - openai: OpenAI GPT-4o (default)
+ *   - anthropic/claude: Anthropic Claude Sonnet 4
+ *   - gemini: Google Gemini Pro
+ *   - azure/azure-openai: Azure OpenAI
+ *   - cohere: Cohere Command R Plus
+ *   - mistral: Mistral Large
  */
 
-const Anthropic = require('@anthropic-ai/sdk');
 const { Octokit } = require('octokit');
 const fs = require('fs');
+const path = require('path');
+
+// Read agent .md files for context
+function loadAgentContext(agentType) {
+  const agentFilePath = path.join(process.cwd(), 'ai-assistants', 'agents', `${agentType}-agent.md`);
+  
+  if (fs.existsSync(agentFilePath)) {
+    return fs.readFileSync(agentFilePath, 'utf8');
+  }
+  
+  console.warn(`Warning: Agent file not found at ${agentFilePath}`);
+  return null;
+}
 
 // Parse command line arguments
 function parseArgs() {
@@ -51,7 +73,7 @@ const AGENT_PROMPTS = {
       'Code follows project standards and conventions (naming, formatting, structure)',
       'Design patterns are correctly applied (Strategy, Singleton, Command, Observer)',
       'SOLID principles are followed (Single Responsibility, Open/Closed, etc.)',
-      'Documentation is complete and up-to-date (CLAUDE.md, inline comments, README)',
+      'Documentation is complete and up-to-date (AI-WORKFLOW.md, inline comments, README)',
       'Commit messages are clear and descriptive',
       'PR description explains what, why, and how',
       'Overall quality meets project requirements',
@@ -67,12 +89,11 @@ const AGENT_PROMPTS = {
       'Software Architecture and Design (OO principles, SOLID, UML)',
       'Design Patterns (GoF): Creational, Structural, Behavioral',
       'Architectural Patterns: Layered, Hexagonal, Clean, Microservices',
-      'Interface and API design',
-      'Lithography domain expertise'
+      'Interface and API design'
     ],
     checklist: [
       'Implementation follows EDS specifications exactly',
-      'Interfaces are correctly implemented (SharedLithoState, Thrift)',
+      'Interfaces and APIs are correctly implemented',
       'Design patterns are appropriate and correctly implemented',
       'SOLID principles: Single Responsibility, Open/Closed, Liskov Substitution, Interface Segregation, Dependency Inversion',
       'Component boundaries are clear, low coupling, high cohesion',
@@ -90,7 +111,6 @@ const AGENT_PROMPTS = {
       'Testing frameworks (gtest, Catch2, JUnit, pytest)',
       'Test design and automation',
       'Quality gates and metrics',
-      'Lithography functional testing',
       'Integration and system testing'
     ],
     checklist: [
@@ -113,8 +133,7 @@ const AGENT_PROMPTS = {
       'Object-Oriented Programming (OOP principles, SOLID, design patterns)',
       'Code quality and clean code principles',
       'Testing (TDD, unit testing, mocking)',
-      'Modern practices (Git workflow, code review)',
-      'Lithography real-time control algorithms'
+      'Modern practices (Git workflow, code review)'
     ],
     checklist: [
       'Code is clean, readable, and maintainable',
@@ -177,13 +196,23 @@ async function getPreviousReview(octokit, repo, prNumber, agentType) {
   }
 }
 
-// Construct review prompt for Claude
+// Construct review prompt for LLM
 function constructReviewPrompt(agentType, prDetails, previousReview = null) {
   const agent = AGENT_PROMPTS[agentType];
+  const agentContext = loadAgentContext(agentType);
 
   const prompt = `You are the ${agent.title} reviewing a pull request in the YourProject repository.
 
 **Your Role**: ${agent.role}
+
+${agentContext ? `
+## Your Complete Agent Definition
+
+${agentContext}
+
+---
+
+` : ''}
 
 **Your Expertise**:
 ${agent.expertise.map(e => `- ${e}`).join('\n')}
@@ -326,29 +355,36 @@ INLINE_COMMENT: path/to/file.ext:123
   return prompt;
 }
 
-// Call Claude API for review
-async function callClaudeForReview(agentType, prDetails, previousReview = null) {
-  const anthropic = new Anthropic({
-    apiKey: process.env.ANTHROPIC_API_KEY
-  });
-
+// Call LLM API for review
+async function callLLMForReview(agentType, prDetails, previousReview = null) {
+  const provider = (process.env.LLM_PROVIDER || 'openai').toLowerCase();
   const prompt = constructReviewPrompt(agentType, prDetails, previousReview);
 
-  console.log(`\nCalling Claude API as ${agentType}...`);
+  console.log(`\nUsing LLM Provider: ${provider}`);
+  console.log(`Calling ${provider} API as ${agentType}...`);
 
-  const message = await anthropic.messages.create({
-    model: 'claude-sonnet-4-20250514',
-    max_tokens: 4096,
-    temperature: 0.2, // Lower temperature for more consistent reviews
-    messages: [
-      {
-        role: 'user',
-        content: prompt
-      }
-    ]
-  });
+  // Map provider aliases
+  const providerMap = {
+    'claude': 'anthropic',
+    'azure-openai': 'azure'
+  };
+  const normalizedProvider = providerMap[provider] || provider;
 
-  const review = message.content[0].text;
+  // Dynamically load provider module
+  let providerModule;
+  try {
+    providerModule = require(`./providers/${normalizedProvider}.js`);
+  } catch (error) {
+    const supportedProviders = ['openai', 'anthropic', 'gemini', 'azure', 'cohere', 'mistral'];
+    throw new Error(
+      `Unsupported LLM provider: ${provider}\n` +
+      `Supported providers: ${supportedProviders.join(', ')}\n` +
+      `Error: ${error.message}`
+    );
+  }
+
+  // Call the provider's LLM function
+  const review = await providerModule.callLLM(prompt, agentType);
 
   console.log(`Review received (${review.length} chars)`);
 
@@ -571,8 +607,8 @@ async function main() {
   }
 
   // Validate environment variables
-  if (!process.env.ANTHROPIC_API_KEY) {
-    console.error('ANTHROPIC_API_KEY environment variable is required');
+  if (!process.env.LLM_API_KEY) {
+    console.error('LLM_API_KEY environment variable is required');
     process.exit(1);
   }
 
@@ -613,8 +649,8 @@ async function main() {
     console.log('✨ First-time review for this agent');
   }
 
-  // Call Claude API for review
-  const reviewText = await callClaudeForReview(agentType, prDetails, previousReview);
+  // Call LLM API for review
+  const reviewText = await callLLMForReview(agentType, prDetails, previousReview);
 
   // Parse decision
   const decision = parseReviewDecision(reviewText);

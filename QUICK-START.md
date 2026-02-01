@@ -77,18 +77,21 @@ gh auth status
 
 **BEFORE ANY TASK**, you MUST configure an LLM provider. The system will error out if not set.
 
-> **Exception for GitHub Copilot users**: If you're using GitHub Copilot (Path G), LLM provider setup is **only required for automated PR reviews**. Your IDE work doesn't need it. See [Path G setup guide](quickstart/tools/github-copilot-setup.md) for details.
+> **Exception for GitHub Copilot users**: If you're using GitHub Copilot (Path G), you can set `LLM_PROVIDER=copilot` for automated reviews - no separate API key needed! See [Path G setup guide](quickstart/tools/github-copilot-setup.md) for details.
 
 ### Step 1: Choose Your LLM Provider
 
 | Provider | Best For | Cost | Setup Guide |
 |----------|----------|------|-------------|
+| **GitHub Copilot** | Copilot subscribers (automated reviews) | Included* | [Copilot Setup](quickstart/tools/github-copilot-setup.md) |
 | **OpenAI** | General purpose, most popular | $$ | [OpenAI Setup](quickstart/providers/openai-setup.md) |
 | **Anthropic** | Code review, complex reasoning | $$$ | [Anthropic Setup](quickstart/providers/anthropic-setup.md) |
 | **Gemini** | Fast, cost-effective | $ | [Gemini Setup](quickstart/providers/gemini-setup.md) |
 | **Azure OpenAI** | Enterprise, compliance | $$$ | [Azure Setup](quickstart/providers/azure-setup.md) |
 | **Cohere** | Efficiency, production | $ | [Cohere Setup](quickstart/providers/cohere-setup.md) |
 | **Mistral** | Open-source, privacy | $ | [Mistral Setup](quickstart/providers/mistral-setup.md) |
+
+*GitHub Copilot API access may require Enterprise plan. For automated reviews, simply set `LLM_PROVIDER=copilot` and the script will handle authentication automatically.
 
 ### Step 2: Follow Your Provider's Setup Guide
 

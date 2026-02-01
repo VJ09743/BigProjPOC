@@ -379,19 +379,24 @@ cat > output/release/install.sh << 'EOF'
 echo "🚀 Installing Sudoku Webapp..."
 echo ""
 
-# Find latest release archive
+# Find latest release archive (if present)
 LATEST_TGZ=$(ls -1 sudoku-webapp-*.tar.gz 2>/dev/null | sort -V | tail -n 1)
-if [ -z "$LATEST_TGZ" ]; then
-  echo "❌ Error: No release archive found (sudoku-webapp-*.tar.gz)"
-  exit 1
-fi
+if [ -n "$LATEST_TGZ" ]; then
+  RELEASE_DIR="${LATEST_TGZ%.tar.gz}"
 
-RELEASE_DIR="${LATEST_TGZ%.tar.gz}"
-
-# Check if directory exists, if not extract from tar.gz
-if [ ! -d "$RELEASE_DIR" ]; then
-  echo "📦 Extracting release package: $LATEST_TGZ"
-  tar -xzf "$LATEST_TGZ"
+  # Check if directory exists, if not extract from tar.gz
+  if [ ! -d "$RELEASE_DIR" ]; then
+    echo "📦 Extracting release package: $LATEST_TGZ"
+    tar -xzf "$LATEST_TGZ"
+  fi
+else
+  # Fall back to latest release directory if archive is missing
+  LATEST_DIR=$(ls -1d sudoku-webapp-*/ 2>/dev/null | sort -V | tail -n 1)
+  if [ -z "$LATEST_DIR" ]; then
+    echo "❌ Error: No release archive or directory found (sudoku-webapp-*)."
+    exit 1
+  fi
+  RELEASE_DIR=${LATEST_DIR%/}
 fi
 
 cd "$RELEASE_DIR"

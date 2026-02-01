@@ -73,15 +73,20 @@ gh auth status
 
 ---
 
-## ⚠️ MANDATORY: Choose Your LLM Provider
+## LLM Provider (Only for Automated Reviews)
 
-**BEFORE ANY TASK**, you MUST set `LLM_PROVIDER`. The system will error out if not set.
+**LLM Provider is ONLY needed if you want automated peer reviews (GitHub Actions).**
 
-> **Note on LLM_API_KEY**: This is ONLY required for automated peer reviews with non-Copilot providers. For IDE work, your AI tool (Copilot, Claude Code, Cursor, etc.) authenticates separately.
+**For IDE work ONLY** (using Copilot, Claude Code, Cursor, etc.):
+- ✅ **No LLM_PROVIDER needed** - Your AI tool authenticates separately
+- ✅ **Start working immediately** - Skip this section and go to [Choose Your Path](#choose-your-path)
 
-> **GitHub Copilot users**: Set `LLM_PROVIDER=copilot` - no API key needed! See [Path G setup guide](quickstart/tools/github-copilot-setup.md) for details.
+**For automated peer reviews**:
+- ⚠️ **LLM_PROVIDER is REQUIRED** - Continue with Step 1 below
 
-### Step 1: Choose Your LLM Provider
+> **GitHub Copilot users**: If you have Copilot Enterprise, set `LLM_PROVIDER=copilot` (no API key needed). If you have Copilot Pro/Individual, use a separate provider like Gemini for automated reviews. See [Path G setup guide](quickstart/tools/github-copilot-setup.md) for details.
+
+### Step 1: Choose Your LLM Provider (for Automated Reviews)
 
 | Provider | Best For | Cost | Setup Guide |
 |----------|----------|------|-------------|
@@ -103,28 +108,24 @@ Click on your chosen provider's setup guide above. Each guide includes:
 - GitHub Secrets setup (for automated reviews)
 - Verification steps
 
-### Step 3: Verify Configuration
+### Step 3: Verify Configuration (Optional - Only for Automated Reviews)
 
 After setup, verify your provider is configured:
 
 ```bash
-# Check environment variable (MANDATORY)
-echo "LLM_PROVIDER: $LLM_PROVIDER"
+# Check environment variable (only needed for automated reviews)
+echo "LLM_PROVIDER: ${LLM_PROVIDER:-'Not set (IDE work only)'}"
 
 # Check API key (only needed for automated reviews with non-Copilot providers)
-echo "LLM_API_KEY is set: $([ -n "$LLM_API_KEY" ] && echo 'Yes ✅' || echo 'No ❌')"
+echo "LLM_API_KEY is set: $([ -n "$LLM_API_KEY" ] && echo 'Yes ✅' || echo 'No (IDE work only)')"
 
 # For Azure users, also check:
 echo "AZURE_OPENAI_ENDPOINT: $AZURE_OPENAI_ENDPOINT"
 ```
 
-**LLM_PROVIDER must be set!**
-
-**Note**: `LLM_API_KEY` is only required if:
-- You want to use automated peer reviews, AND
-- You're NOT using `LLM_PROVIDER=copilot`
-
-For IDE work (Copilot, Claude Code, Cursor, etc.), the AI tool authenticates separately - no `LLM_API_KEY` needed!
+**Summary**:
+- **IDE work only**: No configuration needed - your AI tool handles authentication
+- **Automated reviews**: LLM_PROVIDER required, LLM_API_KEY required (except copilot)
 
 ---
 
@@ -136,8 +137,8 @@ Before proceeding to "Choose Your Path", verify:
 - [ ] GitHub account created and logged in
 - [ ] GITHUB_TOKEN environment variable set
 - [ ] gh CLI installed and authenticated (`gh auth status`)
-- [ ] **LLM_PROVIDER environment variable set** ⚠️ MANDATORY
-- [ ] **LLM_API_KEY environment variable set** (only for automated reviews with non-Copilot providers)
+- [ ] **(Optional)** LLM_PROVIDER set - only if you want automated peer reviews
+- [ ] **(Optional)** LLM_API_KEY set - only if you want automated peer reviews with non-Copilot providers
 
 **If all checkboxes pass**, you're ready to proceed! 🚀
 

@@ -379,8 +379,12 @@ cat > output/release/install.sh << 'EOF'
 echo "🚀 Installing Sudoku Webapp..."
 echo ""
 
+# Determine script directory to locate release artifacts
+ROOT_DIR=$(cd "$(dirname "$0")/.." && pwd)
+RELEASE_ROOT="$ROOT_DIR/output/release"
+
 # Find latest release archive (if present)
-LATEST_TGZ=$(ls -1 sudoku-webapp-*.tar.gz 2>/dev/null | sort -V | tail -n 1)
+LATEST_TGZ=$(ls -1 "$RELEASE_ROOT"/sudoku-webapp-*.tar.gz 2>/dev/null | sort -V | tail -n 1)
 if [ -n "$LATEST_TGZ" ]; then
   RELEASE_DIR="${LATEST_TGZ%.tar.gz}"
 
@@ -391,7 +395,7 @@ if [ -n "$LATEST_TGZ" ]; then
   fi
 else
   # Fall back to latest release directory if archive is missing
-  LATEST_DIR=$(ls -1d sudoku-webapp-*/ 2>/dev/null | sort -V | tail -n 1)
+  LATEST_DIR=$(ls -1d "$RELEASE_ROOT"/sudoku-webapp-*/ 2>/dev/null | sort -V | tail -n 1)
   if [ -z "$LATEST_DIR" ]; then
     echo "❌ Error: No release archive or directory found (sudoku-webapp-*)."
     exit 1
@@ -432,7 +436,8 @@ echo "🚀 Starting Sudoku Webapp..."
 echo ""
 
 # Find latest release directory
-LATEST_DIR=$(ls -1d sudoku-webapp-*/ 2>/dev/null | sort -V | tail -n 1)
+ROOT_DIR=$(cd "$(dirname "$0")" && pwd)
+LATEST_DIR=$(ls -1d "$ROOT_DIR"/sudoku-webapp-*/ 2>/dev/null | sort -V | tail -n 1)
 if [ -z "$LATEST_DIR" ]; then
   echo "❌ Error: No release directory found (sudoku-webapp-*/)."
   echo "Please run ./install.sh first"

@@ -10,6 +10,13 @@ RELEASE_DIR="output/release/sudoku-webapp-${RELEASE_VERSION}"
 
 echo "📦 Creating Sudoku Webapp Release v${RELEASE_VERSION}..."
 
+# Remove older releases (keep only current version directory and archive)
+for p in output/release/sudoku-webapp-*; do
+  if [ "$p" != "$RELEASE_DIR" ] && [ "$p" != "${RELEASE_DIR}.tar.gz" ]; then
+    rm -rf "$p"
+  fi
+done
+
 # Clean previous release
 if [ -d "$RELEASE_DIR" ]; then
   echo "🧹 Cleaning previous release..."

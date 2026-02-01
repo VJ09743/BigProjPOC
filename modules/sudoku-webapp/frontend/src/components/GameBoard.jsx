@@ -11,6 +11,8 @@ export default function GameBoard({ difficulty, onNewGame }) {
   const [hintsRemaining, setHintsRemaining] = useState(3)
   const [emptyErrors, setEmptyErrors] = useState(new Set())
   const [gameComplete, setGameComplete] = useState(false)
+  const [completionTime, setCompletionTime] = useState(null)
+  const [invalidMove, setInvalidMove] = useState(false)
 
   // Initialize game
   useEffect(() => {
@@ -101,7 +103,28 @@ export default function GameBoard({ difficulty, onNewGame }) {
 
     // Send move to backend
     try {
-      await api.submitMove(game.gameId, row, col, value)
+      const response = await api.submitMove(game.gameId, row, col, value)
+      
+      // Handle validation feedback
+      if (!response.valid) {
+        setInvalidMove(true)
+        setErrorMessage('⚠️ Invalid move - number conflicts with row/column/box')
+        setTimeout(() => {
+          setInvalidMove(false)
+          setErrorMessage(null)
+        }, 2000)
+      } else if (response.complete) {
+        // Puzzle completed successfully!
+        setGameComplete(true)
+        setCompletionTime(response.completionTime)
+        setErrorMessage(null)
+      } else if (response.error) {
+        // Puzzle filled but contains errors
+        setErrorMessage(response.error)
+        setTimeout(() => setErrorMessage(null), 3000)
+      } else {
+        setErrorMessage(null)
+      }
       
       // Clear empty errors when user fills a cell
       if (value !== 0 && emptyErrors.has(`${row}-${col}`)) {
@@ -111,6 +134,8 @@ export default function GameBoard({ difficulty, onNewGame }) {
       }
     } catch (err) {
       console.error('Failed to submit move:', err)
+      setErrorMessage('Network error. Please try again.')
+      setTimeout(() => setErrorMessage(null), 2000)
     }
   }, [selectedCell, game, grid, emptyErrors])
   
@@ -231,9 +256,26 @@ export default function GameBoard({ difficulty, onNewGame }) {
 
   return (
     <div className="bg-white rounded-lg shadow p-8">
+      {/* Completion celebration */}
+      {gameComplete && (
+        <div className="mb-4 p-6 bg-green-100 border-2 border-green-500 rounded-lg text-center">
+          <div className="text-4xl mb-2">🎉</div>
+          <div className="text-green-800 font-bold text-xl mb-2">
+            Congratulations! Puzzle Completed!
+          </div>
+          <div className="text-green-700">
+            Time: {Math.floor(completionTime / 1000 / 60)} min {Math.floor((completionTime / 1000) % 60)} sec
+          </div>
+        </div>
+      )}
+      
       {/* Error message banner */}
-      {errorMessage && (
-        <div className="mb-4 p-3 bg-red-100 border border-red-400 text-red-700 rounded-lg text-center font-semibold">
+      {errorMessage && !gameComplete && (
+        <div className={`mb-4 p-3 border rounded-lg text-center font-semibold ${
+          invalidMove 
+            ? 'bg-red-100 border-red-400 text-red-700'
+            : 'bg-yellow-100 border-yellow-400 text-yellow-800'
+        }`}>
           {errorMessage}
         </div>
       )}

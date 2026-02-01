@@ -135,14 +135,43 @@ router.post('/:gameId/move', async (req, res) => {
     userGrid[row][col] = value;
     game.userSolution = sudokuService.gridToString(userGrid);
     
-    // Check if move is valid (optional - for immediate feedback)
+    // Check if move is valid (for immediate feedback)
     const isValid = value === 0 || sudokuService.isValid(userGrid, row, col, value);
+    
+    // Check for completion
+    let isComplete = false;
+    let errorMessage = null;
+    
+    if (value !== 0) {
+      // Check if puzzle is complete (all cells filled)
+      const allFilled = userGrid.every(row => row.every(cell => cell !== 0));
+      
+      if (allFilled) {
+        // Verify solution is correct
+        const solution = sudokuService.stringToGrid(game.solution);
+        const isCorrect = userGrid.every((row, i) => 
+          row.every((cell, j) => cell === solution[i][j])
+        );
+        
+        if (isCorrect) {
+          game.status = 'completed';
+          game.endTime = Date.now();
+          game.completionTime = game.endTime - game.startTime;
+          isComplete = true;
+        } else {
+          errorMessage = 'Puzzle is filled but contains errors. Check for conflicts!';
+        }
+      }
+    }
     
     res.json({
       gameId: game.id,
       userSolution: game.userSolution,
       valid: isValid,
-      status: game.status
+      status: game.status,
+      complete: isComplete,
+      completionTime: game.completionTime,
+      error: errorMessage
     });
   } catch (error) {
     console.error('Error processing move:', error);

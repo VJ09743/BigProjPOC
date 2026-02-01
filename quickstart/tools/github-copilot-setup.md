@@ -25,11 +25,35 @@ For the **automated peer review workflow** to work, you **MUST** configure an LL
 
 ## Setup for Automated Reviews
 
-You have two options:
+You have three options:
 
-### Option A: Use Your Copilot Subscription API (If Available)
+### Option A: Use Copilot Provider (Simplest) ✨
 
-Some GitHub Copilot Enterprise plans provide API access. Check if you have access:
+**NEW**: For GitHub Copilot users, just set the provider to "copilot" and the script handles everything automatically!
+
+```bash
+# Mac/Linux
+echo 'export LLM_PROVIDER="copilot"' >> ~/.bashrc
+source ~/.bashrc
+
+# Windows (PowerShell as Administrator)
+[Environment]::SetEnvironmentVariable("LLM_PROVIDER", "copilot", "User")
+$env:LLM_PROVIDER = "copilot"
+```
+
+**Then configure GitHub Secrets** (for automated reviews):
+1. Go to your repository → Settings → Secrets and variables → Actions
+2. Add these secrets:
+   - `LLM_PROVIDER` = `copilot`
+   - `GITHUB_TOKEN` = (automatically available in GitHub Actions)
+
+**That's it!** The automated review script will use GitHub's API automatically through your repository's authentication.
+
+**Note**: This uses the repository's GitHub token to access GitHub's models API. No separate API key needed!
+
+### Option B: Use Your Copilot Enterprise API (If Available)
+
+Some GitHub Copilot Enterprise plans provide direct API access. Check if you have access:
 1. Go to https://github.com/settings/copilot
 2. Look for "API access" or "Copilot API"
 3. If available, get your API token
@@ -46,9 +70,9 @@ source ~/.bashrc
 [Environment]::SetEnvironmentVariable("LLM_API_KEY", "your-copilot-api-token", "User")
 ```
 
-### Option B: Use a Separate LLM Provider (Recommended)
+### Option C: Use a Separate LLM Provider
 
-Most users should choose a separate provider for automated reviews:
+Choose a separate provider for automated reviews:
 
 **Choose ONE:**
 - **OpenAI** (Recommended) - See [OpenAI Setup](../providers/openai-setup.md)
@@ -80,23 +104,35 @@ Your GitHub Copilot subscription covers:
 
 ### Step 2: Configure for Automated Reviews
 
-1. **Choose a provider** from Option A or B above
-2. **Follow the provider setup guide** to get API key
-3. **Set environment variables**:
-   ```bash
-   export LLM_PROVIDER="openai"  # or your chosen provider
-   export LLM_API_KEY="your-api-key"
-   ```
-4. **Configure GitHub Secrets** (for automated reviews):
-   - Go to your repository → Settings → Secrets → Actions
-   - Add `LLM_PROVIDER` (e.g., "openai")
-   - Add `LLM_API_KEY` (your API key)
+**Recommended: Option A (Simplest)**
+
+Just set `LLM_PROVIDER=copilot` and you're done!
+
+```bash
+# Mac/Linux
+export LLM_PROVIDER="copilot"
+
+# Windows
+$env:LLM_PROVIDER = "copilot"
+```
+
+**Configure GitHub Secrets**:
+1. Go to your repository → Settings → Secrets and variables → Actions
+2. Add secret: `LLM_PROVIDER` = `copilot`
+3. That's it! No API key needed - uses repository's GitHub authentication
+
+**Alternative: Use separate provider** (Option C)
+- Choose OpenAI, Anthropic, Gemini, etc.
+- Follow their setup guide for API key
+- Set `LLM_PROVIDER` and `LLM_API_KEY`
 
 ### Step 3: Verify Setup
 
 ```bash
-# These should be set for automated reviews:
+# For automated reviews, this must be set:
 echo "LLM_PROVIDER: $LLM_PROVIDER"
+
+# If using separate provider (Option C):
 echo "LLM_API_KEY: $([ -n "$LLM_API_KEY" ] && echo 'Set ✅' || echo 'NOT SET ❌')"
 ```
 
@@ -114,8 +150,8 @@ With GitHub Copilot in VS Code:
 You: "I want to build a todo list app"
 
 Copilot: "First, let me verify LLM provider configuration...
-✅ LLM Provider: openai
-✅ API Key: Configured
+✅ LLM Provider: copilot
+✅ Configuration: GitHub authentication
 
 Now, as Product Owner, let me clarify requirements:
 1. What features do you need?
@@ -125,13 +161,25 @@ Now, as Product Owner, let me clarify requirements:
 
 ## Cost Considerations
 
-- **GitHub Copilot subscription**: ~$10-20/month (covers IDE usage)
-- **Automated reviews**: ~$1-5/month depending on:
-  - Number of PRs
-  - Provider chosen (Gemini is cheapest, Claude most expensive)
-  - Frequency of reviews
+**GitHub Copilot Subscription:**
+- Individual: ~$10/month
+- Business: ~$19/month per user  
+- Enterprise: Custom pricing
 
-**Tip**: Use Gemini for budget-friendly automated reviews (~$1-2/month)
+**Automated Reviews Cost:**
+
+**Option A (LLM_PROVIDER=copilot) - RECOMMENDED:**
+- ✅ **FREE** - Uses repository's GitHub authentication
+- No additional API costs
+- Included with your Copilot subscription
+
+**Option C (Separate Provider):**
+- ~$1-5/month depending on provider and usage
+- Gemini: $ (cheapest, ~$1-2/month)
+- OpenAI: $$ (~$2-4/month)
+- Anthropic Claude: $$$ (~$4-8/month)
+
+**Recommendation**: Use **Option A** (`LLM_PROVIDER=copilot`) for simplest setup with no additional cost!
 
 ## What's Next?
 

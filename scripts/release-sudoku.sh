@@ -27,7 +27,10 @@ mkdir -p "$RELEASE_DIR/docs"
 # Build frontend
 echo "🔨 Building frontend..."
 cd modules/sudoku-webapp/frontend
-npm run build
+
+# Build with configurable API URL (will be set at runtime)
+VITE_API_BASE_URL=__API_BASE_URL__ npm run build
+
 cd ../../..
 
 # Copy frontend build artifacts
@@ -234,7 +237,7 @@ EOF
 
 chmod +x "$RELEASE_DIR/install.sh"
 
-# Create run script
+# Create run script with dynamic port allocation
 cat > "$RELEASE_DIR/run.sh" << 'EOF'
 #!/bin/bash
 
@@ -247,8 +250,49 @@ if [ ! -d "backend/node_modules" ]; then
   exit 1
 fi
 
+# Function to find available port
+find_available_port() {
+  local start_port=$1
+  local port=$start_port
+  
+  while [ $port -le 65535 ]; do
+    if ! lsof -i :$port >/dev/null 2>&1; then
+      echo $port
+      return 0
+    fi
+    port=$((port + 1))
+  done
+  
+  echo "❌ No available ports found starting from $start_port"
+  exit 1
+}
+
+# Find available ports (skip 5000 for macOS ControlCenter)
+BACKEND_PORT=$(find_available_port 5001)
+FRONTEND_PORT=$(find_available_port 3000)
+
+echo "📡 Backend will use port: $BACKEND_PORT"
+echo "🌐 Frontend will use port: $FRONTEND_PORT"
+echo ""
+
+# Update backend .env with available port
+echo "PORT=$BACKEND_PORT" > backend/.env
+echo "NODE_ENV=production" >> backend/.env
+echo "CORS_ORIGIN=http://localhost:$FRONTEND_PORT" >> backend/.env
+
+# Create frontend config.js with backend URL
+cat > frontend/config.js << CONFIGEOF
+window.API_BASE_URL = 'http://localhost:$BACKEND_PORT/api/v1';
+CONFIGEOF
+
+# Inject config.js into index.html if not already there
+if ! grep -q 'src="/config.js"' frontend/index.html; then
+  # Insert config.js script tag right before the module script
+  sed -i.bak 's|<script type="module"|<script src="/config.js"></script>\n    <script type="module"|' frontend/index.html
+fi
+
 # Start backend
-echo "📡 Starting backend on http://localhost:5000..."
+echo "📡 Starting backend on http://localhost:$BACKEND_PORT..."
 cd backend
 npm start &
 BACKEND_PID=$!
@@ -268,16 +312,28 @@ echo "✅ Backend started (PID: $BACKEND_PID)"
 echo ""
 
 # Start frontend
-echo "🌐 Starting frontend on http://localhost:3000..."
+echo "🌐 Starting frontend on http://localhost:$FRONTEND_PORT..."
+cd frontend
+npx serve -s . -l $FRONTEND_PORT &
+FRONTEND_PID=$!
+cd ..
+
+# Wait for frontend to start
+sleep 2
+
+echo ""
+echo "✅ Application is running!"
+echo "   Frontend: http://localhost:$FRONTEND_PORT"
+echo "   Backend:  http://localhost:$BACKEND_PORT"
+echo ""
+echo "🌐 Opening browser..."
+open "http://localhost:$FRONTEND_PORT" 2>/dev/null || xdg-open "http://localhost:$FRONTEND_PORT" 2>/dev/null || echo "Please open http://localhost:$FRONTEND_PORT in your browser"
 echo ""
 echo "Press Ctrl+C to stop both services"
 echo ""
 
-cd frontend
-npx serve -s . -l 3000
-
 # Cleanup on exit
-trap "echo ''; echo '🛑 Stopping services...'; kill $BACKEND_PID 2>/dev/null; exit" INT TERM
+trap "echo ''; echo '🛑 Stopping services...'; kill $BACKEND_PID $FRONTEND_PID 2>/dev/null; exit" INT TERM
 
 wait
 EOF

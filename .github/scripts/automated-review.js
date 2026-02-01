@@ -374,9 +374,15 @@ async function callLLMForReview(agentType, prDetails, previousReview = null) {
   const review = completion.choices[0].message.content;
 
   /* Alternative: Use Anthropic/Claude instead
+  // Option 1: Use generic LLM_API_KEY
   const anthropic = new Anthropic({
     apiKey: process.env.LLM_API_KEY
   });
+
+  // Option 2: Use provider-specific ANTHROPIC_API_KEY
+  // const anthropic = new Anthropic({
+  //   apiKey: process.env.ANTHROPIC_API_KEY
+  // });
 
   const prompt = constructReviewPrompt(agentType, prDetails, previousReview);
 

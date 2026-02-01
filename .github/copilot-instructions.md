@@ -365,7 +365,7 @@ Every agent MUST create a GitHub PR before handing off to the next agent. If the
 
 The examples below use `{llm-agent}` as a placeholder. Replace this with your actual LLM agent name:
 - GitHub Copilot: Use `copilot` → `copilot/architect-sudoku-webapp-123456`
-- Claude: Use `claude` → `claude/architect-sudoku-webapp-123456`
+- Claude Code: Use `claude` → `claude/architect-sudoku-webapp-123456`
 - Gemini: Use `gemini` → `gemini/architect-sudoku-webapp-123456`
 - Other LLMs: Use appropriate identifier
 

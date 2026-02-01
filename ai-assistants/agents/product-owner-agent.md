@@ -12,30 +12,41 @@ Customer-Facing Requirements Lead and Backlog Manager
 ### 1. LLM Provider Configuration (MANDATORY)
 
 ```bash
-# Check if LLM_PROVIDER is set
+# Check if LLM_PROVIDER is set (MANDATORY)
 if [ -z "$LLM_PROVIDER" ]; then
     echo "❌ ERROR: LLM_PROVIDER is not set!"
     echo "Please configure your LLM provider first:"
-    echo "See: quickstart/providers/ for setup guides"
-    exit 1
-fi
-
-# Check if LLM_API_KEY is set
-if [ -z "$LLM_API_KEY" ]; then
-    echo "❌ ERROR: LLM_API_KEY is not set!"
-    echo "Please set your API key for provider: $LLM_PROVIDER"
+    echo "See: quickstart/providers/ or quickstart/tools/ for setup guides"
     exit 1
 fi
 
 echo "✅ LLM Provider: $LLM_PROVIDER"
-echo "✅ LLM_API_KEY: Configured"
+
+# Check if LLM_API_KEY is set (only needed for automated reviews with non-Copilot providers)
+if [ "$LLM_PROVIDER" != "copilot" ] && [ -z "$LLM_API_KEY" ]; then
+    echo "⚠️  WARNING: LLM_API_KEY is not set!"
+    echo "This is required for automated peer reviews."
+    echo "For IDE work, your AI tool authenticates separately."
+    # Don't exit - allow IDE work to continue
+else
+    if [ "$LLM_PROVIDER" = "copilot" ]; then
+        echo "✅ Using GitHub Copilot provider (no API key needed)"
+    else
+        echo "✅ LLM_API_KEY: Configured"
+    fi
+fi
 ```
 
-**If either variable is missing:**
+**If LLM_PROVIDER is missing:**
 1. **STOP immediately** - do not proceed
-2. **Inform user**: "Please configure LLM provider first"
-3. **Provide link**: See [QUICK-START.md](../../QUICK-START.md#mandatory-choose-and-configure-your-llm-provider)
+2. **Inform user**: "Please configure LLM_PROVIDER first"
+3. **Provide link**: See [QUICK-START.md](../../QUICK-START.md#mandatory-choose-your-llm-provider)
 4. **Wait for user** to complete setup
+
+**If LLM_API_KEY is missing (and not using Copilot):**
+1. **WARN user**: "LLM_API_KEY not set. Automated reviews won't work."
+2. **Allow IDE work** to continue
+3. **Provide link**: See provider setup guide if needed
 
 ### 2. GitHub Token Verification
 

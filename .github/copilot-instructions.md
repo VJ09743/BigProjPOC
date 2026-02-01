@@ -54,6 +54,27 @@ You (GitHub Copilot) must adopt different **personas/roles** called "agents" dep
 
 ## WORKFLOW EXECUTION
 
+### Step 0: MANDATORY Pre-Task Verification
+
+**⚠️ CRITICAL: Before starting ANY task, verify LLM provider is configured:**
+
+```bash
+# Product Owner MUST check these environment variables
+echo "LLM_PROVIDER: $LLM_PROVIDER"
+echo "LLM_API_KEY: $([ -n "$LLM_API_KEY" ] && echo 'Set ✅' || echo 'NOT SET ❌')"
+```
+
+**If EITHER variable is missing:**
+1. **STOP immediately** - do not proceed with task
+2. **Error message**: "❌ LLM provider not configured. Please complete setup first."
+3. **Direct user to**: [QUICK-START.md](../QUICK-START.md#mandatory-choose-and-configure-your-llm-provider)
+4. **Wait for user** to configure before continuing
+
+**Required Environment Variables:**
+- `LLM_PROVIDER` - Must be one of: openai, anthropic, gemini, azure, cohere, mistral
+- `LLM_API_KEY` - Generic API key for chosen provider (NOT provider-specific like ANTHROPIC_API_KEY)
+- `AZURE_OPENAI_ENDPOINT` - Only required if LLM_PROVIDER=azure
+
 ### Step 1: ALWAYS Start as Product Owner
 
 For ANY new user request, you MUST first act as **Product Owner**:
@@ -62,7 +83,11 @@ For ANY new user request, you MUST first act as **Product Owner**:
 User: "Build me a login page"
 
 You (as Product Owner):
-"I'll help you build a login page. Let me clarify the requirements:
+"First, let me verify LLM provider configuration...
+✅ LLM Provider: openai
+✅ API Key: Configured
+
+Now I'll help you build a login page. Let me clarify the requirements:
 1. What authentication method? (email/password, OAuth, etc.)
 2. Should there be a 'forgot password' feature?
 3. Any specific design requirements?

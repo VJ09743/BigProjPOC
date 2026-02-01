@@ -73,11 +73,56 @@ gh auth status
 
 ---
 
+## ⚠️ MANDATORY: Choose and Configure Your LLM Provider
+
+**BEFORE ANY TASK**, you MUST configure an LLM provider. The system will error out if not set.
+
+### Step 1: Choose Your LLM Provider
+
+| Provider | Best For | Cost | Setup Guide |
+|----------|----------|------|-------------|
+| **OpenAI** | General purpose, most popular | $$ | [OpenAI Setup](quickstart/providers/openai-setup.md) |
+| **Anthropic** | Code review, complex reasoning | $$$ | [Anthropic Setup](quickstart/providers/anthropic-setup.md) |
+| **Gemini** | Fast, cost-effective | $ | [Gemini Setup](quickstart/providers/gemini-setup.md) |
+| **Azure OpenAI** | Enterprise, compliance | $$$ | [Azure Setup](quickstart/providers/azure-setup.md) |
+| **Cohere** | Efficiency, production | $ | [Cohere Setup](quickstart/providers/cohere-setup.md) |
+| **Mistral** | Open-source, privacy | $ | [Mistral Setup](quickstart/providers/mistral-setup.md) |
+
+### Step 2: Follow Your Provider's Setup Guide
+
+Click on your chosen provider's setup guide above. Each guide includes:
+- API key acquisition
+- Environment variable configuration
+- GitHub Secrets setup (for automated reviews)
+- Verification steps
+
+### Step 3: Verify Configuration
+
+After setup, verify your provider is configured:
+
+```bash
+# Check environment variables
+echo "LLM_PROVIDER: $LLM_PROVIDER"
+echo "LLM_API_KEY is set: $([ -n "$LLM_API_KEY" ] && echo 'Yes ✅' || echo 'No ❌')"
+
+# For Azure users, also check:
+echo "AZURE_OPENAI_ENDPOINT: $AZURE_OPENAI_ENDPOINT"
+```
+
+**Both variables MUST show as set before proceeding!**
+
+---
+
 ## ✅ Setup Checklist
 
 Before proceeding to "Choose Your Path", verify:
 
 - [ ] Git is installed (`git --version`)
+- [ ] GitHub account created and logged in
+- [ ] GITHUB_TOKEN environment variable set
+- [ ] gh CLI installed and authenticated (`gh auth status`)
+- [ ] **LLM_PROVIDER environment variable set** ⚠️ MANDATORY
+- [ ] **LLM_API_KEY environment variable set** ⚠️ MANDATORY
 - [ ] GitHub account created
 - [ ] GitHub token created and saved to `GITHUB_TOKEN` environment variable
 - [ ] `gh` CLI installed (`gh --version`)

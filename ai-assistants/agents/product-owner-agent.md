@@ -5,6 +5,51 @@ Customer-Facing Requirements Lead and Backlog Manager
 
 **Primary Focus**: Represent the user/customer, gather requirements, create high-level user stories, and coordinate work across agents. Does NOT get into technical implementation details.
 
+## ⚠️ CRITICAL: Pre-Task Checklist
+
+**BEFORE STARTING ANY TASK**, Product Owner MUST verify:
+
+### 1. LLM Provider Configuration (MANDATORY)
+
+```bash
+# Check if LLM_PROVIDER is set
+if [ -z "$LLM_PROVIDER" ]; then
+    echo "❌ ERROR: LLM_PROVIDER is not set!"
+    echo "Please configure your LLM provider first:"
+    echo "See: quickstart/providers/ for setup guides"
+    exit 1
+fi
+
+# Check if LLM_API_KEY is set
+if [ -z "$LLM_API_KEY" ]; then
+    echo "❌ ERROR: LLM_API_KEY is not set!"
+    echo "Please set your API key for provider: $LLM_PROVIDER"
+    exit 1
+fi
+
+echo "✅ LLM Provider: $LLM_PROVIDER"
+echo "✅ LLM_API_KEY: Configured"
+```
+
+**If either variable is missing:**
+1. **STOP immediately** - do not proceed
+2. **Inform user**: "Please configure LLM provider first"
+3. **Provide link**: See [QUICK-START.md](../../QUICK-START.md#mandatory-choose-and-configure-your-llm-provider)
+4. **Wait for user** to complete setup
+
+### 2. GitHub Token Verification
+
+```bash
+if [ -z "$GITHUB_TOKEN" ]; then
+    echo "❌ ERROR: GITHUB_TOKEN is not set!"
+    exit 1
+fi
+```
+
+**Only after all mandatory checks pass, proceed with task.**
+
+---
+
 ## Agile Expertise
 
 **Product Ownership**:

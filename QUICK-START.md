@@ -144,8 +144,13 @@ Pick ONE path based on which AI tool you want to use:
 | **Path D** | Aider + Gemini | Budget-conscious | Easy (CLI) | [Setup Guide](quickstart/tools/aider-gemini-setup.md) |
 | **Path E** | Aider + OpenAI | GPT-4 users | Easy (CLI) | [Setup Guide](quickstart/tools/aider-openai-setup.md) |
 | **Path F** | Continue + VS Code | VS Code users | Easy (Extension) | [Setup Guide](quickstart/tools/continue-setup.md) |
+| **Path G** | GitHub Copilot | Copilot subscribers | Easiest (GUI) | [Setup Guide](quickstart/tools/github-copilot-setup.md) |
 
-**Recommended**: Path A (Claude Code) for best software development experience.
+**Recommended**: 
+- **Path A** (Claude Code) for best software development experience
+- **Path G** (GitHub Copilot) if you already have a subscription
+
+**⚠️ Important for GitHub Copilot users**: While Copilot works in your IDE without LLM_PROVIDER setup, you still need to configure an LLM provider for automated peer reviews. See [Path G guide](quickstart/tools/github-copilot-setup.md) for details.
 
 **Click on your chosen setup guide above** for detailed installation and configuration instructions.
 

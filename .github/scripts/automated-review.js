@@ -397,6 +397,56 @@ async function callLLMForReview(agentType, prDetails, previousReview = null) {
   const review = message.content[0].text;
   */
 
+  /* Alternative: Use Google Gemini instead
+  // First install: npm install @google/generative-ai
+  // Add at top: const { GoogleGenerativeAI } = require('@google/generative-ai');
+  
+  const genAI = new GoogleGenerativeAI(process.env.LLM_API_KEY);
+  const model = genAI.getGenerativeModel({ model: 'gemini-pro' });
+
+  const prompt = constructReviewPrompt(agentType, prDetails, previousReview);
+
+  console.log(`\nCalling Gemini API as ${agentType}...`);
+
+  const result = await model.generateContent({
+    contents: [{ role: 'user', parts: [{ text: prompt }] }],
+    generationConfig: {
+      maxOutputTokens: 4096,
+      temperature: 0.2,
+    },
+  });
+
+  const review = result.response.text();
+  */
+
+  /* Alternative: Use Azure OpenAI instead
+  // Use OpenAI package with Azure configuration
+  const openai = new OpenAI({
+    apiKey: process.env.LLM_API_KEY,
+    baseURL: process.env.AZURE_OPENAI_ENDPOINT, // e.g., https://your-resource.openai.azure.com/openai/deployments/your-deployment
+    defaultQuery: { 'api-version': '2024-02-15-preview' },
+    defaultHeaders: { 'api-key': process.env.LLM_API_KEY },
+  });
+
+  const prompt = constructReviewPrompt(agentType, prDetails, previousReview);
+
+  console.log(`\nCalling Azure OpenAI API as ${agentType}...`);
+
+  const completion = await openai.chat.completions.create({
+    model: 'gpt-4', // Use your Azure deployment name
+    max_tokens: 4096,
+    temperature: 0.2,
+    messages: [
+      {
+        role: 'user',
+        content: prompt
+      }
+    ]
+  });
+
+  const review = completion.choices[0].message.content;
+  */
+
   console.log(`Review received (${review.length} chars)`);
 
   return review;

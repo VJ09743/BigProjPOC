@@ -11,21 +11,30 @@
 **BEFORE STARTING ANY TASK**, every agent MUST verify LLM provider is configured:
 
 ```bash
-# Check if LLM_PROVIDER is set
+# Check if LLM_PROVIDER is set (MANDATORY)
 if [ -z "$LLM_PROVIDER" ]; then
     echo "❌ ERROR: LLM_PROVIDER is not set!"
     echo "Please configure your LLM provider first."
-    echo "See: quickstart/providers/ for setup guides"
-    echo "Available providers: openai, anthropic, gemini, azure, cohere, mistral"
+    echo "See: quickstart/providers/ or quickstart/tools/ for setup guides"
+    echo "Available providers: openai, anthropic, gemini, azure, cohere, mistral, copilot"
     exit 1
 fi
 
-# Check if LLM_API_KEY is set
-if [ -z "$LLM_API_KEY" ]; then
-    echo "❌ ERROR: LLM_API_KEY is not set!"
-    echo "Please set your API key for provider: $LLM_PROVIDER"
-    echo "See: quickstart/providers/${LLM_PROVIDER}-setup.md"
-    exit 1
+echo "✅ LLM Provider: $LLM_PROVIDER"
+
+# Check if LLM_API_KEY is set (only needed for automated reviews with non-Copilot providers)
+if [ "$LLM_PROVIDER" != "copilot" ] && [ -z "$LLM_API_KEY" ]; then
+    echo "⚠️  WARNING: LLM_API_KEY is not set!"
+    echo "This is required for automated peer reviews."
+    echo "For IDE work, your AI tool authenticates separately."
+    echo "For automated reviews, see: quickstart/providers/${LLM_PROVIDER}-setup.md"
+    # Don't exit - allow IDE work to continue
+else
+    if [ "$LLM_PROVIDER" = "copilot" ]; then
+        echo "✅ Using GitHub Copilot provider (no API key needed)"
+    else
+        echo "✅ LLM_API_KEY: Configured"
+    fi
 fi
 
 # For Azure, also check endpoint
@@ -34,20 +43,24 @@ if [ "$LLM_PROVIDER" = "azure" ] && [ -z "$AZURE_OPENAI_ENDPOINT" ]; then
     echo "Azure OpenAI requires both LLM_API_KEY and AZURE_OPENAI_ENDPOINT"
     exit 1
 fi
-
-echo "✅ LLM Provider: $LLM_PROVIDER"
-echo "✅ LLM_API_KEY: Configured"
 ```
 
-**If verification fails:**
+**If LLM_PROVIDER is missing:**
 1. **STOP immediately** - do not proceed with task
-2. **Inform user**: "LLM provider not configured. Please complete setup first."
-3. **Provide link**: See [QUICK-START.md](QUICK-START.md#mandatory-choose-and-configure-your-llm-provider)
+2. **Inform user**: "LLM_PROVIDER not configured. Please complete setup first."
+3. **Provide link**: See [QUICK-START.md](QUICK-START.md#mandatory-choose-your-llm-provider)
 4. **Wait for user** to configure before continuing
 
+**If LLM_API_KEY is missing (and not using Copilot):**
+1. **WARN user**: "LLM_API_KEY not set. Automated peer reviews will not work."
+2. **Allow IDE work** to continue (AI tool authenticates separately)
+3. **Provide link**: See provider setup guide for automated review configuration
+
 **Required Environment Variables:**
-- `LLM_PROVIDER` - One of: openai, anthropic, gemini, azure, cohere, mistral
-- `LLM_API_KEY` - Generic API key for chosen provider (NOT provider-specific like ANTHROPIC_API_KEY)
+- `LLM_PROVIDER` - **MANDATORY** - One of: openai, anthropic, gemini, azure, cohere, mistral, copilot
+- `LLM_API_KEY` - **OPTIONAL** - Only needed for automated reviews with non-Copilot providers
+  - For IDE work: Your AI tool (Copilot, Claude Code, Cursor, etc.) authenticates separately
+  - For `LLM_PROVIDER=copilot`: Uses GitHub authentication automatically (no API key needed)
 - `AZURE_OPENAI_ENDPOINT` - Only required if LLM_PROVIDER=azure
 
 **This check applies to ALL agents**: Product Owner, Architect, Developer, Tester, IT Agent.

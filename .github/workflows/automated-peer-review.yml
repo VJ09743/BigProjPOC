@@ -164,7 +164,9 @@ jobs:
         id: run_reviews
         if: steps.reviewers.outputs.skip != 'true'
         env:
+          LLM_PROVIDER: ${{ secrets.LLM_PROVIDER || 'openai' }}
           LLM_API_KEY: ${{ secrets.LLM_API_KEY }}
+          AZURE_OPENAI_ENDPOINT: ${{ secrets.AZURE_OPENAI_ENDPOINT }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           # Parse reviewers list

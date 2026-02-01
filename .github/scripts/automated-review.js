@@ -14,13 +14,20 @@
  *     --pr-details-file <path>
  *
  * Environment variables:
- *   LLM_API_KEY - Required for LLM API (supports Anthropic, OpenAI, etc.)
+ *   LLM_PROVIDER - Provider name: openai, anthropic, gemini, azure, cohere, mistral (default: openai)
+ *   LLM_API_KEY - API key for your LLM provider
+ *   AZURE_OPENAI_ENDPOINT - Required for Azure OpenAI (e.g., https://your-resource.openai.azure.com)
  *   GITHUB_TOKEN - Required for GitHub API
+ *
+ * Supported LLM Providers:
+ *   - openai: OpenAI GPT-4o (default)
+ *   - anthropic/claude: Anthropic Claude Sonnet 4
+ *   - gemini: Google Gemini Pro
+ *   - azure/azure-openai: Azure OpenAI
+ *   - cohere: Cohere Command R Plus
+ *   - mistral: Mistral Large
  */
 
-const OpenAI = require('openai');
-const Anthropic = require('@anthropic-ai/sdk');
-// Note: Currently using OpenAI. To switch to Anthropic, modify callLLMForReview function below.
 const { Octokit } = require('octokit');
 const fs = require('fs');
 const path = require('path');
@@ -350,102 +357,34 @@ INLINE_COMMENT: path/to/file.ext:123
 
 // Call LLM API for review
 async function callLLMForReview(agentType, prDetails, previousReview = null) {
-  // Using OpenAI
-  const openai = new OpenAI({
-    apiKey: process.env.LLM_API_KEY
-  });
-
+  const provider = (process.env.LLM_PROVIDER || 'openai').toLowerCase();
   const prompt = constructReviewPrompt(agentType, prDetails, previousReview);
 
-  console.log(`\nCalling OpenAI API as ${agentType}...`);
+  console.log(`\nUsing LLM Provider: ${provider}`);
+  console.log(`Calling ${provider} API as ${agentType}...`);
 
-  const completion = await openai.chat.completions.create({
-    model: 'gpt-4o',
-    max_tokens: 4096,
-    temperature: 0.2, // Lower temperature for more consistent reviews
-    messages: [
-      {
-        role: 'user',
-        content: prompt
-      }
-    ]
-  });
+  // Map provider aliases
+  const providerMap = {
+    'claude': 'anthropic',
+    'azure-openai': 'azure'
+  };
+  const normalizedProvider = providerMap[provider] || provider;
 
-  const review = completion.choices[0].message.content;
+  // Dynamically load provider module
+  let providerModule;
+  try {
+    providerModule = require(`./providers/${normalizedProvider}.js`);
+  } catch (error) {
+    const supportedProviders = ['openai', 'anthropic', 'gemini', 'azure', 'cohere', 'mistral'];
+    throw new Error(
+      `Unsupported LLM provider: ${provider}\n` +
+      `Supported providers: ${supportedProviders.join(', ')}\n` +
+      `Error: ${error.message}`
+    );
+  }
 
-  /* Alternative: Use Anthropic/Claude instead
-  const anthropic = new Anthropic({
-    apiKey: process.env.LLM_API_KEY
-  });
-
-  const prompt = constructReviewPrompt(agentType, prDetails, previousReview);
-
-  console.log(`\nCalling Anthropic API as ${agentType}...`);
-
-  const message = await anthropic.messages.create({
-    model: 'claude-sonnet-4-20250514',
-    max_tokens: 4096,
-    temperature: 0.2,
-    messages: [
-      {
-        role: 'user',
-        content: prompt
-      }
-    ]
-  });
-
-  const review = message.content[0].text;
-  */
-
-  /* Alternative: Use Google Gemini instead
-  // First install: npm install @google/generative-ai
-  // Add at top: const { GoogleGenerativeAI } = require('@google/generative-ai');
-  
-  const genAI = new GoogleGenerativeAI(process.env.LLM_API_KEY);
-  const model = genAI.getGenerativeModel({ model: 'gemini-pro' });
-
-  const prompt = constructReviewPrompt(agentType, prDetails, previousReview);
-
-  console.log(`\nCalling Gemini API as ${agentType}...`);
-
-  const result = await model.generateContent({
-    contents: [{ role: 'user', parts: [{ text: prompt }] }],
-    generationConfig: {
-      maxOutputTokens: 4096,
-      temperature: 0.2,
-    },
-  });
-
-  const review = result.response.text();
-  */
-
-  /* Alternative: Use Azure OpenAI instead
-  // Use OpenAI package with Azure configuration
-  const openai = new OpenAI({
-    apiKey: process.env.LLM_API_KEY,
-    baseURL: process.env.AZURE_OPENAI_ENDPOINT, // e.g., https://your-resource.openai.azure.com/openai/deployments/your-deployment
-    defaultQuery: { 'api-version': '2024-02-15-preview' },
-    defaultHeaders: { 'api-key': process.env.LLM_API_KEY },
-  });
-
-  const prompt = constructReviewPrompt(agentType, prDetails, previousReview);
-
-  console.log(`\nCalling Azure OpenAI API as ${agentType}...`);
-
-  const completion = await openai.chat.completions.create({
-    model: 'gpt-4', // Use your Azure deployment name
-    max_tokens: 4096,
-    temperature: 0.2,
-    messages: [
-      {
-        role: 'user',
-        content: prompt
-      }
-    ]
-  });
-
-  const review = completion.choices[0].message.content;
-  */
+  // Call the provider's LLM function
+  const review = await providerModule.callLLM(prompt, agentType);
 
   console.log(`Review received (${review.length} chars)`);
 

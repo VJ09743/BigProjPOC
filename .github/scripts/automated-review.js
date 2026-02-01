@@ -60,6 +60,28 @@ function parseArgs() {
 
 // Agent review prompts and checklists
 const AGENT_PROMPTS = {
+  'product-owner': {
+    role: 'Product Owner Agent',
+    title: 'Customer-Facing Requirements Lead and Backlog Manager',
+    expertise: [
+      'Requirements gathering and user story creation',
+      'Acceptance criteria definition',
+      'Stakeholder communication',
+      'Project coordination and workflow management'
+    ],
+    checklist: [
+      'User stories are clear with well-defined acceptance criteria',
+      'Requirements align with project goals',
+      'Documentation is complete and user-facing',
+      'Deliverables match acceptance criteria',
+      'Work follows proper workflow sequence',
+      'All agent handoffs are properly documented',
+      'PR description is clear and complete',
+      'Changes meet business requirements'
+    ],
+    focus: 'requirements alignment, acceptance criteria, documentation completeness, workflow compliance'
+  },
+
   'team-leader': {
     role: 'Team Leader Agent',
     title: 'Senior Technical Leader',

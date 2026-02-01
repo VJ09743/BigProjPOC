@@ -25,11 +25,13 @@ For the **automated peer review workflow** to work, you **MUST** configure an LL
 
 ## Setup for Automated Reviews
 
+⚠️ **IMPORTANT**: GitHub Copilot Pro/Individual subscriptions ($10-20/month) do NOT provide API access for automated reviews.
+
 You have three options:
 
-### Option A: Use Copilot Provider (Simplest) ✨
+### Option A: Use Copilot ENTERPRISE (If You Have It) ✨
 
-**NEW**: For GitHub Copilot users, just set the provider to "copilot" and the script handles everything automatically!
+**Only available for GitHub Copilot Enterprise customers**
 
 ```bash
 # Mac/Linux
@@ -47,9 +49,7 @@ $env:LLM_PROVIDER = "copilot"
    - `LLM_PROVIDER` = `copilot`
    - `GITHUB_TOKEN` = (automatically available in GitHub Actions)
 
-**That's it!** The automated review script will use GitHub's API automatically through your repository's authentication.
-
-**Note**: This uses the repository's GitHub token to access GitHub's models API. No separate API key needed!
+**Note**: This only works with Copilot ENTERPRISE, not Pro/Individual subscriptions.
 
 ### Option B: Use Your Copilot Enterprise API (If Available)
 
@@ -70,7 +70,9 @@ source ~/.bashrc
 [Environment]::SetEnvironmentVariable("LLM_API_KEY", "your-copilot-api-token", "User")
 ```
 
-### Option C: Use a Separate LLM Provider
+### Option B: Use a Separate LLM Provider (RECOMMENDED for Copilot Pro users) ✅
+
+**This is the recommended approach for GitHub Copilot Pro/Individual subscription users.**
 
 Choose a separate provider for automated reviews:
 

@@ -40,7 +40,27 @@ echo "📦 Packaging backend..."
 cp -r modules/sudoku-webapp/backend/src "$RELEASE_DIR/backend/"
 cp -r modules/sudoku-webapp/backend/config "$RELEASE_DIR/backend/"
 cp modules/sudoku-webapp/backend/package.json "$RELEASE_DIR/backend/"
-cp modules/sudoku-webapp/backend/.env.example "$RELEASE_DIR/backend/" 2>/dev/null || true
+
+# Ensure .env.example exists, create if missing
+if [ -f "modules/sudoku-webapp/backend/.env.example" ]; then
+  cp modules/sudoku-webapp/backend/.env.example "$RELEASE_DIR/backend/"
+else
+  # Create default .env.example
+  cat > "$RELEASE_DIR/backend/.env.example" << 'ENVEOF'
+# Sudoku Webapp Backend Configuration
+
+# Server Configuration
+PORT=5000
+NODE_ENV=production
+
+# Database Configuration (Optional - uses in-memory storage by default)
+# Uncomment and configure if you want persistent storage with PostgreSQL
+# DATABASE_URL=postgresql://username:password@localhost:5432/sudoku_db
+
+# CORS Configuration
+# CORS_ORIGIN=http://localhost:3000
+ENVEOF
+fi
 
 # Copy database setup files
 echo "📦 Packaging database files..."
@@ -188,20 +208,81 @@ echo "🚀 Installing Sudoku Webapp..."
 echo "📦 Installing backend dependencies..."
 cd backend
 npm install --production
+
+# Create .env file from example
+if [ -f ".env.example" ]; then
+  if [ ! -f ".env" ]; then
+    echo "📝 Creating .env file from template..."
+    cp .env.example .env
+  else
+    echo "ℹ️  .env file already exists, skipping..."
+  fi
+fi
+
 cd ..
 
+echo ""
 echo "✅ Installation complete!"
 echo ""
-echo "Next steps:"
-echo "  1. cd backend && cp .env.example .env"
-echo "  2. Edit backend/.env with your configuration"
-echo "  3. cd backend && npm start"
-echo "  4. Serve frontend/ with any static file server"
+echo "To start the application, run:"
+echo "  ./run.sh"
 echo ""
-echo "Example: npx serve -s frontend -l 3000"
+echo "The application will be available at:"
+echo "  Frontend: http://localhost:3000"
+echo "  Backend:  http://localhost:5000"
 EOF
 
 chmod +x "$RELEASE_DIR/install.sh"
+
+# Create run script
+cat > "$RELEASE_DIR/run.sh" << 'EOF'
+#!/bin/bash
+
+echo "🚀 Starting Sudoku Webapp..."
+echo ""
+
+# Check if backend dependencies are installed
+if [ ! -d "backend/node_modules" ]; then
+  echo "❌ Backend dependencies not found. Please run ./install.sh first"
+  exit 1
+fi
+
+# Start backend
+echo "📡 Starting backend on http://localhost:5000..."
+cd backend
+npm start &
+BACKEND_PID=$!
+cd ..
+
+# Wait for backend to start
+echo "⏳ Waiting for backend to start..."
+sleep 3
+
+# Check if backend is running
+if ! kill -0 $BACKEND_PID 2>/dev/null; then
+  echo "❌ Backend failed to start"
+  exit 1
+fi
+
+echo "✅ Backend started (PID: $BACKEND_PID)"
+echo ""
+
+# Start frontend
+echo "🌐 Starting frontend on http://localhost:3000..."
+echo ""
+echo "Press Ctrl+C to stop both services"
+echo ""
+
+cd frontend
+npx serve -s . -l 3000
+
+# Cleanup on exit
+trap "echo ''; echo '🛑 Stopping services...'; kill $BACKEND_PID 2>/dev/null; exit" INT TERM
+
+wait
+EOF
+
+chmod +x "$RELEASE_DIR/run.sh"
 
 # Copy additional documentation
 echo "📄 Copying documentation..."

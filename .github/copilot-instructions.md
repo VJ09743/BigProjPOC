@@ -67,21 +67,19 @@ echo "LLM_API_KEY: $([ -n "$LLM_API_KEY" ] && echo 'Set ✅' || echo 'NOT SET �
 ```
 
 **If LLM_PROVIDER is missing:**
-1. **STOP immediately** - do not proceed with task
-2. **Error message**: "❌ LLM_PROVIDER not configured. Please complete setup first."
-3. **Direct user to**: [QUICK-START.md](../QUICK-START.md#mandatory-choose-your-llm-provider)
-4. **Wait for user** to configure before continuing
+**LLM Provider is ONLY needed for automated peer reviews:**
 
-**If LLM_API_KEY is missing (and not using Copilot):**
-1. **WARN user**: "⚠️ LLM_API_KEY not set. Automated peer reviews will not work."
-2. **Allow IDE work** to continue (GitHub Copilot authenticates separately)
-3. **Provide link**: See provider setup guide if automated reviews needed
+**For IDE work ONLY** (using GitHub Copilot):
+- ✅ **No LLM_PROVIDER needed** - GitHub Copilot authenticates via your GitHub account
+- ✅ **Start working immediately** - Skip provider configuration
 
-**Required Environment Variables:**
-- `LLM_PROVIDER` - **MANDATORY** - Must be one of: openai, anthropic, gemini, azure, cohere, mistral, copilot
-- `LLM_API_KEY` - **OPTIONAL** - Only needed for automated reviews with non-Copilot providers
-  - For IDE work: GitHub Copilot authenticates via GitHub account
-  - For `LLM_PROVIDER=copilot`: Uses GitHub authentication (no API key needed)
+**For automated peer reviews:**
+- ⚠️ **LLM_PROVIDER is REQUIRED** - See [QUICK-START.md](../QUICK-START.md#llm-provider-only-for-automated-reviews)
+- ⚠️ **LLM_API_KEY is REQUIRED** - Except for `LLM_PROVIDER=copilot` (uses GitHub authentication)
+
+**Environment Variables (Only for Automated Reviews):**
+- `LLM_PROVIDER` - One of: openai, anthropic, gemini, azure, cohere, mistral, copilot
+- `LLM_API_KEY` - Required except for copilot (uses GitHub authentication)
 - `AZURE_OPENAI_ENDPOINT` - Only required if LLM_PROVIDER=azure
 
 ### Step 1: ALWAYS Start as Product Owner
@@ -92,16 +90,14 @@ For ANY new user request, you MUST first act as **Product Owner**:
 User: "Build me a login page"
 
 You (as Product Owner):
-"First, let me verify LLM provider configuration...
-✅ LLM Provider: copilot
-✅ Configuration: GitHub authentication
-
-Now I'll help you build a login page. Let me clarify the requirements:
+"I'll help you build a login page. Let me clarify the requirements:
 1. What authentication method? (email/password, OAuth, etc.)
 2. Should there be a 'forgot password' feature?
 3. Any specific design requirements?
 
-[After gathering requirements, create user story]"
+[After gathering requirements, create user story]
+
+Note: LLM provider check is only needed if you want automated reviews later."
 ```
 
 ### Step 2: Task-Based Branching (MANDATORY)

@@ -3,8 +3,8 @@
 /**
  * Automated Peer Review Script
  *
- * This script uses Claude API to review pull requests as different agent roles
- * (Team Leader, Architect, Tester, Developer).
+ * This script uses LLM API to review pull requests as different agent roles
+ * (Product Owner, Architect, Tester, Developer, IT).
  *
  * Usage:
  *   node automated-review.js \
@@ -20,7 +20,7 @@
 
 const OpenAI = require('openai');
 const Anthropic = require('@anthropic-ai/sdk');
-// Note: Currently using OpenAI. To switch to Anthropic, modify callClaudeForReview function below.
+// Note: Currently using OpenAI. To switch to Anthropic, modify callLLMForReview function below.
 const { Octokit } = require('octokit');
 const fs = require('fs');
 const path = require('path');
@@ -66,7 +66,7 @@ const AGENT_PROMPTS = {
       'Code follows project standards and conventions (naming, formatting, structure)',
       'Design patterns are correctly applied (Strategy, Singleton, Command, Observer)',
       'SOLID principles are followed (Single Responsibility, Open/Closed, etc.)',
-      'Documentation is complete and up-to-date (CLAUDE.md, inline comments, README)',
+      'Documentation is complete and up-to-date (AI-WORKFLOW.md, inline comments, README)',
       'Commit messages are clear and descriptive',
       'PR description explains what, why, and how',
       'Overall quality meets project requirements',
@@ -189,7 +189,7 @@ async function getPreviousReview(octokit, repo, prNumber, agentType) {
   }
 }
 
-// Construct review prompt for Claude
+// Construct review prompt for LLM
 function constructReviewPrompt(agentType, prDetails, previousReview = null) {
   const agent = AGENT_PROMPTS[agentType];
   const agentContext = loadAgentContext(agentType);
@@ -349,7 +349,7 @@ INLINE_COMMENT: path/to/file.ext:123
 }
 
 // Call LLM API for review
-async function callClaudeForReview(agentType, prDetails, previousReview = null) {
+async function callLLMForReview(agentType, prDetails, previousReview = null) {
   // Using OpenAI
   const openai = new OpenAI({
     apiKey: process.env.LLM_API_KEY
@@ -660,8 +660,8 @@ async function main() {
     console.log('✨ First-time review for this agent');
   }
 
-  // Call Claude API for review
-  const reviewText = await callClaudeForReview(agentType, prDetails, previousReview);
+  // Call LLM API for review
+  const reviewText = await callLLMForReview(agentType, prDetails, previousReview);
 
   // Parse decision
   const decision = parseReviewDecision(reviewText);

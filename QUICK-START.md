@@ -73,11 +73,13 @@ gh auth status
 
 ---
 
-## ⚠️ MANDATORY: Choose and Configure Your LLM Provider
+## ⚠️ MANDATORY: Choose Your LLM Provider
 
-**BEFORE ANY TASK**, you MUST configure an LLM provider. The system will error out if not set.
+**BEFORE ANY TASK**, you MUST set `LLM_PROVIDER`. The system will error out if not set.
 
-> **Exception for GitHub Copilot users**: If you're using GitHub Copilot (Path G), you can set `LLM_PROVIDER=copilot` for automated reviews - no separate API key needed! See [Path G setup guide](quickstart/tools/github-copilot-setup.md) for details.
+> **Note on LLM_API_KEY**: This is ONLY required for automated peer reviews with non-Copilot providers. For IDE work, your AI tool (Copilot, Claude Code, Cursor, etc.) authenticates separately.
+
+> **GitHub Copilot users**: Set `LLM_PROVIDER=copilot` - no API key needed! See [Path G setup guide](quickstart/tools/github-copilot-setup.md) for details.
 
 ### Step 1: Choose Your LLM Provider
 
@@ -106,15 +108,23 @@ Click on your chosen provider's setup guide above. Each guide includes:
 After setup, verify your provider is configured:
 
 ```bash
-# Check environment variables
+# Check environment variable (MANDATORY)
 echo "LLM_PROVIDER: $LLM_PROVIDER"
+
+# Check API key (only needed for automated reviews with non-Copilot providers)
 echo "LLM_API_KEY is set: $([ -n "$LLM_API_KEY" ] && echo 'Yes ✅' || echo 'No ❌')"
 
 # For Azure users, also check:
 echo "AZURE_OPENAI_ENDPOINT: $AZURE_OPENAI_ENDPOINT"
 ```
 
-**Both variables MUST show as set before proceeding!**
+**LLM_PROVIDER must be set!**
+
+**Note**: `LLM_API_KEY` is only required if:
+- You want to use automated peer reviews, AND
+- You're NOT using `LLM_PROVIDER=copilot`
+
+For IDE work (Copilot, Claude Code, Cursor, etc.), the AI tool authenticates separately - no `LLM_API_KEY` needed!
 
 ---
 
@@ -127,11 +137,7 @@ Before proceeding to "Choose Your Path", verify:
 - [ ] GITHUB_TOKEN environment variable set
 - [ ] gh CLI installed and authenticated (`gh auth status`)
 - [ ] **LLM_PROVIDER environment variable set** ⚠️ MANDATORY
-- [ ] **LLM_API_KEY environment variable set** ⚠️ MANDATORY
-- [ ] GitHub account created
-- [ ] GitHub token created and saved to `GITHUB_TOKEN` environment variable
-- [ ] `gh` CLI installed (`gh --version`)
-- [ ] `gh auth status` shows you're authenticated
+- [ ] **LLM_API_KEY environment variable set** (only for automated reviews with non-Copilot providers)
 
 **If all checkboxes pass**, you're ready to proceed! 🚀
 

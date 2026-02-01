@@ -93,7 +93,7 @@ gh auth status
 | **Cohere** | Efficiency, production | $ | [Cohere Setup](quickstart/providers/cohere-setup.md) |
 | **Mistral** | Open-source, privacy | $ | [Mistral Setup](quickstart/providers/mistral-setup.md) |
 
-*GitHub Copilot API access may require Enterprise plan. For automated reviews, simply set `LLM_PROVIDER=copilot` and the script will handle authentication automatically.
+*GitHub Copilot Pro/Individual subscriptions provide IDE access only. For automated reviews, you need Copilot ENTERPRISE or use a separate provider (Gemini, OpenAI, etc.). Set `LLM_PROVIDER=copilot` only if you have Enterprise access.
 
 ### Step 2: Follow Your Provider's Setup Guide
 

@@ -77,6 +77,8 @@ gh auth status
 
 **BEFORE ANY TASK**, you MUST configure an LLM provider. The system will error out if not set.
 
+> **Exception for GitHub Copilot users**: If you're using GitHub Copilot (Path G), LLM provider setup is **only required for automated PR reviews**. Your IDE work doesn't need it. See [Path G setup guide](quickstart/tools/github-copilot-setup.md) for details.
+
 ### Step 1: Choose Your LLM Provider
 
 | Provider | Best For | Cost | Setup Guide |

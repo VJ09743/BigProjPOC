@@ -119,6 +119,7 @@ When a new project starts or technology stack is chosen by Architect, IT Agent M
 - Maintain versioning strategy for releases
 - Create versioned release folders in `release/` directory
 - Package and publish releases of implemented features
+- Always include a `run.sh` script in release artifacts so users can start the app automatically
 - Create release notes and changelogs
 - Tag releases in git with proper semantic versioning
 - Maintain release documentation in `project-management/operations/releases/`

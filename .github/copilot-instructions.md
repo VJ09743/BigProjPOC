@@ -368,7 +368,17 @@ function handleLogin(req, res) {
 
 **CRITICAL**: Every agent MUST create a PR before handing off to the next agent.
 
-### How to Create PR
+Every agent MUST create a GitHub PR before handing off to the next agent. If there is no PR, the work is not complete.
+
+### Note on Branch Naming (LLM-Agnostic)
+
+The examples below use `{llm-agent}` as a placeholder. Replace this with your actual LLM agent name:
+- GitHub Copilot: Use `copilot` → `copilot/architect-sudoku-webapp-123456`
+- Claude Code: Use `claude` → `claude/architect-sudoku-webapp-123456`
+- Gemini: Use `gemini` → `gemini/architect-sudoku-webapp-123456`
+- Other LLMs: Use appropriate identifier
+
+### Step-by-Step PR Creation
 
 ```bash
 # 1. Commit your work

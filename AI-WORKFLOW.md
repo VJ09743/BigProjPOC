@@ -374,7 +374,7 @@ git push -u origin master_{task_name}
 | Branch Type | Pattern | Example |
 |-------------|---------|---------|
 | Task Master | `master_{task_name}` | `master_joke-website` |
-| Agent Branch | `claude/{agent}-{task_name}-{sessionID}` | `claude/developer-joke-website-abc123` |
+| Agent Branch | `{llm-agent}/{agent}-{task_name}-{sessionID}` | `copilot/developer-joke-website-abc123` |
 
 ### Git Worktree Workflow
 
@@ -388,8 +388,8 @@ git push -u origin master_{task_name}
 
 # Then creates worktrees for agents (branching from task master)
 git checkout master_{task_name}
-git worktree add ../worktree-architect claude/architect-{task_name}-{sessionID}
-git worktree add ../worktree-developer claude/developer-{task_name}-{sessionID}
+git worktree add ../worktree-architect {llm-agent}/architect-{task_name}-{sessionID}
+git worktree add ../worktree-developer {llm-agent}/developer-{task_name}-{sessionID}
 
 # Each agent works independently in their worktree
 # When done, create PR to master_{task_name} (the task's main branch)
@@ -509,7 +509,7 @@ pending → in-progress → completed → archived
 ### Git Workflow
 - **Base branch**: `template/agentic-workflow`
 - **Task branch**: `master_{task_name}` (created per task, see [Task-Based Branching Strategy](#task-based-branching-strategy))
-- **Agent branches**: `claude/{agent}-{task_name}-{sessionID}` (created per agent from task branch)
+- **Agent branches**: `{llm-agent}/{agent}-{task_name}-{sessionID}` (created per agent from task branch)
 - Always test before committing
 
 ### Testing Strategy
@@ -604,12 +604,12 @@ Modify `.github/workflows/` for your CI/CD needs.
 
 ## Using with Different AI Tools
 
-### Claude Code
+### Claude Code (Example Tool)
 ```bash
 npm install -g @anthropic-ai/claude-code
 export ANTHROPIC_API_KEY="your-key"
 cd your-project
-claude
+claude  # or use your preferred AI tool
 ```
 
 ### Aider

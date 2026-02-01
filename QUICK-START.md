@@ -339,10 +339,11 @@ This workflow automatically reviews your PRs using AI agents.
 
 ### Step 1: Choose Your LLM Provider
 
-The automated review supports 6 LLM providers:
+The automated review supports 7 LLM providers:
 
 | Provider | Best For | Cost | Setup |
 |----------|----------|------|-------|
+| GitHub Copilot | Copilot subscribers | FREE* | Set LLM_PROVIDER=copilot (no API key!) |
 | OpenAI | Most popular, GPT-4o | $$ | https://platform.openai.com/ |
 | Anthropic | Best code reviews, Claude | $$$ | https://console.anthropic.com/ |
 | Gemini | Google's model | $ | https://makersuite.google.com/ |
@@ -350,45 +351,74 @@ The automated review supports 6 LLM providers:
 | Cohere | Fast responses | $ | https://dashboard.cohere.com/ |
 | Mistral | Open-source option | $ | https://console.mistral.ai/ |
 
-### Step 2: Configure GitHub Secrets
+*Uses repository's GitHub authentication automatically
 
-Go to your repository → Settings → Secrets and variables → Actions
+### Step 2: Configure GitHub Repository Secrets
 
-**For OpenAI (default):**
+Go to your repository → **Settings** → **Secrets and variables** → **Actions** → **Repository secrets** tab → Click **"New repository secret"**
+
+**For GitHub Copilot (Recommended - FREE):**
 ```
-LLM_PROVIDER = openai
-LLM_API_KEY = your-openai-api-key
+Name: LLM_PROVIDER
+Secret: copilot
+```
+That's it! No API key needed - uses repository authentication automatically.
+
+**For OpenAI:**
+```
+Name: LLM_PROVIDER
+Secret: openai
+
+Name: LLM_API_KEY
+Secret: your-openai-api-key
 ```
 
 **For Anthropic (Claude):**
 ```
-LLM_PROVIDER = anthropic
-LLM_API_KEY = your-anthropic-api-key
+Name: LLM_PROVIDER
+Secret: anthropic
+
+Name: LLM_API_KEY
+Secret: your-anthropic-api-key
 ```
 
 **For Gemini:**
 ```
-LLM_PROVIDER = gemini
-LLM_API_KEY = your-google-api-key
+Name: LLM_PROVIDER
+Secret: gemini
+
+Name: LLM_API_KEY
+Secret: your-google-api-key
 ```
 
 **For Azure OpenAI:**
 ```
-LLM_PROVIDER = azure
-LLM_API_KEY = your-azure-api-key
-AZURE_OPENAI_ENDPOINT = https://your-resource.openai.azure.com/
+Name: LLM_PROVIDER
+Secret: azure
+
+Name: LLM_API_KEY
+Secret: your-azure-api-key
+
+Name: AZURE_OPENAI_ENDPOINT
+Secret: https://your-resource.openai.azure.com/
 ```
 
 **For Cohere:**
 ```
-LLM_PROVIDER = cohere
-LLM_API_KEY = your-cohere-api-key
+Name: LLM_PROVIDER
+Secret: cohere
+
+Name: LLM_API_KEY
+Secret: your-cohere-api-key
 ```
 
 **For Mistral:**
 ```
-LLM_PROVIDER = mistral
-LLM_API_KEY = your-mistral-api-key
+Name: LLM_PROVIDER
+Secret: mistral
+
+Name: LLM_API_KEY
+Secret: your-mistral-api-key
 ```
 
 ### Step 3: Run Automated Review

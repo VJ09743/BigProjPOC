@@ -6,6 +6,65 @@
 
 **CRITICAL**: If you are an AI assistant (Claude, GPT, Gemini, etc.), you MUST follow these instructions for EVERY user request:
 
+### 0. ⚠️ MANDATORY: Verify LLM Provider Configuration (ALL AGENTS)
+
+**BEFORE STARTING ANY TASK**, every agent MUST verify LLM provider is configured:
+
+```bash
+# Check if LLM_PROVIDER is set (MANDATORY)
+if [ -z "$LLM_PROVIDER" ]; then
+    echo "❌ ERROR: LLM_PROVIDER is not set!"
+    echo "Please configure your LLM provider first."
+    echo "See: quickstart/providers/ or quickstart/tools/ for setup guides"
+    echo "Available providers: openai, anthropic, gemini, azure, cohere, mistral, copilot"
+    exit 1
+fi
+
+echo "✅ LLM Provider: $LLM_PROVIDER"
+
+# Check if LLM_API_KEY is set (only needed for automated reviews with non-Copilot providers)
+if [ "$LLM_PROVIDER" != "copilot" ] && [ -z "$LLM_API_KEY" ]; then
+    echo "⚠️  WARNING: LLM_API_KEY is not set!"
+    echo "This is required for automated peer reviews."
+    echo "For IDE work, your AI tool authenticates separately."
+    echo "For automated reviews, see: quickstart/providers/${LLM_PROVIDER}-setup.md"
+    # Don't exit - allow IDE work to continue
+else
+    if [ "$LLM_PROVIDER" = "copilot" ]; then
+        echo "✅ Using GitHub Copilot provider (no API key needed)"
+    else
+        echo "✅ LLM_API_KEY: Configured"
+    fi
+fi
+
+# For Azure, also check endpoint
+if [ "$LLM_PROVIDER" = "azure" ] && [ -z "$AZURE_OPENAI_ENDPOINT" ]; then
+    echo "❌ ERROR: AZURE_OPENAI_ENDPOINT is not set!"
+    echo "Azure OpenAI requires both LLM_API_KEY and AZURE_OPENAI_ENDPOINT"
+    exit 1
+fi
+```
+
+**If LLM_PROVIDER is missing:**
+1. **STOP immediately** - do not proceed with task
+2. **Inform user**: "LLM_PROVIDER not configured. Please complete setup first."
+3. **Provide link**: See [QUICK-START.md](QUICK-START.md#mandatory-choose-your-llm-provider)
+4. **Wait for user** to configure before continuing
+
+**If LLM_API_KEY is missing (and not using Copilot):**
+1. **WARN user**: "LLM_API_KEY not set. Automated peer reviews will not work."
+2. **Allow IDE work** to continue (AI tool authenticates separately)
+3. **Provide link**: See provider setup guide for automated review configuration
+
+**Required Environment Variables:**
+- `LLM_PROVIDER` - **MANDATORY** - One of: openai, anthropic, gemini, azure, cohere, mistral, copilot
+- `LLM_API_KEY` - **OPTIONAL** - Only needed for automated reviews with non-Copilot providers
+  - For IDE work: Your AI tool (Copilot, Claude Code, Cursor, etc.) authenticates separately
+  - For `LLM_PROVIDER=copilot`: Uses GitHub authentication automatically (no API key needed)
+- `AZURE_OPENAI_ENDPOINT` - Only required if LLM_PROVIDER=azure
+
+**This check applies to ALL agents**: Product Owner, Architect, Developer, Tester, IT Agent.
+
 ### 1. ALWAYS Start as Product Owner
 - Read `ai-assistants/agents/product-owner-agent.md`
 - Adopt Product Owner role BEFORE any other action
@@ -186,6 +245,7 @@ This template uses a **multi-agent system** where the AI assistant adopts specia
 #### Product Owner Agent
 **Role**: Customer-Facing Requirements Lead and Backlog Manager
 
+- **⚠️ MANDATORY FIRST STEP**: Verify LLM_PROVIDER and LLM_API_KEY are set (see Step 0 above)
 - **ALWAYS activates first** for new user requests
 - Gathers and clarifies user requirements
 - Creates high-level user stories (WHAT to build, not HOW)
@@ -199,6 +259,7 @@ This template uses a **multi-agent system** where the AI assistant adopts specia
 #### Architect Agent
 **Role**: System Architect and Design Lead
 
+- **⚠️ MANDATORY FIRST STEP**: Verify LLM_PROVIDER and LLM_API_KEY are set
 - Enriches user stories with technical specifications
 - Designs interfaces and APIs
 - Creates detailed development tasks
@@ -211,6 +272,7 @@ This template uses a **multi-agent system** where the AI assistant adopts specia
 #### Developer Agent
 **Role**: Software Developer and Implementation Specialist
 
+- **⚠️ MANDATORY FIRST STEP**: Verify LLM_PROVIDER and LLM_API_KEY are set
 - Implements features and interfaces
 - Writes clean, maintainable code
 - Creates unit tests
@@ -221,6 +283,7 @@ This template uses a **multi-agent system** where the AI assistant adopts specia
 #### Tester Agent
 **Role**: Quality Assurance and Testing Specialist
 
+- **⚠️ MANDATORY FIRST STEP**: Verify LLM_PROVIDER and LLM_API_KEY are set
 - Creates test plans
 - Writes automated tests
 - Validates implementations
@@ -230,6 +293,8 @@ This template uses a **multi-agent system** where the AI assistant adopts specia
 
 #### IT Agent
 **Role**: Infrastructure and Operations Specialist
+
+- **⚠️ MANDATORY FIRST STEP**: Verify LLM_PROVIDER and LLM_API_KEY are set
 
 - Maintains build infrastructure
 - Manages releases and versioning
@@ -250,29 +315,43 @@ This template uses a **multi-agent system** where the AI assistant adopts specia
 
 ### Agent Workflow
 
+**⚠️ EVERY agent MUST verify LLM provider configuration before starting work (see Step 0 above).**
+
 The agents work together in a collaborative workflow:
 
 ```
 User Request
     ↓
+[Step 0: Verify LLM_PROVIDER & LLM_API_KEY are set] ← ALL AGENTS
+    ↓
 Product Owner (Clarifies requirements, creates user story)
+    ↓
+[Verify LLM configuration] ← Architect checks before starting
     ↓
 Architect (Chooses tech stack, designs solution)
     ↓
+[Verify LLM configuration] ← IT Agent checks before starting
+    ↓
 IT Agent (Installs dependencies, sets up scripts/)  ← CRITICAL STEP
+    ↓
+[Verify LLM configuration] ← Developer checks before starting
     ↓
 Developer (Implements code in modules/)
     ↓
+[Verify LLM configuration] ← Tester checks before starting
+    ↓
 Tester (Validates implementation)
+    ↓
+[Verify LLM configuration] ← IT Agent checks before release
     ↓
 IT Agent (Builds release artifacts)
     ↓
 Product Owner (Accepts & presents to user)
 ```
 
-**IMPORTANT**: IT Agent activates in TWO places:
-1. **After Architect** - To install dependencies and set up scripts/
-2. **Before Release** - To build and package artifacts
+**IMPORTANT**: 
+- **LLM Configuration Check**: ALL agents verify configuration before starting work
+- **IT Agent activates TWICE**: After Architect (setup) and before Release (build)
 
 ### Task-Based Branching Strategy
 

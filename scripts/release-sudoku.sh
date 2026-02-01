@@ -475,7 +475,7 @@ echo "Starting application from latest release..."
 echo "=========================================="
 
 if [ -x "$RELEASE_INSTALL" ]; then
-  "$RELEASE_INSTALL"
+  (cd "$RELEASE_DIR" && "$RELEASE_INSTALL")
 fi
 
 if [ -x "$RELEASE_RUN" ]; then

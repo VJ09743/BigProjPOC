@@ -59,20 +59,29 @@ You (GitHub Copilot) must adopt different **personas/roles** called "agents" dep
 **⚠️ CRITICAL: Before starting ANY task, verify LLM provider is configured:**
 
 ```bash
-# Product Owner MUST check these environment variables
+# Product Owner MUST check this environment variable
 echo "LLM_PROVIDER: $LLM_PROVIDER"
+
+# Optional: Only needed for automated reviews with non-Copilot providers
 echo "LLM_API_KEY: $([ -n "$LLM_API_KEY" ] && echo 'Set ✅' || echo 'NOT SET ❌')"
 ```
 
-**If EITHER variable is missing:**
+**If LLM_PROVIDER is missing:**
 1. **STOP immediately** - do not proceed with task
-2. **Error message**: "❌ LLM provider not configured. Please complete setup first."
-3. **Direct user to**: [QUICK-START.md](../QUICK-START.md#mandatory-choose-and-configure-your-llm-provider)
+2. **Error message**: "❌ LLM_PROVIDER not configured. Please complete setup first."
+3. **Direct user to**: [QUICK-START.md](../QUICK-START.md#mandatory-choose-your-llm-provider)
 4. **Wait for user** to configure before continuing
 
+**If LLM_API_KEY is missing (and not using Copilot):**
+1. **WARN user**: "⚠️ LLM_API_KEY not set. Automated peer reviews will not work."
+2. **Allow IDE work** to continue (GitHub Copilot authenticates separately)
+3. **Provide link**: See provider setup guide if automated reviews needed
+
 **Required Environment Variables:**
-- `LLM_PROVIDER` - Must be one of: openai, anthropic, gemini, azure, cohere, mistral
-- `LLM_API_KEY` - Generic API key for chosen provider (NOT provider-specific like ANTHROPIC_API_KEY)
+- `LLM_PROVIDER` - **MANDATORY** - Must be one of: openai, anthropic, gemini, azure, cohere, mistral, copilot
+- `LLM_API_KEY` - **OPTIONAL** - Only needed for automated reviews with non-Copilot providers
+  - For IDE work: GitHub Copilot authenticates via GitHub account
+  - For `LLM_PROVIDER=copilot`: Uses GitHub authentication (no API key needed)
 - `AZURE_OPENAI_ENDPOINT` - Only required if LLM_PROVIDER=azure
 
 ### Step 1: ALWAYS Start as Product Owner
@@ -84,8 +93,8 @@ User: "Build me a login page"
 
 You (as Product Owner):
 "First, let me verify LLM provider configuration...
-✅ LLM Provider: openai
-✅ API Key: Configured
+✅ LLM Provider: copilot
+✅ Configuration: GitHub authentication
 
 Now I'll help you build a login page. Let me clarify the requirements:
 1. What authentication method? (email/password, OAuth, etc.)

@@ -17,11 +17,11 @@ echo "Starting application from latest release..."
 echo "=========================================="
 
 if [ -x "$RELEASE_INSTALL" ]; then
-	"$RELEASE_INSTALL"
+  (cd "$RELEASE_DIR" && "$RELEASE_INSTALL")
 fi
 
 if [ -x "$RELEASE_RUN" ]; then
-	exec "$RELEASE_RUN"
+  exec "$RELEASE_RUN"
 fi
 
 echo "ERROR: Latest release run script not found."

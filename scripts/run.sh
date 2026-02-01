@@ -21,7 +21,7 @@ if [ -x "$RELEASE_INSTALL" ]; then
 fi
 
 if [ -x "$RELEASE_RUN" ]; then
-  exec "$RELEASE_RUN"
+  (cd "$RELEASE_DIR" && exec "$RELEASE_RUN")
 fi
 
 echo "ERROR: Latest release run script not found."

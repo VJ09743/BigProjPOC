@@ -609,11 +609,88 @@ The **Cost Analyst** agent will warn you before expensive operations.
 
 ---
 
-## You're Ready!
+## Automated Peer Review Setup
 
-Remember:
-- **Be specific** about what you want
-- **Review changes** before accepting
-- **Ask questions** if something is unclear
+This workflow automatically reviews your PRs using AI agents.
 
-Happy building!
+### Step 1: Choose Your LLM Provider
+
+The automated review supports 6 LLM providers:
+
+| Provider | Best For | Cost | Setup |
+|----------|----------|------|-------|
+| OpenAI | Most popular, GPT-4o | $$ | https://platform.openai.com/ |
+| Anthropic | Best code reviews, Claude | $$$ | https://console.anthropic.com/ |
+| Gemini | Google's model | $ | https://makersuite.google.com/ |
+| Azure OpenAI | Enterprise users | $$$ | https://portal.azure.com/ |
+| Cohere | Fast responses | $ | https://dashboard.cohere.com/ |
+| Mistral | Open-source option | $ | https://console.mistral.ai/ |
+
+### Step 2: Configure GitHub Secrets
+
+Go to your repository → Settings → Secrets and variables → Actions
+
+**For OpenAI (default):**
+```
+LLM_PROVIDER = openai
+LLM_API_KEY = your-openai-api-key
+```
+
+**For Anthropic (Claude):**
+```
+LLM_PROVIDER = anthropic
+LLM_API_KEY = your-anthropic-api-key
+```
+
+**For Gemini:**
+```
+LLM_PROVIDER = gemini
+LLM_API_KEY = your-google-api-key
+```
+
+**For Azure OpenAI:**
+```
+LLM_PROVIDER = azure
+LLM_API_KEY = your-azure-api-key
+AZURE_OPENAI_ENDPOINT = https://your-resource.openai.azure.com/
+```
+
+**For Cohere:**
+```
+LLM_PROVIDER = cohere
+LLM_API_KEY = your-cohere-api-key
+```
+
+**For Mistral:**
+```
+LLM_PROVIDER = mistral
+LLM_API_KEY = your-mistral-api-key
+```
+
+### Step 3: Run Automated Review
+
+1. Create a PR following the branch naming pattern:
+   - `{llm-name}/{agent-type}-{project}-{sessionID}`
+   - Example: `copilot/developer-sudoku-webapp-123456`
+
+2. Go to **Actions** tab → **Automated Multi-Agent Peer Review**
+
+3. Click **Run workflow** → Enter PR number
+
+4. Wait for sequential agent reviews (Architect, Tester)
+
+5. Reviews posted as PR comments with inline suggestions
+
+### Switching Providers
+
+Just update the `LLM_PROVIDER` secret in GitHub - no code changes needed!
+
+```bash
+# Example: Switch from OpenAI to Claude
+# In GitHub: Settings → Secrets → Actions
+# Edit LLM_PROVIDER: change "openai" to "anthropic"
+# Edit LLM_API_KEY: change to your Anthropic key
+```
+
+---
+

@@ -372,6 +372,112 @@ cd output/release
 tar -czf "sudoku-webapp-${RELEASE_VERSION}.tar.gz" "sudoku-webapp-${RELEASE_VERSION}"
 cd ../..
 
+# Create/update top-level helper scripts in output/release
+cat > output/release/install.sh << 'EOF'
+#!/bin/bash
+
+echo "🚀 Installing Sudoku Webapp..."
+echo ""
+
+# Find latest release archive
+LATEST_TGZ=$(ls -1 sudoku-webapp-*.tar.gz 2>/dev/null | sort -V | tail -n 1)
+if [ -z "$LATEST_TGZ" ]; then
+  echo "❌ Error: No release archive found (sudoku-webapp-*.tar.gz)"
+  exit 1
+fi
+
+RELEASE_DIR="${LATEST_TGZ%.tar.gz}"
+
+# Check if directory exists, if not extract from tar.gz
+if [ ! -d "$RELEASE_DIR" ]; then
+  echo "📦 Extracting release package: $LATEST_TGZ"
+  tar -xzf "$LATEST_TGZ"
+fi
+
+cd "$RELEASE_DIR"
+
+# Install backend dependencies
+echo "📦 Installing backend dependencies..."
+cd backend
+npm install --production
+
+# Create .env file from example
+if [ -f ".env.example" ]; then
+  if [ ! -f ".env" ]; then
+    echo "📝 Creating .env file from template..."
+    cp .env.example .env
+  else
+    echo "ℹ️  .env file already exists, skipping..."
+  fi
+fi
+
+cd ../..
+
+echo ""
+echo "✅ Installation complete!"
+echo ""
+echo "To start the application, run:"
+echo "  ./run.sh"
+EOF
+
+cat > output/release/run.sh << 'EOF'
+#!/bin/bash
+
+echo "🚀 Starting Sudoku Webapp..."
+echo ""
+
+# Find latest release directory
+LATEST_DIR=$(ls -1d sudoku-webapp-*/ 2>/dev/null | sort -V | tail -n 1)
+if [ -z "$LATEST_DIR" ]; then
+  echo "❌ Error: No release directory found (sudoku-webapp-*/)."
+  echo "Please run ./install.sh first"
+  exit 1
+fi
+
+RELEASE_DIR=${LATEST_DIR%/}
+
+cd "$RELEASE_DIR"
+
+# Delegate to release-specific run script
+if [ ! -x "./run.sh" ]; then
+  echo "❌ Error: ./run.sh not found in $RELEASE_DIR"
+  exit 1
+fi
+
+exec ./run.sh
+EOF
+
+chmod +x output/release/install.sh output/release/run.sh
+
+# Create/update repo-level scripts/run.sh to always run latest release
+cat > scripts/run.sh << 'EOF'
+#!/bin/bash
+# =============================================================================
+# Run Script
+# =============================================================================
+# Always run the latest release artifact if present.
+# =============================================================================
+
+set -e
+
+ROOT_DIR=$(cd "$(dirname "$0")/.." && pwd)
+RELEASE_RUN="$ROOT_DIR/output/release/run.sh"
+
+echo "=========================================="
+echo "Starting application from latest release..."
+echo "=========================================="
+
+if [ -x "$RELEASE_RUN" ]; then
+  exec "$RELEASE_RUN"
+fi
+
+echo "ERROR: Latest release run script not found."
+echo "Please build a release first (e.g., ./scripts/release-sudoku.sh <version>)."
+exit 1
+EOF
+
+chmod +x scripts/run.sh
+
 echo ""
 echo "✅ Release package created successfully!"
 echo ""

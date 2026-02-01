@@ -380,8 +380,7 @@ echo "🚀 Installing Sudoku Webapp..."
 echo ""
 
 # Determine script directory to locate release artifacts
-ROOT_DIR=$(cd "$(dirname "$0")/.." && pwd)
-RELEASE_ROOT="$ROOT_DIR/output/release"
+RELEASE_ROOT=$(cd "$(dirname "$0")" && pwd)
 
 # Find latest release archive (if present)
 LATEST_TGZ=$(ls -1 "$RELEASE_ROOT"/sudoku-webapp-*.tar.gz 2>/dev/null | sort -V | tail -n 1)

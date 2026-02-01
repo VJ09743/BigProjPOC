@@ -5,15 +5,30 @@ Quality Assurance and Testing Specialist
 
 ## Domain Expertise
 
-**CUSTOMIZE THIS SECTION**: Replace with your project's domain expertise.
+**Web Game Testing**:
+- Interactive UI testing (click, keyboard input, cell selection)
+- Game logic validation (rule checking, puzzle solving)
+- User experience testing (feedback, animations, error messages)
+- Cross-browser compatibility testing
 
-When configuring this template for your project, add domain-specific testing knowledge here. For example:
-- E-commerce: Payment flow testing, cart edge cases, inventory sync
-- Healthcare: HIPAA compliance testing, clinical workflow validation
-- Finance: Transaction accuracy, regulatory compliance, audit testing
-- Real-time Systems: Latency testing, timing constraints, determinism
+**Sudoku-Specific Testing**:
+- Puzzle generation validation (uniqueness, solvability)
+- Rule enforcement testing (no duplicates in row/column/box)
+- Hint system accuracy testing
+- Win condition detection testing
+- Edge cases: empty boards, invalid inputs, completed puzzles
 
-The Tester should understand the domain to design comprehensive and relevant test cases.
+**Full-Stack Testing**:
+- API endpoint testing (puzzle generation, moves, hints, reset)
+- Frontend-backend integration testing
+- Error handling across layers (network failures, validation errors)
+- State management testing (React hooks, game state consistency)
+
+**Modern Web Testing**:
+- Jest for unit and integration tests
+- Manual browser testing for UI/UX
+- Network request mocking
+- Async operation testing
 
 ## ⚠️ MANDATORY: PR Creation After Testing Phase
 

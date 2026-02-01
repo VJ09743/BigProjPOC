@@ -73,15 +73,72 @@ gh auth status
 
 ---
 
+## LLM Provider (Only for Automated Reviews)
+
+**LLM Provider is ONLY needed if you want automated peer reviews (GitHub Actions).**
+
+**For IDE work ONLY** (using Copilot, Claude Code, Cursor, etc.):
+- ✅ **No LLM_PROVIDER needed** - Your AI tool authenticates separately
+- ✅ **Start working immediately** - Skip this section and go to [Choose Your Path](#choose-your-path)
+
+**For automated peer reviews**:
+- ⚠️ **LLM_PROVIDER is REQUIRED** - Continue with Step 1 below
+
+> **GitHub Copilot users**: If you have Copilot Enterprise, set `LLM_PROVIDER=copilot` (no API key needed). If you have Copilot Pro/Individual, use a separate provider like Gemini for automated reviews. See [Path G setup guide](quickstart/tools/github-copilot-setup.md) for details.
+
+### Step 1: Choose Your LLM Provider (for Automated Reviews)
+
+| Provider | Best For | Cost | Setup Guide |
+|----------|----------|------|-------------|
+| **GitHub Copilot** | Copilot subscribers (automated reviews) | Included* | [Copilot Setup](quickstart/tools/github-copilot-setup.md) |
+| **OpenAI** | General purpose, most popular | $$ | [OpenAI Setup](quickstart/providers/openai-setup.md) |
+| **Anthropic** | Code review, complex reasoning | $$$ | [Anthropic Setup](quickstart/providers/anthropic-setup.md) |
+| **Gemini** | Fast, cost-effective | $ | [Gemini Setup](quickstart/providers/gemini-setup.md) |
+| **Azure OpenAI** | Enterprise, compliance | $$$ | [Azure Setup](quickstart/providers/azure-setup.md) |
+| **Cohere** | Efficiency, production | $ | [Cohere Setup](quickstart/providers/cohere-setup.md) |
+| **Mistral** | Open-source, privacy | $ | [Mistral Setup](quickstart/providers/mistral-setup.md) |
+
+*GitHub Copilot Pro/Individual subscriptions provide IDE access only. For automated reviews, you need Copilot ENTERPRISE or use a separate provider (Gemini, OpenAI, etc.). Set `LLM_PROVIDER=copilot` only if you have Enterprise access.
+
+### Step 2: Follow Your Provider's Setup Guide
+
+Click on your chosen provider's setup guide above. Each guide includes:
+- API key acquisition
+- Environment variable configuration
+- GitHub Secrets setup (for automated reviews)
+- Verification steps
+
+### Step 3: Verify Configuration (Optional - Only for Automated Reviews)
+
+After setup, verify your provider is configured:
+
+```bash
+# Check environment variable (only needed for automated reviews)
+echo "LLM_PROVIDER: ${LLM_PROVIDER:-'Not set (IDE work only)'}"
+
+# Check API key (only needed for automated reviews with non-Copilot providers)
+echo "LLM_API_KEY is set: $([ -n "$LLM_API_KEY" ] && echo 'Yes ✅' || echo 'No (IDE work only)')"
+
+# For Azure users, also check:
+echo "AZURE_OPENAI_ENDPOINT: $AZURE_OPENAI_ENDPOINT"
+```
+
+**Summary**:
+- **IDE work only**: No configuration needed - your AI tool handles authentication
+- **Automated reviews**: LLM_PROVIDER required, LLM_API_KEY required (except copilot)
+
+---
+
 ## ✅ Setup Checklist
 
 Before proceeding to "Choose Your Path", verify:
 
 - [ ] Git is installed (`git --version`)
-- [ ] GitHub account created
-- [ ] GitHub token created and saved to `GITHUB_TOKEN` environment variable
-- [ ] `gh` CLI installed (`gh --version`)
-- [ ] `gh auth status` shows you're authenticated
+- [ ] GitHub account created and logged in
+- [ ] GITHUB_TOKEN environment variable set
+- [ ] gh CLI installed and authenticated (`gh auth status`)
+- [ ] **(Optional)** LLM_PROVIDER set - only if you want automated peer reviews
+- [ ] **(Optional)** LLM_API_KEY set - only if you want automated peer reviews with non-Copilot providers
 
 **If all checkboxes pass**, you're ready to proceed! 🚀
 
@@ -91,349 +148,23 @@ Before proceeding to "Choose Your Path", verify:
 
 Pick ONE path based on which AI tool you want to use:
 
-| Path | AI Tool | Best For | Difficulty |
-|------|---------|----------|------------|
-| [Path A](#path-a-claude-code--anthropic) | Claude Code + Anthropic | Software projects | Easy (CLI) |
-| [Path B](#path-b-cursor-ide) | Cursor IDE | Beginners, visual interface | Easiest (GUI) |
-| [Path C](#path-c-windsurf-ide) | Windsurf IDE | Beginners, visual interface | Easiest (GUI) |
-| [Path D](#path-d-aider--google-gemini) | Aider + Google Gemini | Budget-conscious | Easy (CLI) |
-| [Path E](#path-e-aider--openai) | Aider + OpenAI | GPT-4 users | Easy (CLI) |
-| [Path F](#path-f-continue-extension) | Continue + VS Code | VS Code users | Easy (Extension) |
-
-**Recommended**: Path A (Claude Code) for best software development experience.
-
----
-
-## Path A: Claude Code + Anthropic
-
-**Best for**: Software projects, most capable for coding tasks.
-
-### Step 1: Get Your Anthropic API Key
-
-1. Go to https://console.anthropic.com/
-2. Create an account (or sign in)
-3. Go to **API Keys** section
-4. Click **Create Key**
-5. Copy the key (starts with `sk-ant-...`)
-
-### Step 2: Save Your API Key
-
-**On Mac/Linux:**
-```bash
-echo 'export ANTHROPIC_API_KEY="your-key-here"' >> ~/.bashrc
-source ~/.bashrc
-```
-
-**On Windows:**
-1. Search for "Environment Variables" in Start menu
-2. Click "Edit the system environment variables"
-3. Click "Environment Variables" button
-4. Under "User variables", click "New"
-5. Variable name: `ANTHROPIC_API_KEY`
-6. Variable value: your API key
-7. Click OK
-
-### Step 3: Install Claude Code
-
-**On Mac:**
-```bash
-# Install Node.js if needed
-if ! command -v node &> /dev/null; then
-    brew install node || { /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)" && brew install node; }
-fi
-# Install Claude Code
-npm install -g @anthropic-ai/claude-code
-```
-
-**On Windows (PowerShell as Administrator):**
-```powershell
-# Install Node.js if needed
-if (!(Get-Command node -ErrorAction SilentlyContinue)) {
-    winget install OpenJS.NodeJS.LTS --accept-package-agreements --accept-source-agreements
-    $env:Path = [System.Environment]::GetEnvironmentVariable("Path","Machine") + ";" + [System.Environment]::GetEnvironmentVariable("Path","User")
-}
-# Install Claude Code
-npm install -g @anthropic-ai/claude-code
-```
-
-**On Linux (Ubuntu/Debian):**
-```bash
-# Install Node.js if needed
-if ! command -v node &> /dev/null; then
-    curl -fsSL https://deb.nodesource.com/setup_lts.x | sudo -E bash -
-    sudo apt install -y nodejs
-fi
-# Install Claude Code
-npm install -g @anthropic-ai/claude-code
-```
-
-### Step 4: Start Building
-
-```bash
-cd /path/to/your/project
-claude
-```
-
-Now describe what you want to build! [Jump to examples](#example-requests)
-
----
-
-## Path B: Cursor IDE
-
-**Best for**: Beginners who prefer a visual interface. Works with any AI provider.
-
-### Step 1: Get an API Key
-
-Choose ONE provider:
-
-**Option 1 - Anthropic (Recommended):**
-1. Go to https://console.anthropic.com/
-2. Create account → API Keys → Create Key
-3. Copy the key (starts with `sk-ant-...`)
-
-**Option 2 - OpenAI:**
-1. Go to https://platform.openai.com/api-keys
-2. Create account → Create new secret key
-3. Copy the key (starts with `sk-...`)
-
-### Step 2: Install Cursor
-
-1. Go to https://cursor.sh
-2. Download for your operating system
-3. Install and open Cursor
-
-### Step 3: Configure API Key in Cursor
-
-1. Open Cursor Settings (Cmd+, on Mac, Ctrl+, on Windows)
-2. Go to **Models** section
-3. Add your API key for your chosen provider
-4. Select your preferred model
-
-### Step 4: Start Building
-
-1. Click **File** → **Open Folder**
-2. Select your project folder
-3. Press **Cmd+K** (Mac) or **Ctrl+K** (Windows) to chat with AI
-
-Now describe what you want to build! [Jump to examples](#example-requests)
-
----
-
-## Path C: Windsurf IDE
-
-**Best for**: Beginners who prefer a visual interface with AI-first design.
-
-### Step 1: Get an API Key
-
-Choose ONE provider:
-
-**Option 1 - Anthropic (Recommended):**
-1. Go to https://console.anthropic.com/
-2. Create account → API Keys → Create Key
-3. Copy the key (starts with `sk-ant-...`)
-
-**Option 2 - OpenAI:**
-1. Go to https://platform.openai.com/api-keys
-2. Create account → Create new secret key
-3. Copy the key (starts with `sk-...`)
-
-### Step 2: Install Windsurf
-
-1. Go to https://codeium.com/windsurf
-2. Download for your operating system
-3. Install and open Windsurf
-
-### Step 3: Configure API Key
-
-1. Open Windsurf Settings
-2. Navigate to AI/Model settings
-3. Add your API key
-4. Select your preferred model
-
-### Step 4: Start Building
-
-1. Open your project folder in Windsurf
-2. Use the AI chat panel to describe what you want
-
-Now describe what you want to build! [Jump to examples](#example-requests)
-
----
-
-## Path D: Aider + Google Gemini
-
-**Best for**: Budget-conscious users, Google ecosystem.
-
-### Step 1: Get Your Google API Key
-
-1. Go to https://aistudio.google.com/
-2. Sign in with Google account
-3. Click **"Get API Key"**
-4. Create and copy the key
-
-### Step 2: Save Your API Key
-
-**On Mac/Linux:**
-```bash
-echo 'export GOOGLE_API_KEY="your-key-here"' >> ~/.bashrc
-source ~/.bashrc
-```
-
-**On Windows:**
-1. Search for "Environment Variables" in Start menu
-2. Click "Edit the system environment variables"
-3. Click "Environment Variables" → "New"
-4. Variable name: `GOOGLE_API_KEY`
-5. Variable value: your API key
-6. Click OK
-
-### Step 3: Install Aider
-
-**On Mac:**
-```bash
-# Install Python if needed
-if ! command -v python3 &> /dev/null; then
-    brew install python3 || { /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)" && brew install python3; }
-fi
-pip3 install aider-chat
-```
-
-**On Windows (PowerShell as Administrator):**
-```powershell
-# Install Python if needed
-if (!(Get-Command python -ErrorAction SilentlyContinue)) {
-    winget install Python.Python.3.11 --accept-package-agreements --accept-source-agreements
-    $env:Path = [System.Environment]::GetEnvironmentVariable("Path","Machine") + ";" + [System.Environment]::GetEnvironmentVariable("Path","User")
-}
-pip install aider-chat
-```
-
-**On Linux (Ubuntu/Debian):**
-```bash
-# Install Python if needed
-if ! command -v python3 &> /dev/null; then
-    sudo apt update && sudo apt install -y python3 python3-pip
-fi
-pip3 install aider-chat
-```
-
-### Step 4: Start Building
-
-```bash
-cd /path/to/your/project
-aider --model gemini/gemini-1.5-pro-latest
-```
-
-Now describe what you want to build! [Jump to examples](#example-requests)
-
----
-
-## Path E: Aider + OpenAI
-
-**Best for**: GPT-4 users, OpenAI ecosystem.
-
-### Step 1: Get Your OpenAI API Key
-
-1. Go to https://platform.openai.com/signup
-2. Create an account (or sign in)
-3. Go to https://platform.openai.com/api-keys
-4. Click **"Create new secret key"**
-5. Copy the key (starts with `sk-...`)
-
-### Step 2: Save Your API Key
-
-**On Mac/Linux:**
-```bash
-echo 'export OPENAI_API_KEY="your-key-here"' >> ~/.bashrc
-source ~/.bashrc
-```
-
-**On Windows:**
-1. Search for "Environment Variables" in Start menu
-2. Click "Edit the system environment variables"
-3. Click "Environment Variables" → "New"
-4. Variable name: `OPENAI_API_KEY`
-5. Variable value: your API key
-6. Click OK
-
-### Step 3: Install Aider
-
-**On Mac:**
-```bash
-# Install Python if needed
-if ! command -v python3 &> /dev/null; then
-    brew install python3 || { /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)" && brew install python3; }
-fi
-pip3 install aider-chat
-```
-
-**On Windows (PowerShell as Administrator):**
-```powershell
-# Install Python if needed
-if (!(Get-Command python -ErrorAction SilentlyContinue)) {
-    winget install Python.Python.3.11 --accept-package-agreements --accept-source-agreements
-    $env:Path = [System.Environment]::GetEnvironmentVariable("Path","Machine") + ";" + [System.Environment]::GetEnvironmentVariable("Path","User")
-}
-pip install aider-chat
-```
-
-**On Linux (Ubuntu/Debian):**
-```bash
-# Install Python if needed
-if ! command -v python3 &> /dev/null; then
-    sudo apt update && sudo apt install -y python3 python3-pip
-fi
-pip3 install aider-chat
-```
-
-### Step 4: Start Building
-
-```bash
-cd /path/to/your/project
-aider
-```
-
-Now describe what you want to build! [Jump to examples](#example-requests)
-
----
-
-## Path F: Continue Extension
-
-**Best for**: VS Code users who want AI assistance in their existing editor.
-
-### Step 1: Get an API Key
-
-Choose ONE provider:
-
-**Option 1 - Anthropic (Recommended):**
-1. Go to https://console.anthropic.com/
-2. Create account → API Keys → Create Key
-3. Copy the key (starts with `sk-ant-...`)
-
-**Option 2 - OpenAI:**
-1. Go to https://platform.openai.com/api-keys
-2. Create account → Create new secret key
-3. Copy the key (starts with `sk-...`)
-
-### Step 2: Install Continue
-
-1. Open VS Code
-2. Go to Extensions (Cmd+Shift+X on Mac, Ctrl+Shift+X on Windows)
-3. Search for "Continue"
-4. Click Install
-
-### Step 3: Configure Continue
-
-1. Click the Continue icon in the sidebar
-2. Go to Settings
-3. Add your API key
-4. Select your preferred model
-
-### Step 4: Start Building
-
-1. Open your project folder in VS Code
-2. Use the Continue panel to chat with AI
-
-Now describe what you want to build! [Jump to examples](#example-requests)
+| Path | AI Tool | Best For | Difficulty | Setup Guide |
+|------|---------|----------|------------|-------------|
+| **Path A** | Claude Code + Anthropic | Software projects | Easy (CLI) | [Setup Guide](quickstart/tools/claude-code-setup.md) |
+| **Path B** | Cursor IDE | Beginners, visual | Easiest (GUI) | [Setup Guide](quickstart/tools/cursor-setup.md) |
+| **Path C** | Windsurf IDE | Beginners, visual | Easiest (GUI) | [Setup Guide](quickstart/tools/windsurf-setup.md) |
+| **Path D** | Aider + Gemini | Budget-conscious | Easy (CLI) | [Setup Guide](quickstart/tools/aider-gemini-setup.md) |
+| **Path E** | Aider + OpenAI | GPT-4 users | Easy (CLI) | [Setup Guide](quickstart/tools/aider-openai-setup.md) |
+| **Path F** | Continue + VS Code | VS Code users | Easy (Extension) | [Setup Guide](quickstart/tools/continue-setup.md) |
+| **Path G** | GitHub Copilot | Copilot subscribers | Easiest (GUI) | [Setup Guide](quickstart/tools/github-copilot-setup.md) |
+
+**Recommended**: 
+- **Path A** (Claude Code) for best software development experience
+- **Path G** (GitHub Copilot) if you already have a subscription
+
+**⚠️ Important for GitHub Copilot users**: While Copilot works in your IDE without LLM_PROVIDER setup, you still need to configure an LLM provider for automated peer reviews. See [Path G guide](quickstart/tools/github-copilot-setup.md) for details.
+
+**Click on your chosen setup guide above** for detailed installation and configuration instructions.
 
 ---
 
@@ -609,11 +340,118 @@ The **Cost Analyst** agent will warn you before expensive operations.
 
 ---
 
-## You're Ready!
+## Automated Peer Review Setup
 
-Remember:
-- **Be specific** about what you want
-- **Review changes** before accepting
-- **Ask questions** if something is unclear
+This workflow automatically reviews your PRs using AI agents.
 
-Happy building!
+### Step 1: Choose Your LLM Provider
+
+The automated review supports 7 LLM providers:
+
+| Provider | Best For | Cost | Setup |
+|----------|----------|------|-------|
+| GitHub Copilot | Copilot subscribers | FREE* | Set LLM_PROVIDER=copilot (no API key!) |
+| OpenAI | Most popular, GPT-4o | $$ | https://platform.openai.com/ |
+| Anthropic | Best code reviews, Claude | $$$ | https://console.anthropic.com/ |
+| Gemini | Google's model | $ | https://makersuite.google.com/ |
+| Azure OpenAI | Enterprise users | $$$ | https://portal.azure.com/ |
+| Cohere | Fast responses | $ | https://dashboard.cohere.com/ |
+| Mistral | Open-source option | $ | https://console.mistral.ai/ |
+
+*Uses repository's GitHub authentication automatically
+
+### Step 2: Configure GitHub Repository Secrets
+
+Go to your repository → **Settings** → **Secrets and variables** → **Actions** → **Repository secrets** tab → Click **"New repository secret"**
+
+**For GitHub Copilot (Recommended - FREE):**
+```
+Name: LLM_PROVIDER
+Secret: copilot
+```
+That's it! No API key needed - uses repository authentication automatically.
+
+**For OpenAI:**
+```
+Name: LLM_PROVIDER
+Secret: openai
+
+Name: LLM_API_KEY
+Secret: your-openai-api-key
+```
+
+**For Anthropic (Claude):**
+```
+Name: LLM_PROVIDER
+Secret: anthropic
+
+Name: LLM_API_KEY
+Secret: your-anthropic-api-key
+```
+
+**For Gemini:**
+```
+Name: LLM_PROVIDER
+Secret: gemini
+
+Name: LLM_API_KEY
+Secret: your-google-api-key
+```
+
+**For Azure OpenAI:**
+```
+Name: LLM_PROVIDER
+Secret: azure
+
+Name: LLM_API_KEY
+Secret: your-azure-api-key
+
+Name: AZURE_OPENAI_ENDPOINT
+Secret: https://your-resource.openai.azure.com/
+```
+
+**For Cohere:**
+```
+Name: LLM_PROVIDER
+Secret: cohere
+
+Name: LLM_API_KEY
+Secret: your-cohere-api-key
+```
+
+**For Mistral:**
+```
+Name: LLM_PROVIDER
+Secret: mistral
+
+Name: LLM_API_KEY
+Secret: your-mistral-api-key
+```
+
+### Step 3: Run Automated Review
+
+1. Create a PR following the branch naming pattern:
+   - `{llm-name}/{agent-type}-{project}-{sessionID}`
+   - Example: `copilot/developer-sudoku-webapp-123456`
+
+2. Go to **Actions** tab → **Automated Multi-Agent Peer Review**
+
+3. Click **Run workflow** → Enter PR number
+
+4. Wait for sequential agent reviews (Architect, Tester)
+
+5. Reviews posted as PR comments with inline suggestions
+
+### Switching Providers
+
+Just update the `LLM_PROVIDER` secret in GitHub - no code changes needed!
+
+```bash
+# Example: Switch from OpenAI to Claude
+# In GitHub: Settings → Secrets → Actions
+# Edit LLM_PROVIDER: change "openai" to "anthropic"
+# Edit LLM_API_KEY: change to your Anthropic key
+```
+
+---
+

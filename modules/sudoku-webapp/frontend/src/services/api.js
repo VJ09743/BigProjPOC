@@ -1,6 +1,6 @@
 import axios from 'axios'
 
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:5000/api/v1'
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:5001/api/v1'
 
 const apiClient = axios.create({
   baseURL: API_BASE_URL,
@@ -11,34 +11,64 @@ const apiClient = axios.create({
 
 export const api = {
   // Health check
-  checkHealth: () => apiClient.get('/health'),
+  checkHealth: async () => {
+    const response = await apiClient.get('/health')
+    return response.data
+  },
 
   // Users
-  createUser: () => apiClient.post('/users'),
-  getUser: (userId) => apiClient.get(`/users/${userId}`),
+  createUser: async () => {
+    const response = await apiClient.post('/users')
+    return response.data
+  },
+  
+  getUser: async (userId) => {
+    const response = await apiClient.get(`/users/${userId}`)
+    return response.data
+  },
 
   // Games
-  generatePuzzle: (difficulty, userId) =>
-    apiClient.post('/games/generate', { difficulty, userId }),
+  generatePuzzle: async (difficulty, userId) => {
+    const response = await apiClient.post('/games/generate', { difficulty, userId })
+    return response.data
+  },
   
-  getGame: (gameId) => apiClient.get(`/games/${gameId}`),
+  getGame: async (gameId) => {
+    const response = await apiClient.get(`/games/${gameId}`)
+    return response.data
+  },
   
-  submitMove: (gameId, row, col, value) =>
-    apiClient.post(`/games/${gameId}/move`, { row, col, value }),
+  submitMove: async (gameId, row, col, value) => {
+    const response = await apiClient.post(`/games/${gameId}/move`, { row, col, value })
+    return response.data
+  },
   
-  getHint: (gameId) => apiClient.post(`/games/${gameId}/hint`),
+  getHint: async (gameId) => {
+    const response = await apiClient.post(`/games/${gameId}/hint`)
+    return response.data
+  },
   
-  resetGame: (gameId) => apiClient.post(`/games/${gameId}/reset`),
+  resetGame: async (gameId) => {
+    const response = await apiClient.post(`/games/${gameId}/reset`)
+    return response.data
+  },
   
-  completeGame: (gameId, board, timeElapsedSeconds) =>
-    apiClient.post(`/games/${gameId}/complete`, { board, timeElapsedSeconds }),
+  completeGame: async (gameId, board, timeElapsedSeconds) => {
+    const response = await apiClient.post(`/games/${gameId}/complete`, { board, timeElapsedSeconds })
+    return response.data
+  },
 
   // Leaderboard
-  getLeaderboard: (sortBy = 'wins', limit = 100) =>
-    apiClient.get('/leaderboard', { params: { sortBy, limit } }),
+  getLeaderboard: async (sortBy = 'wins', limit = 100) => {
+    const response = await apiClient.get('/leaderboard', { params: { sortBy, limit } })
+    return response.data
+  },
 
   // Stats
-  getUserStats: (userId) => apiClient.get(`/stats/${userId}`),
+  getUserStats: async (userId) => {
+    const response = await apiClient.get(`/stats/${userId}`)
+    return response.data
+  },
 }
 
-export default apiClient
+export default api

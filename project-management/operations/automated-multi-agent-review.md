@@ -24,7 +24,7 @@
 
 ## 1. Overview
 
-The **Automated Multi-Agent Peer Review System** uses Claude API to automatically review pull requests as different agent roles in a single sequential workflow.
+The **Automated Multi-Agent Peer Review System** uses LLM APIs (OpenAI, Anthropic, Gemini, Azure, Cohere, or Mistral) to automatically review pull requests as different agent roles in a single sequential workflow.
 
 ### Key Features
 
@@ -44,6 +44,7 @@ The **Automated Multi-Agent Peer Review System** uses Claude API to automaticall
 - **Precision**: Inline comments point to exact lines of code with issues
 - **Learning**: Detailed feedback helps improve code quality
 - **Transparency**: All review comments visible in PR (Conversation + Files changed tabs)
+- **Flexible**: Choose from 6 LLM providers (OpenAI, Anthropic, Gemini, Azure, Cohere, Mistral)
 
 ---
 
@@ -109,16 +110,16 @@ Based on PR branch name `agent/{agent}-{project}-{sessionID}`:
 2. **Workflow triggers** automatically
 3. **Team Leader Agent** reviews:
    - Fetches PR diff and files
-   - Calls Claude API with Team Leader prompt and checklist
-   - Claude analyzes code for standards, patterns, documentation
+   - Calls LLM API with Team Leader prompt and checklist
+   - LLM analyzes code for standards, patterns, documentation
    - Posts review comment: "✅ APPROVED" or "🔴 CHANGES REQUESTED"
 4. **Architect Agent** reviews:
-   - Calls Claude API with Architect prompt and checklist
-   - Claude checks design adherence, SOLID principles, interfaces
+   - Calls LLM API with Architect prompt and checklist
+   - LLM checks design adherence, SOLID principles, interfaces
    - Posts review comment with decision
 5. **Tester Agent** reviews:
-   - Calls Claude API with Tester prompt and checklist
-   - Claude evaluates testability, coverage, quality gates
+   - Calls LLM API with Tester prompt and checklist
+   - LLM evaluates testability, coverage, quality gates
    - Posts review comment with decision
 6. **Approval Check**:
    - Count approvals (✅ APPROVED markers in comments)
@@ -137,7 +138,7 @@ Based on PR branch name `agent/{agent}-{project}-{sessionID}`:
 
 ## 4. Agent Roles and Checklists
 
-Each agent has a specific role, expertise, and checklist that Claude API uses for review.
+Each agent has a specific role, expertise, and checklist that the LLM API uses for review.
 
 ### 4.1 Team Leader Agent
 
@@ -239,7 +240,8 @@ Ensure GitHub Actions has write permissions:
 # - automated-peer-review.yml (automated reviews)
 
 # Review script already in .github/scripts/
-# - automated-review.js (calls Claude API)
+# - automated-review.js (orchestrates reviews)
+# - providers/*.js (LLM provider modules)
 # - package.json (dependencies)
 ```
 
@@ -247,7 +249,7 @@ Ensure GitHub Actions has write permissions:
 
 After merging this PR:
 
-1. **Add ANTHROPIC_API_KEY secret** (see 5.1 above)
+1. **Add LLM_PROVIDER and LLM_API_KEY secrets** (see 5.1 above)
 2. **Verify GitHub Actions permissions** (see 5.2 above)
 3. **Test with a sample PR**:
    ```bash
@@ -451,7 +453,7 @@ After 2+ approvals:
 **Possible Causes**:
 1. GitHub token permissions insufficient
 2. Script error parsing PR details
-3. Claude API rate limit hit
+3. LLM API rate limit hit
 
 **Solutions**:
 - Check workflow permissions (read and write needed)
@@ -482,10 +484,48 @@ After 2+ approvals:
 
 ---
 
-## Appendix A: Claude API Configuration
+## Appendix A: LLM Provider Configuration
 
-### Model Used
-- **Model**: `claude-sonnet-4-20250514`
+### Supported Providers
+
+| Provider | Model | Best For | Cost |
+|----------|-------|----------|------|
+| OpenAI | GPT-4o | General purpose | $$ |
+| Anthropic | Claude Sonnet 4 | Code review | $$$ |
+| Gemini | Gemini Pro | Fast responses | $ |
+| Azure | GPT-4 | Enterprise | $$$ |
+| Cohere | Command R Plus | Efficiency | $ |
+| Mistral | Mistral Large | Open-source | $ |
+
+### Modular Architecture
+
+The system uses a modular provider architecture:
+- Each provider in separate file: `.github/scripts/providers/{provider}.js`
+- Dynamic loading based on `LLM_PROVIDER` environment variable
+- Standardized interface: `callLLM(prompt, agentType)` returns review text
+- Easy to add new providers without modifying main script
+
+### Switching Providers
+
+To switch providers, just update GitHub Secrets:
+1. Settings → Secrets → Actions
+2. Update `LLM_PROVIDER` to new provider name
+3. Update `LLM_API_KEY` to new provider's key
+4. (Optional) Add provider-specific secrets like `AZURE_OPENAI_ENDPOINT`
+
+No code changes required!
+
+### Model Configuration
+
+Models vary by provider:
+- **OpenAI**: `gpt-4o`
+- **Anthropic**: `claude-sonnet-4-20250514`
+- **Gemini**: `gemini-pro`
+- **Azure**: `gpt-4`
+- **Cohere**: `command-r-plus`
+- **Mistral**: `mistral-large-latest`
+
+**Common Settings**:
 - **Max Tokens**: 4096
 - **Temperature**: 0.2 (lower for consistent reviews)
 
@@ -502,7 +542,7 @@ After 2+ approvals:
 **Monthly** (assuming 50 PRs/month):
 - Total: ~$1.50-$7.50/month
 
-*Note: Costs are approximate and depend on PR size and Claude API pricing*
+*Note: Costs are approximate and depend on PR size and LLM provider pricing*
 
 ---
 

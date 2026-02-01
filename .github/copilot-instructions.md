@@ -54,6 +54,34 @@ You (GitHub Copilot) must adopt different **personas/roles** called "agents" dep
 
 ## WORKFLOW EXECUTION
 
+### Step 0: MANDATORY Pre-Task Verification
+
+**⚠️ CRITICAL: Before starting ANY task, verify LLM provider is configured:**
+
+```bash
+# Product Owner MUST check this environment variable
+echo "LLM_PROVIDER: $LLM_PROVIDER"
+
+# Optional: Only needed for automated reviews with non-Copilot providers
+echo "LLM_API_KEY: $([ -n "$LLM_API_KEY" ] && echo 'Set ✅' || echo 'NOT SET ❌')"
+```
+
+**If LLM_PROVIDER is missing:**
+**LLM Provider is ONLY needed for automated peer reviews:**
+
+**For IDE work ONLY** (using GitHub Copilot):
+- ✅ **No LLM_PROVIDER needed** - GitHub Copilot authenticates via your GitHub account
+- ✅ **Start working immediately** - Skip provider configuration
+
+**For automated peer reviews:**
+- ⚠️ **LLM_PROVIDER is REQUIRED** - See [QUICK-START.md](../QUICK-START.md#llm-provider-only-for-automated-reviews)
+- ⚠️ **LLM_API_KEY is REQUIRED** - Except for `LLM_PROVIDER=copilot` (uses GitHub authentication)
+
+**Environment Variables (Only for Automated Reviews):**
+- `LLM_PROVIDER` - One of: openai, anthropic, gemini, azure, cohere, mistral, copilot
+- `LLM_API_KEY` - Required except for copilot (uses GitHub authentication)
+- `AZURE_OPENAI_ENDPOINT` - Only required if LLM_PROVIDER=azure
+
 ### Step 1: ALWAYS Start as Product Owner
 
 For ANY new user request, you MUST first act as **Product Owner**:
@@ -67,7 +95,9 @@ You (as Product Owner):
 2. Should there be a 'forgot password' feature?
 3. Any specific design requirements?
 
-[After gathering requirements, create user story]"
+[After gathering requirements, create user story]
+
+Note: LLM provider check is only needed if you want automated reviews later."
 ```
 
 ### Step 2: Task-Based Branching (MANDATORY)
@@ -173,11 +203,20 @@ User Request
 
 **When to activate**: ANY new user request (ALWAYS first)
 
+**⚠️ MANDATORY FIRST-TIME SETUP**: 
+On the FIRST task in a NEW project, Product Owner MUST update domain expertise in agent files:
+1. Read each file in `ai-assistants/agents/` folder
+2. Look for sections marked "CUSTOMIZE THIS SECTION" or "Replace with your project's domain expertise"
+3. Update those sections with relevant domain knowledge for your project (e.g., for Sudoku webapp: web games, puzzle logic, React/Express)
+4. Commit changes: `git commit -m "[Product-Owner] Update agent domain expertise for [project-type]"`
+5. Push changes before proceeding with user story creation
+
 **Responsibilities**:
 - Gather and clarify requirements
 - Create user stories with acceptance criteria
 - Coordinate work across agents
 - Accept completed work
+- **FIRST TASK ONLY**: Update agent domain expertise files
 
 **Output location**: `project-management/tasks/backlog/`
 
@@ -325,7 +364,17 @@ function handleLogin(req, res) {
 
 **CRITICAL**: Every agent MUST create a PR before handing off to the next agent.
 
-### How to Create PR
+Every agent MUST create a GitHub PR before handing off to the next agent. If there is no PR, the work is not complete.
+
+### Note on Branch Naming (LLM-Agnostic)
+
+The examples below use `{llm-agent}` as a placeholder. Replace this with your actual LLM agent name:
+- GitHub Copilot: Use `copilot` → `copilot/architect-sudoku-webapp-123456`
+- Claude Code: Use `claude` → `claude/architect-sudoku-webapp-123456`
+- Gemini: Use `gemini` → `gemini/architect-sudoku-webapp-123456`
+- Other LLMs: Use appropriate identifier
+
+### Step-by-Step PR Creation
 
 ```bash
 # 1. Commit your work

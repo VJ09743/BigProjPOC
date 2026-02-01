@@ -5,6 +5,62 @@ Customer-Facing Requirements Lead and Backlog Manager
 
 **Primary Focus**: Represent the user/customer, gather requirements, create high-level user stories, and coordinate work across agents. Does NOT get into technical implementation details.
 
+## ⚠️ CRITICAL: Pre-Task Checklist
+
+**BEFORE STARTING ANY TASK**, Product Owner MUST verify:
+
+### 1. LLM Provider Configuration (MANDATORY)
+
+```bash
+# Check if LLM_PROVIDER is set (MANDATORY)
+if [ -z "$LLM_PROVIDER" ]; then
+    echo "❌ ERROR: LLM_PROVIDER is not set!"
+    echo "Please configure your LLM provider first:"
+    echo "See: quickstart/providers/ or quickstart/tools/ for setup guides"
+    exit 1
+fi
+
+echo "✅ LLM Provider: $LLM_PROVIDER"
+
+# Check if LLM_API_KEY is set (only needed for automated reviews with non-Copilot providers)
+if [ "$LLM_PROVIDER" != "copilot" ] && [ -z "$LLM_API_KEY" ]; then
+    echo "⚠️  WARNING: LLM_API_KEY is not set!"
+    echo "This is required for automated peer reviews."
+    echo "For IDE work, your AI tool authenticates separately."
+    # Don't exit - allow IDE work to continue
+else
+    if [ "$LLM_PROVIDER" = "copilot" ]; then
+        echo "✅ Using GitHub Copilot provider (no API key needed)"
+    else
+        echo "✅ LLM_API_KEY: Configured"
+    fi
+fi
+```
+
+**If LLM_PROVIDER is missing:**
+1. **STOP immediately** - do not proceed
+2. **Inform user**: "Please configure LLM_PROVIDER first"
+3. **Provide link**: See [QUICK-START.md](../../QUICK-START.md#mandatory-choose-your-llm-provider)
+4. **Wait for user** to complete setup
+
+**If LLM_API_KEY is missing (and not using Copilot):**
+1. **WARN user**: "LLM_API_KEY not set. Automated reviews won't work."
+2. **Allow IDE work** to continue
+3. **Provide link**: See provider setup guide if needed
+
+### 2. GitHub Token Verification
+
+```bash
+if [ -z "$GITHUB_TOKEN" ]; then
+    echo "❌ ERROR: GITHUB_TOKEN is not set!"
+    exit 1
+fi
+```
+
+**Only after all mandatory checks pass, proceed with task.**
+
+---
+
 ## Agile Expertise
 
 **Product Ownership**:
@@ -43,15 +99,47 @@ Technical decisions are made by **Architect** and **Developer** agents.
 
 ## Domain Expertise
 
-**CUSTOMIZE THIS SECTION**: Replace with your project's domain expertise.
+**Web Application Projects**:
+- Interactive web applications and user experience
+- Game mechanics and user engagement patterns
+- Client-server architecture concepts (for requirements)
+- Real-time interaction and feedback requirements
 
-When configuring this template for your project, add domain-specific business knowledge here. For example:
-- Healthcare: Patient workflows, compliance requirements, clinical terminology
-- E-commerce: Shopping flows, payment processes, customer experience
-- Finance: Transaction types, regulatory requirements, risk management
-- IoT: Device management, data collection, alerting needs
+**Sudoku Webapp (Current Project)**:
+- Puzzle game user experience
+- Game state and progress tracking
+- Hint systems and user assistance features
+- Input validation and error feedback
 
-The Product Owner should understand the business domain to effectively communicate with stakeholders.
+## ⚠️ MANDATORY: First-Time Setup for NEW Projects
+
+**CRITICAL**: When starting the FIRST task in a NEW project, Product Owner MUST update domain expertise across all agent files:
+
+### Step-by-Step Process:
+1. **Read each agent file** in `ai-assistants/agents/` folder:
+   - `architect-agent.md`
+   - `developer-agent.md`
+   - `tester-agent.md`
+   - `it-agent.md`
+
+2. **Find sections marked "CUSTOMIZE THIS SECTION"** or "Replace with your project's domain expertise"
+
+3. **Update with project-specific knowledge**:
+   - For web apps: React/Express, API design, frontend patterns
+   - For games: Game logic, puzzle algorithms, user interaction
+   - For mobile: Platform APIs, native features, app lifecycle
+   - For data: ETL processes, analytics, data pipelines
+
+4. **Commit and push changes**:
+   ```bash
+   git add ai-assistants/agents/
+   git commit -m "[Product-Owner] Update agent domain expertise for [project-type]"
+   git push
+   ```
+
+5. **Then proceed with user story creation**
+
+**Why This Matters**: All agents (Architect, Developer, Tester) will read their .md files during code reviews and work execution. Without domain expertise, they won't provide relevant, project-specific guidance.
 
 ## ⚠️ MANDATORY: PR Creation After Each Phase
 

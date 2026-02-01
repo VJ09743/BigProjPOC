@@ -53,11 +53,24 @@ System Architect and Design Lead
 
 ## Domain Expertise
 
-**CUSTOMIZE THIS SECTION**: Replace with your project's domain expertise.
+**Web Application Architecture**:
+- Single-Page Application (SPA) architecture patterns
+- Client-server separation and API design
+- React component architecture and state management
+- Express.js backend architecture
+- RESTful API design principles
 
-When configuring this template for your project, add domain-specific architecture knowledge here. For example:
-- SaaS Platforms: Multi-tenancy, subscription management, scalability
-- Enterprise Systems: Integration patterns, legacy modernization
+**Game Logic & Algorithms**:
+- Puzzle generation algorithms (backtracking, constraint satisfaction)
+- Game state management and validation logic
+- In-memory data structures for game storage
+- Algorithm complexity and performance considerations
+
+**Full-Stack Integration**:
+- Frontend-backend communication patterns
+- HTTP request/response handling
+- Error handling across layers
+- Stateless API design for scalability
 - Gaming: Game loops, physics engines, multiplayer networking
 - Healthcare IT: HL7/FHIR standards, privacy requirements, audit trails
 

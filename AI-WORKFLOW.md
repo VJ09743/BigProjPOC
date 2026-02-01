@@ -6,16 +6,79 @@
 
 **CRITICAL**: If you are an AI assistant (Claude, GPT, Gemini, etc.), you MUST follow these instructions for EVERY user request:
 
+### 0. ⚠️ OPTIONAL: LLM Provider Configuration (Only for Automated Reviews)
+
+**LLM Provider is ONLY needed for automated peer reviews (GitHub Actions).**
+
+**For IDE work ONLY** (Copilot, Claude Code, Cursor, etc.):
+- ✅ **No LLM_PROVIDER needed** - Your AI tool authenticates separately
+- ✅ **No LLM_API_KEY needed** - IDE handles authentication  
+- ✅ **Start working immediately** - Skip provider setup
+
+**For automated peer reviews**:
+
+```bash
+# Check if LLM_PROVIDER is set (ONLY needed for automated reviews)
+if [ -z "$LLM_PROVIDER" ]; then
+    echo "ℹ️  LLM_PROVIDER not set"
+    echo "   • IDE work: ✅ Works fine (your AI tool authenticates separately)"
+    echo "   • Automated reviews: ❌ Won't work"
+    echo "   • To enable reviews: See quickstart/providers/ for setup"
+else
+    echo "✅ LLM Provider: $LLM_PROVIDER (automated reviews enabled)"
+fi
+
+# Check if LLM_API_KEY is set (only needed for automated reviews with non-Copilot providers)
+if [ -n "$LLM_PROVIDER" ] && [ "$LLM_PROVIDER" != "copilot" ] && [ -z "$LLM_API_KEY" ]; then
+    echo "⚠️  WARNING: LLM_API_KEY is not set!"
+    echo "This is required for automated peer reviews with $LLM_PROVIDER"
+    echo "See: quickstart/providers/${LLM_PROVIDER}-setup.md"
+elif [ "$LLM_PROVIDER" = "copilot" ]; then
+    echo "✅ Using GitHub Copilot provider (no API key needed)"
+elif [ -n "$LLM_PROVIDER" ] && [ -n "$LLM_API_KEY" ]; then
+    echo "✅ LLM_API_KEY: Configured for automated reviews"
+fi
+
+# For Azure, also check endpoint
+if [ "$LLM_PROVIDER" = "azure" ] && [ -z "$AZURE_OPENAI_ENDPOINT" ]; then
+    echo "❌ ERROR: AZURE_OPENAI_ENDPOINT is not set!"
+    echo "Azure OpenAI requires both LLM_API_KEY and AZURE_OPENAI_ENDPOINT"
+    exit 1
+fi
+```
+
+**If you want to use automated peer reviews:**
+1. **LLM_PROVIDER is REQUIRED** - Set to: openai, anthropic, gemini, azure, cohere, mistral, or copilot
+2. **LLM_API_KEY is REQUIRED** - Except for `LLM_PROVIDER=copilot` (uses GitHub authentication)
+3. **See**: [QUICK-START.md](QUICK-START.md#mandatory-choose-your-llm-provider) for setup
+
+**If you're only using IDE tools (Copilot, Claude Code, Cursor, etc.):**
+1. **LLM_PROVIDER is NOT needed** - Your AI tool authenticates separately
+2. **LLM_API_KEY is NOT needed** - IDE handles authentication
+3. **You can skip** the provider setup and start working immediately
+
+**Environment Variables (Only for Automated Reviews):**
+- `LLM_PROVIDER` - One of: openai, anthropic, gemini, azure, cohere, mistral, copilot
+- `LLM_API_KEY` - Required except for copilot (uses GitHub authentication)
+- `AZURE_OPENAI_ENDPOINT` - Only required if LLM_PROVIDER=azure
+
+**Summary**: IDE work doesn't need LLM_PROVIDER. Only automated peer reviews need it.
+
 ### 1. ALWAYS Start as Product Owner
 - Read `ai-assistants/agents/product-owner-agent.md`
 - Adopt Product Owner role BEFORE any other action
 - Never skip straight to coding
 
 ### 2. First Task? Customize the Template
-When this is a NEW project, Product Owner MUST:
-- Update the "Domain" section below with actual project domain
-- Update agent skills in `ai-assistants/agents/*.md`
-- Add domain-specific context throughout
+**⚠️ MANDATORY FOR NEW PROJECTS**
+
+When this is the FIRST task in a NEW project, Product Owner MUST:
+1. **Read** `ai-assistants/agents/product-owner-agent.md` for detailed steps
+2. **Update domain expertise** in ALL agent files (`ai-assistants/agents/*.md`)
+3. **Commit changes** before creating user story
+4. This ensures all agents have project-specific context for reviews and work
+
+**Do NOT skip this step** - agents won't provide relevant guidance without domain expertise.
 
 ### 3. Follow the Agent Workflow
 ```
@@ -181,6 +244,7 @@ This template uses a **multi-agent system** where the AI assistant adopts specia
 #### Product Owner Agent
 **Role**: Customer-Facing Requirements Lead and Backlog Manager
 
+- **⚠️ MANDATORY FIRST STEP**: Verify LLM_PROVIDER and LLM_API_KEY are set (see Step 0 above)
 - **ALWAYS activates first** for new user requests
 - Gathers and clarifies user requirements
 - Creates high-level user stories (WHAT to build, not HOW)
@@ -194,6 +258,7 @@ This template uses a **multi-agent system** where the AI assistant adopts specia
 #### Architect Agent
 **Role**: System Architect and Design Lead
 
+- **⚠️ MANDATORY FIRST STEP**: Verify LLM_PROVIDER and LLM_API_KEY are set
 - Enriches user stories with technical specifications
 - Designs interfaces and APIs
 - Creates detailed development tasks
@@ -206,6 +271,7 @@ This template uses a **multi-agent system** where the AI assistant adopts specia
 #### Developer Agent
 **Role**: Software Developer and Implementation Specialist
 
+- **⚠️ MANDATORY FIRST STEP**: Verify LLM_PROVIDER and LLM_API_KEY are set
 - Implements features and interfaces
 - Writes clean, maintainable code
 - Creates unit tests
@@ -216,6 +282,7 @@ This template uses a **multi-agent system** where the AI assistant adopts specia
 #### Tester Agent
 **Role**: Quality Assurance and Testing Specialist
 
+- **⚠️ MANDATORY FIRST STEP**: Verify LLM_PROVIDER and LLM_API_KEY are set
 - Creates test plans
 - Writes automated tests
 - Validates implementations
@@ -225,6 +292,8 @@ This template uses a **multi-agent system** where the AI assistant adopts specia
 
 #### IT Agent
 **Role**: Infrastructure and Operations Specialist
+
+- **⚠️ MANDATORY FIRST STEP**: Verify LLM_PROVIDER and LLM_API_KEY are set
 
 - Maintains build infrastructure
 - Manages releases and versioning
@@ -245,29 +314,43 @@ This template uses a **multi-agent system** where the AI assistant adopts specia
 
 ### Agent Workflow
 
+**⚠️ EVERY agent MUST verify LLM provider configuration before starting work (see Step 0 above).**
+
 The agents work together in a collaborative workflow:
 
 ```
 User Request
     ↓
+[Step 0: Verify LLM_PROVIDER & LLM_API_KEY are set] ← ALL AGENTS
+    ↓
 Product Owner (Clarifies requirements, creates user story)
+    ↓
+[Verify LLM configuration] ← Architect checks before starting
     ↓
 Architect (Chooses tech stack, designs solution)
     ↓
+[Verify LLM configuration] ← IT Agent checks before starting
+    ↓
 IT Agent (Installs dependencies, sets up scripts/)  ← CRITICAL STEP
+    ↓
+[Verify LLM configuration] ← Developer checks before starting
     ↓
 Developer (Implements code in modules/)
     ↓
+[Verify LLM configuration] ← Tester checks before starting
+    ↓
 Tester (Validates implementation)
+    ↓
+[Verify LLM configuration] ← IT Agent checks before release
     ↓
 IT Agent (Builds release artifacts)
     ↓
 Product Owner (Accepts & presents to user)
 ```
 
-**IMPORTANT**: IT Agent activates in TWO places:
-1. **After Architect** - To install dependencies and set up scripts/
-2. **Before Release** - To build and package artifacts
+**IMPORTANT**: 
+- **LLM Configuration Check**: ALL agents verify configuration before starting work
+- **IT Agent activates TWICE**: After Architect (setup) and before Release (build)
 
 ### Task-Based Branching Strategy
 
@@ -290,7 +373,7 @@ git push -u origin master_{task_name}
 | Branch Type | Pattern | Example |
 |-------------|---------|---------|
 | Task Master | `master_{task_name}` | `master_joke-website` |
-| Agent Branch | `claude/{agent}-{task_name}-{sessionID}` | `claude/developer-joke-website-abc123` |
+| Agent Branch | `{llm-agent}/{agent}-{task_name}-{sessionID}` | `copilot/developer-joke-website-abc123` |
 
 ### Git Worktree Workflow
 
@@ -304,8 +387,8 @@ git push -u origin master_{task_name}
 
 # Then creates worktrees for agents (branching from task master)
 git checkout master_{task_name}
-git worktree add ../worktree-architect claude/architect-{task_name}-{sessionID}
-git worktree add ../worktree-developer claude/developer-{task_name}-{sessionID}
+git worktree add ../worktree-architect {llm-agent}/architect-{task_name}-{sessionID}
+git worktree add ../worktree-developer {llm-agent}/developer-{task_name}-{sessionID}
 
 # Each agent works independently in their worktree
 # When done, create PR to master_{task_name} (the task's main branch)
@@ -425,7 +508,7 @@ pending → in-progress → completed → archived
 ### Git Workflow
 - **Base branch**: `template/agentic-workflow`
 - **Task branch**: `master_{task_name}` (created per task, see [Task-Based Branching Strategy](#task-based-branching-strategy))
-- **Agent branches**: `claude/{agent}-{task_name}-{sessionID}` (created per agent from task branch)
+- **Agent branches**: `{llm-agent}/{agent}-{task_name}-{sessionID}` (created per agent from task branch)
 - Always test before committing
 
 ### Testing Strategy
@@ -520,12 +603,12 @@ Modify `.github/workflows/` for your CI/CD needs.
 
 ## Using with Different AI Tools
 
-### Claude Code
+### Claude Code (Example Tool)
 ```bash
 npm install -g @anthropic-ai/claude-code
 export ANTHROPIC_API_KEY="your-key"
 cd your-project
-claude
+claude  # or use your preferred AI tool
 ```
 
 ### Aider

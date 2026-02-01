@@ -1,6 +1,7 @@
 import dotenv from 'dotenv'
 import express from 'express'
 import cors from 'cors'
+import gamesRouter from './routes/games.js'
 
 dotenv.config()
 
@@ -21,11 +22,8 @@ app.get('/health', (req, res) => {
   res.json({ status: 'ok', message: 'Sudoku Webapp API is running' })
 })
 
-// API versioning
-app.use('/api/v1', (req, res, next) => {
-  // Routes will be added here
-  res.status(404).json({ error: 'Not Found' })
-})
+// API routes
+app.use('/api/v1/games', gamesRouter)
 
 // 404 handler
 app.use((req, res) => {

@@ -375,7 +375,7 @@ async function callLLMForReview(agentType, prDetails, previousReview = null) {
   try {
     providerModule = require(`./providers/${normalizedProvider}.js`);
   } catch (error) {
-    const supportedProviders = ['openai', 'anthropic', 'gemini', 'azure', 'cohere', 'mistral'];
+    const supportedProviders = ['openai', 'anthropic', 'gemini', 'azure', 'cohere', 'mistral', 'copilot'];
     throw new Error(
       `Unsupported LLM provider: ${provider}\n` +
       `Supported providers: ${supportedProviders.join(', ')}\n` +

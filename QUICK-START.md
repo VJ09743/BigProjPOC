@@ -218,7 +218,7 @@ For each task, the AI uses this branch structure:
   - Created once per task
   - All agents work from this branch
   - All PRs merge into this branch
-- **Agent branches**: `claude/{agent}-{task_name}-{sessionID}`
+- **Agent branches**: `{llm-name}/{agent}-{task_name}-{sessionID}`
   - Created per agent (Developer, Architect, Tester, etc.)
   - Agent works on their task
   - Creates PR to `master_{task_name}`
@@ -227,9 +227,9 @@ For each task, the AI uses this branch structure:
 ```
 template/agentic-workflow
   └─→ master_login-page (Product Owner creates this)
-        ├─→ claude/architect-login-page-abc123 (Architect's work)
-        ├─→ claude/developer-login-page-abc123 (Developer's work)
-        └─→ claude/tester-login-page-abc123 (Tester's work)
+        ├─→ {llm-name}/architect-login-page-abc123 (Architect's work)
+        ├─→ {llm-name}/developer-login-page-abc123 (Developer's work)
+        └─→ {llm-name}/tester-login-page-abc123 (Tester's work)
 ```
 
 See [Task-Based Branching Strategy](AI-WORKFLOW.md#task-based-branching-strategy) for details.

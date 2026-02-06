@@ -88,56 +88,8 @@ gh auth status  # Verify authentication
 
 **LLM Provider is ONLY needed if you want automated peer reviews (GitHub Actions).**
 
-**For IDE work ONLY** (using Copilot, Claude Code, Cursor, etc.):
-- ✅ **No LLM_PROVIDER needed** - Your AI tool authenticates separately
-- ✅ **Start working immediately** - Skip this section and go to [Choose Your Path](#choose-your-path)
-
-**For automated peer reviews**:
-- ⚠️ **LLM_PROVIDER is REQUIRED** - Continue with Step 1 below
-
-> **GitHub Copilot users**: If you have Copilot Enterprise, set `LLM_PROVIDER=copilot` (no API key needed). If you have Copilot Pro/Individual, use a separate provider like Gemini for automated reviews. See [Path G setup guide](quickstart/tools/github-copilot-setup.md) for details.
-
-### Step 1: Choose Your LLM Provider (for Automated Reviews)
-
-| Provider | Best For | Cost | Setup Guide |
-|----------|----------|------|-------------|
-| **GitHub Copilot** | Copilot subscribers (automated reviews) | Included* | [Copilot Setup](quickstart/tools/github-copilot-setup.md) |
-| **OpenAI** | General purpose, most popular | $$ | [OpenAI Setup](quickstart/providers/openai-setup.md) |
-| **Anthropic** | Code review, complex reasoning | $$$ | [Anthropic Setup](quickstart/providers/anthropic-setup.md) |
-| **Gemini** | Fast, cost-effective | $ | [Gemini Setup](quickstart/providers/gemini-setup.md) |
-| **Azure OpenAI** | Enterprise, compliance | $$$ | [Azure Setup](quickstart/providers/azure-setup.md) |
-| **Cohere** | Efficiency, production | $ | [Cohere Setup](quickstart/providers/cohere-setup.md) |
-| **Mistral** | Open-source, privacy | $ | [Mistral Setup](quickstart/providers/mistral-setup.md) |
-
-*GitHub Copilot Pro/Individual subscriptions provide IDE access only. For automated reviews, you need Copilot ENTERPRISE or use a separate provider (Gemini, OpenAI, etc.). Set `LLM_PROVIDER=copilot` only if you have Enterprise access.
-
-### Step 2: Follow Your Provider's Setup Guide
-
-Click on your chosen provider's setup guide above. Each guide includes:
-- API key acquisition
-- Environment variable configuration
-- GitHub Secrets setup (for automated reviews)
-- Verification steps
-
-### Step 3: Verify Configuration (Optional - Only for Automated Reviews)
-
-After setup, verify your provider is configured:
-
-**Linux/macOS (bash):**
-```bash
-echo "LLM_PROVIDER: ${LLM_PROVIDER:-'Not set (IDE work only)'}"
-echo "LLM_API_KEY is set: $([ -n "$LLM_API_KEY" ] && echo 'Yes' || echo 'No (IDE work only)')"
-```
-
-**Windows (PowerShell):**
-```powershell
-Write-Host "LLM_PROVIDER: $($env:LLM_PROVIDER ?? 'Not set (IDE work only)')"
-Write-Host "LLM_API_KEY is set: $(if ($env:LLM_API_KEY) { 'Yes' } else { 'No (IDE work only)' })"
-```
-
-**Summary**:
-- **IDE work only**: No configuration needed - your AI tool handles authentication
-- **Automated reviews**: LLM_PROVIDER required, LLM_API_KEY required (except copilot)
+- **For IDE work ONLY** (using Copilot, Claude Code, Cursor, etc.): No LLM_PROVIDER needed — your AI tool authenticates separately. Skip to [Choose Your Path](#choose-your-path).
+- **For automated peer reviews**: See [Automated Peer Review Setup](#automated-peer-review-setup) for full instructions.
 
 ---
 
@@ -149,8 +101,7 @@ Before proceeding to "Choose Your Path", verify:
 - [ ] GitHub account created and logged in
 - [ ] GITHUB_TOKEN environment variable set
 - [ ] gh CLI installed and authenticated (`gh auth status`)
-- [ ] **(Optional)** LLM_PROVIDER set - only if you want automated peer reviews
-- [ ] **(Optional)** LLM_API_KEY set - only if you want automated peer reviews with non-Copilot providers
+- [ ] **(Optional)** LLM_PROVIDER and LLM_API_KEY set - only if you want [automated peer reviews](#automated-peer-review-setup)
 
 **If all checkboxes pass**, you're ready to proceed! 🚀
 
@@ -360,17 +311,19 @@ This workflow automatically reviews your PRs using AI agents.
 
 The automated review supports 7 LLM providers:
 
-| Provider | Best For | Cost | Setup |
-|----------|----------|------|-------|
-| GitHub Copilot | Copilot subscribers | FREE* | Set LLM_PROVIDER=copilot (no API key!) |
-| OpenAI | Most popular, GPT-4o | $$ | https://platform.openai.com/ |
-| Anthropic | Best code reviews, Claude | $$$ | https://console.anthropic.com/ |
-| Gemini | Google's model | $ | https://makersuite.google.com/ |
-| Azure OpenAI | Enterprise users | $$$ | https://portal.azure.com/ |
-| Cohere | Fast responses | $ | https://dashboard.cohere.com/ |
-| Mistral | Open-source option | $ | https://console.mistral.ai/ |
+| Provider | Best For | Cost | Setup Guide |
+|----------|----------|------|-------------|
+| **GitHub Copilot** | Copilot subscribers | FREE* | [Copilot Setup](quickstart/tools/github-copilot-setup.md) |
+| **OpenAI** | Most popular, GPT-4o | $$ | [OpenAI Setup](quickstart/providers/openai-setup.md) |
+| **Anthropic** | Best code reviews, Claude | $$$ | [Anthropic Setup](quickstart/providers/anthropic-setup.md) |
+| **Gemini** | Google's model, cost-effective | $ | [Gemini Setup](quickstart/providers/gemini-setup.md) |
+| **Azure OpenAI** | Enterprise, compliance | $$$ | [Azure Setup](quickstart/providers/azure-setup.md) |
+| **Cohere** | Fast responses, efficiency | $ | [Cohere Setup](quickstart/providers/cohere-setup.md) |
+| **Mistral** | Open-source, privacy | $ | [Mistral Setup](quickstart/providers/mistral-setup.md) |
 
-*Uses repository's GitHub authentication automatically
+*GitHub Copilot uses repository authentication automatically. Copilot Pro/Individual provides IDE access only — for automated reviews you need Copilot ENTERPRISE or a separate provider.
+
+> Follow your chosen provider's setup guide above for API key acquisition, environment variable configuration, and verification steps.
 
 ### Step 2: Configure GitHub Repository Secrets
 

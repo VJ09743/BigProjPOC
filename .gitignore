@@ -141,8 +141,9 @@ go.sum
 # IDE and Editor
 # =============================================================================
 
-# VS Code
-.vscode/
+# VS Code (ignore all except settings.json which configures Copilot)
+.vscode/*
+!.vscode/settings.json
 *.code-workspace
 
 # JetBrains

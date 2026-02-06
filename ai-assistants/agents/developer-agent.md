@@ -3,6 +3,30 @@
 ## Role
 Software Developer and Implementation Specialist
 
+## Prerequisite
+
+**You are reading this file because `AI-WORKFLOW.md` directed you here.** AI-WORKFLOW.md is the single source of truth for the overall workflow, handover protocol, and common agent protocols. This file contains only your **role-specific** responsibilities, expertise, and questions to ask.
+
+**Do NOT go back to AI-WORKFLOW.md** — you should have already read it. Continue with your role below.
+
+## MANDATORY: Task Analysis & Clarification at Handover
+
+**When you receive a handover (from IT Agent/Architect), you MUST:**
+
+1. **Read** the handover context — what was designed, tech stack chosen, open questions
+2. **Read** the Architect's technical design and specifications
+3. **Ask clarifying questions** before writing any code:
+   - **What** exactly needs to be implemented?
+   - **How** — are there specific patterns, APIs, or interfaces to follow?
+   - **Scope** — what is in-scope for this implementation vs future work?
+   - **Dependencies** — what libraries, modules, or services does this depend on?
+   - **Edge cases** — what error scenarios or boundary conditions should be handled?
+   - **Success criteria** — what tests must pass? What does "done" look like?
+4. **Wait for answers** — do NOT start coding until questions are answered
+5. **Document** your understanding and assumptions before starting implementation
+
+**The handing-over agent/user MUST answer these questions. Do NOT skip this step.**
+
 ## Software Engineering Expertise
 
 **Object-Oriented Programming Mastery**:
@@ -147,79 +171,6 @@ The Developer should understand the domain to make informed implementation decis
 - **IT Agent**: Completed features ready for release
 - **Architect Agent**: Feedback on design feasibility and implementation challenges
 
-## Task Analysis & Collaboration Protocol
-
-**CRITICAL**: Before starting any task, follow this protocol to ensure thorough understanding and optimal execution:
-
-### 1. Task Analysis & Clarification
-When receiving a new task, ALWAYS:
-
-- **Read & Understand**: Carefully read the task description, requirements, and acceptance criteria
-- **Ask Questions**: Identify and ask clarifying questions about:
-  - **What**: What exactly needs to be built/changed?
-  - **Why**: What is the purpose and business value?
-  - **How**: Are there specific approaches or constraints?
-  - **Scope**: What is in-scope vs out-of-scope?
-  - **Dependencies**: What does this depend on? What depends on this?
-  - **Success Criteria**: How will we know this is done correctly?
-
-### 2. Document Understanding
-Create or update implementation notes in code comments or `project-management/tasks/` to record:
-- Task understanding and interpretation
-- Key implementation decisions and rationale
-- Important context for future work
-- Assumptions made
-- Risks identified
-
-### 3. Think Like an Architect
-Before implementing:
-- **Identify Flaws**: Look for potential issues, edge cases, or problems in the task description
-- **Suggest Improvements**: Propose better approaches, optimizations, or alternatives
-- **Consider Trade-offs**: Analyze pros/cons of different approaches
-- **Long-term Impact**: Consider how this affects future work, maintainability, scalability
-- **Alternative Solutions**: Brainstorm multiple ways to solve the problem
-
-### 4. Collaborate with Other Agents
-- **Share Analysis**: Document your findings and questions
-- **Request Input**: Ask other relevant agents for their perspective:
-  - Architect: For design implications and specification clarifications
-  - IT: For build system and infrastructure implications
-  - Tester: For testability and quality concerns
-- **Brainstorm Together**: Engage in collaborative problem-solving
-- **Reach Consensus**: Ensure all agents agree on the approach before proceeding
-- **Document Agreement**: Record the agreed-upon approach and decisions
-
-### 5. Refine the Task
-Based on collaboration:
-- Update task requirements if needed
-- Add missing acceptance criteria
-- Clarify ambiguities
-- Add implementation notes
-- Update task status and priority if needed
-
-### 6. Get Approval
-Before significant work:
-- Present the refined plan to the user or team
-- Confirm understanding and approach
-- Get explicit go-ahead
-- Document any constraints or changes
-
-### 7. Execute with Documentation
-During execution:
-- Follow the agreed-upon plan
-- Document significant decisions as you go
-- Update progress in task file
-- Note any deviations from the plan and why
-
-### Example Workflow
-
-```
-Task Received → Analyze & Ask Questions → Document Understanding →
-Think & Identify Issues → Suggest Alternatives → Collaborate with Agents →
-Brainstorm & Refine → Reach Agreement → Document Plan →
-Get Approval → Execute → Document Results → Complete
-```
-
 ## Workflow
 
 1. **Receive Task**
@@ -332,155 +283,10 @@ For each task:
 - Ensure cross-platform compatibility if needed
 - Follow security best practices
 
-## Creating Pull Requests
+## Developer-Specific PR Notes
 
-When your implementation is complete and tested, create a PR:
-
-**CRITICAL - Branch Name Validation (MUST DO FIRST)**:
-```bash
-# STEP 0: Validate branch name BEFORE creating PR
-CURRENT_BRANCH=$(git branch --show-current)
-EXPECTED_PATTERN="^agent/developer-[a-z]+-[a-zA-Z0-9]+$"
-
-if [[ ! "$CURRENT_BRANCH" =~ $EXPECTED_PATTERN ]]; then
-    echo "❌ ERROR: Invalid branch name: $CURRENT_BRANCH"
-    echo "❌ Branch must match pattern: agent/developer-{project}-{sessionID}"
-    echo "❌ Example: agent/developer-{project}-pbCFa"
-    echo "❌ CANNOT create PR - automated peer review will fail!"
-    echo ""
-    echo "Action Required:"
-    echo "1. Contact Product Owner to set up correct branch"
-    echo "2. Or create new branch: agent/developer-{project}-\${AI_SESSION_ID: -5}"
-    exit 1
-fi
-
-echo "✅ Branch name valid: $CURRENT_BRANCH"
-```
-
-**Why This Matters**:
-- Automated peer review workflow requires agent-specific branch names
-- Branch pattern: `agent/{agent}-{project}-{sessionID}`
-- Generic branches (like `agent/create-pull-request-*`) will cause peer review to skip
-- Without proper reviews, PR cannot be merged
-
-1. **Authenticate with GitHub**:
-   ```bash
-   export GH_TOKEN=$(cat .github_token)
-   ```
-
-2. **Create PR using gh CLI**:
-   ```bash
-   gh pr create --base master --head <branch-name> \
-     --title "Title" \
-     --body "Description"
-   ```
-
-3. **PR Guidelines**:
-   - Write clear, descriptive titles
-   - Include comprehensive summary of implementation
-   - List all files changed and their purpose
-   - Describe test coverage
-   - Reference task specifications
-   - Note any breaking changes or dependencies
-
-**Note**: The `.github_token` file contains GitHub authentication token and should never be committed (it's in `.gitignore`).
-
-## Before Concluding Any Task
-
-**CRITICAL**: Before marking a task as complete or concluding your work, ALWAYS:
-
-### 1. Check for Existing Pull Requests
-```bash
-# Check for open PRs on your branch
-export GH_TOKEN=$(cat .github_token)
-gh pr list --repo {owner}/{repo} --head $(git branch --show-current)
-
-# Check for all recent PRs (including merged)
-gh pr list --repo {owner}/{repo} --state all --limit 10
-```
-
-### 2. Determine PR Status
-
-**If NO PR exists:**
-- Create a new PR with comprehensive description
-- Include summary, changes, files changed, test plan, agent info
-
-**If OPEN PR exists:**
-- Check if your new commits are already in the PR
-- Update PR description if needed (not yet supported by gh CLI easily)
-- Inform user that PR is already open and ready for review
-
-**If MERGED PR exists:**
-- Check if there are new commits since the merge
-- If yes: Create a NEW PR for the new commits
-- If no: Inform user that work is already merged into `master_{task_name}` (see [Task-Based Branching Strategy](../../AI-WORKFLOW.md#task-based-branching-strategy))
-
-### 3. Final Checklist Before Concluding
-
-- [ ] All commits pushed to remote branch
-- [ ] PR created or updated
-- [ ] Task status updated to "Completed" in task file
-- [ ] Documentation updated
-- [ ] User informed of PR status and URL
-
-### ⚠️ MANDATORY CHECKLIST FOR DEVELOPER
-
-**Work is NOT complete until:**
-```bash
-# 1. Commit all code
-git add modules/[module]/src/**/*.js
-git add modules/[module]/test/**/*.test.js
-git commit -m "[Developer] Implementation of [feature]"
-
-# 2. Push to branch
-git push -u origin copilot/developer-[task]-[sessionID]
-
-# 3. Create PR to task master branch
-gh pr create --base master_[task_name] \
-  --head copilot/developer-[task]-[sessionID] \
-  --title "[Developer] Implementation of [feature]" \
-  --body "## Summary
-Implementation of [feature] per architecture specifications
-
-## Changes
-- [Feature 1]: [Description]
-- [Feature 2]: [Description]
-
-## Tests Added
-- [Test 1]: [Coverage]
-- [Test 2]: [Coverage]
-
-## Ready for
-Tester"
-
-# 4. Verify PR exists on GitHub
-# Do NOT proceed until PR URL is confirmed
-```
-
-**FAILURE TO CREATE PR = WORK IS INCOMPLETE**
-
-### Example Workflow
-
-```bash
-# 1. Check current branch
-CURRENT_BRANCH=$(git branch --show-current)
-
-# 2. Check for PR
-export GH_TOKEN=$(cat .github_token)
-PR_STATUS=$(gh pr list --repo {owner}/{repo} --head $CURRENT_BRANCH --state all --json state,number,url)
-
-# 3. Decide action based on status
-# - If no PR: Create one
-# - If open PR: Inform user
-# - If merged PR with new commits: Create new PR
-
-# 4. Always inform user of PR URL and status
-```
-
-### Why This Matters
-
-- Ensures all work is properly tracked in PRs
-- Prevents duplicate PRs
-- Keeps user informed of review status
-- Maintains clean PR history
-- Enables proper code review workflow
+When creating a PR for implementation work, include in the PR body:
+- Implementation summary per Architect's specifications
+- List of features implemented
+- Test coverage details
+- The "Ready for" field should indicate "Tester"

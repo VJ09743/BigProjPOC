@@ -11,8 +11,11 @@ This directory contains configuration for your LLM (Large Language Model) provid
 
 2. **Set your API key:**
    ```bash
-   # Add to your shell profile (~/.bashrc, ~/.zshrc, etc.)
+   # Linux/macOS (add to ~/.bashrc or ~/.zshrc for persistence):
    export LLM_API_KEY="your-api-key-here"
+
+   # Windows (PowerShell — add to $PROFILE for persistence):
+   # $env:LLM_API_KEY = "your-api-key-here"
    ```
 
 3. **Edit config.json** with your provider settings
@@ -31,7 +34,11 @@ This directory contains configuration for your LLM (Large Language Model) provid
 **CLI Tool:** [Claude Code](https://github.com/anthropics/claude-code)
 ```bash
 npm install -g @anthropic-ai/claude-code
+
+# Linux/macOS:
 export ANTHROPIC_API_KEY="your-key"
+# Windows (PowerShell): $env:ANTHROPIC_API_KEY = "your-key"
+
 claude
 ```
 
@@ -84,12 +91,14 @@ claude
 **Setup:**
 ```bash
 # Install Ollama
+# Linux/macOS:
 curl -fsSL https://ollama.ai/install.sh | sh
+# Windows: Download from https://ollama.ai/download
 
-# Pull a model
+# Pull a model (all platforms):
 ollama pull llama3
 
-# Use with Aider
+# Use with Aider (all platforms):
 aider --model ollama/llama3
 ```
 
@@ -112,34 +121,41 @@ The agentic workflow works with various AI coding assistants:
 | Tool | Providers | Install |
 |------|-----------|---------|
 | [Claude Code](https://github.com/anthropics/claude-code) | Anthropic | `npm i -g @anthropic-ai/claude-code` |
-| [Aider](https://aider.chat) | OpenAI, Anthropic, Ollama, Azure | `pip install aider-chat` |
+| [GitHub Copilot](https://github.com/features/copilot) | GitHub/OpenAI | VS Code extension |
 | [Cursor](https://cursor.sh) | OpenAI, Anthropic | Download from website |
+| [Windsurf](https://codeium.com/windsurf) | Multiple | Download from website |
 | [Continue](https://continue.dev) | Multiple | VS Code extension |
+| [Aider](https://aider.chat) | OpenAI, Anthropic, Ollama, Azure | `pip install aider-chat` |
 | [Cody](https://sourcegraph.com/cody) | Multiple | VS Code extension |
-| [Copilot](https://github.com/features/copilot) | GitHub/OpenAI | VS Code extension |
 
 ## Environment Variables
 
 Store API keys as environment variables, never in files:
 
+**Linux/macOS** (add to `~/.bashrc` or `~/.zshrc`):
 ```bash
-# ~/.bashrc or ~/.zshrc
-
-# Anthropic
 export ANTHROPIC_API_KEY="sk-ant-..."
-
-# OpenAI
 export OPENAI_API_KEY="sk-..."
-
-# Azure
 export AZURE_OPENAI_API_KEY="..."
 export AZURE_OPENAI_ENDPOINT="https://..."
-
-# Google
 export GOOGLE_API_KEY="..."
+export LLM_API_KEY="..."   # Generic (used by this template)
+```
 
-# Generic (used by this template)
-export LLM_API_KEY="..."
+**Windows (PowerShell)** (add to `$PROFILE` for persistence):
+```powershell
+$env:ANTHROPIC_API_KEY = "sk-ant-..."
+$env:OPENAI_API_KEY = "sk-..."
+$env:AZURE_OPENAI_API_KEY = "..."
+$env:AZURE_OPENAI_ENDPOINT = "https://..."
+$env:GOOGLE_API_KEY = "..."
+$env:LLM_API_KEY = "..."   # Generic (used by this template)
+```
+
+**Windows (CMD):**
+```cmd
+set ANTHROPIC_API_KEY=sk-ant-...
+set OPENAI_API_KEY=sk-...
 ```
 
 ## Security
@@ -173,11 +189,13 @@ The agent definitions in `ai-assistants/agents/` work with any LLM. If your tool
 
 **API Key not found:**
 ```bash
-# Verify your key is set
+# Linux/macOS — verify your key is set:
 echo $LLM_API_KEY
+source ~/.bashrc   # Reload profile if recently added
 
-# Source your profile
-source ~/.bashrc
+# Windows (PowerShell):
+# echo $env:LLM_API_KEY
+# . $PROFILE   # Reload profile if recently added
 ```
 
 **Model not available:**

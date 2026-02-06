@@ -72,18 +72,18 @@ package.json                       @it-agent
 # Project Documentation
 # ============================================================================
 
-# Main project documentation - Team Leader oversees
-/CLAUDE.md                         @team-leader-agent
-/README.md                         @team-leader-agent
+# Main project documentation - Product Owner oversees
+/CLAUDE.md                         @product-owner-agent
+/README.md                         @product-owner-agent
 
-# Task management system - Team Leader manages
-/docs/tasks/                       @team-leader-agent
+# Task management system - Product Owner manages
+/docs/tasks/                       @product-owner-agent
 
-# Team leader documentation
-/docs/team-leader/                 @team-leader-agent
+# Product owner documentation
+/docs/product-owner/               @product-owner-agent
 
-# Agent configuration - Team Leader manages
-/.claude/agents/                   @team-leader-agent
+# Agent configuration - Product Owner manages
+/.claude/agents/                   @product-owner-agent
 
 # ============================================================================
 # Notes
@@ -94,14 +94,14 @@ package.json                       @it-agent
 # - Developer: Implements the design, writes unit tests
 # - Tester: Validates implementation, writes comprehensive tests
 # - IT: Manages build system, infrastructure, releases
-# - Team Leader: Orchestrates, reviews, ensures quality
+# - Product Owner: Orchestrates, reviews, ensures quality
 #
 # Review Process:
 # - All PRs require peer review before merge
-# - Developer PRs: Reviewed by Team Leader, Architect, Tester
-# - Architect PRs: Reviewed by Team Leader, Developer
-# - Tester PRs: Reviewed by Team Leader, Developer
-# - IT PRs: Reviewed by Team Leader, Architect
-# - Team Leader PRs: Reviewed by Architect, Developer, Tester
+# - Developer PRs: Reviewed by Product Owner, Architect, Tester
+# - Architect PRs: Reviewed by Product Owner, Developer
+# - Tester PRs: Reviewed by Product Owner, Developer
+# - IT PRs: Reviewed by Product Owner, Architect
+# - Product Owner PRs: Reviewed by Architect, Developer, Tester
 #
 # See .github/workflows/pr-review-assignment.yml for automated review assignment

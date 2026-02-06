@@ -55,9 +55,11 @@ git push -u origin main
 | Provider | Models | Recommended Tools |
 |----------|--------|-------------------|
 | **Anthropic** | Claude 3.5, Opus 4 | Claude Code (recommended) |
-| **Google** | Gemini 1.5 Pro, Flash | Aider, Cursor |
-| **OpenAI** | GPT-4o, GPT-4 Turbo | Aider, Cursor |
-| **Azure** | GPT-4, GPT-3.5 | Aider, Cursor |
+| **Google** | Gemini 1.5 Pro, Flash | Aider, Cursor, Windsurf |
+| **OpenAI** | GPT-4o, GPT-4 Turbo | Aider, Cursor, Windsurf |
+| **Azure** | GPT-4, GPT-3.5 | Aider, Cursor, Windsurf |
+| **GitHub** | Copilot | GitHub Copilot (VS Code) |
+| **Ollama** | Local models | Aider, Continue |
 
 ## What is this?
 
@@ -93,12 +95,17 @@ cd my-project
 
 # 2. Set up your AI provider
 cp ai-assistants/provider-setup/config.template.json ai-assistants/provider-setup/config.json
+
+# Linux/macOS:
 export ANTHROPIC_API_KEY="your-api-key"  # or GOOGLE_API_KEY or OPENAI_API_KEY
+# Windows (PowerShell): $env:ANTHROPIC_API_KEY = "your-api-key"
+# Windows (CMD): set ANTHROPIC_API_KEY=your-api-key
 
 # 3. Start your AI tool and describe what you want to build
 claude           # For Claude Code (recommended)
 aider            # For Aider (Gemini/OpenAI)
 cursor .         # For Cursor IDE
+# Or: Windsurf, Continue (VS Code), GitHub Copilot
 ```
 
 ## Features
@@ -114,6 +121,8 @@ cursor .         # For Cursor IDE
 
 ```
 ├── CLAUDE.md                # Claude Code workflow instructions
+├── .github/copilot-instructions.md  # GitHub Copilot workflow instructions
+├── .vscode/settings.json   # VS Code settings (enables Copilot instructions)
 ├── .cursorrules             # Cursor IDE workflow instructions
 ├── .windsurfrules           # Windsurf IDE workflow instructions
 ├── .continuerules           # Continue extension workflow instructions
@@ -162,21 +171,30 @@ cursor .         # For Cursor IDE
 
 ### Anthropic Claude (Recommended)
 ```bash
+# Linux/macOS:
 export ANTHROPIC_API_KEY="sk-ant-..."
+# Windows (PowerShell): $env:ANTHROPIC_API_KEY = "sk-ant-..."
+
 npm install -g @anthropic-ai/claude-code
 claude
 ```
 
 ### Google Gemini
 ```bash
+# Linux/macOS:
 export GOOGLE_API_KEY="your-key-here"
+# Windows (PowerShell): $env:GOOGLE_API_KEY = "your-key-here"
+
 pip install aider-chat
 aider --model gemini/gemini-1.5-pro-latest
 ```
 
 ### OpenAI (GPT-4)
 ```bash
+# Linux/macOS:
 export OPENAI_API_KEY="sk-..."
+# Windows (PowerShell): $env:OPENAI_API_KEY = "sk-..."
+
 pip install aider-chat
 aider
 ```

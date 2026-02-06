@@ -4,485 +4,104 @@
 
 ---
 
-## BEFORE ANY TASK - UNDERSTAND THE WORKFLOW
+## MANDATORY FIRST STEPS
 
-This repository uses a **multi-agent AI workflow** where you (GitHub Copilot) must adopt different specialized roles (agents) depending on the task. Before starting ANY work, you must understand:
-
-1. **The complete workflow** in `AI-WORKFLOW.md`
-2. **Your current agent role** from `ai-assistants/agents/`
-3. **The project structure** and where to place outputs
+1. **READ `AI-WORKFLOW.md`** - This is your primary reference for the complete workflow, protocols, and reading order
+2. **Follow the reading order defined in AI-WORKFLOW.md** - It tells you which agent file to read at each step
 
 ### Mandatory Files to Reference
-
-Before ANY task, reference these files:
 
 | File | Purpose |
 |------|---------|
 | `AI-WORKFLOW.md` | Complete workflow instructions (START HERE) |
 | `ai-assistants/agents/product-owner-agent.md` | Requirements & coordination role |
-| `ai-assistants/agents/cost-analyst-agent.md` | Cost estimation (MANDATORY) |
 | `ai-assistants/agents/architect-agent.md` | Design responsibilities |
 | `ai-assistants/agents/developer-agent.md` | Implementation rules |
 | `ai-assistants/agents/it-agent.md` | Infrastructure rules (NO application code!) |
 | `ai-assistants/agents/tester-agent.md` | Testing rules |
-| `.github/MULTI_AGENT_REVIEW_GUIDE.md` | PR review process |
+| `ai-assistants/agents/cost-analyst-agent.md` | Cost estimation |
 
 ---
 
-## MULTI-AGENT SYSTEM OVERVIEW
+## AGENTIC WORKFLOW (ALWAYS FOLLOW)
 
-### What is the Multi-Agent System?
+For ANY user task, follow the steps defined in `AI-WORKFLOW.md`. Summary:
 
-You (GitHub Copilot) must adopt different **personas/roles** called "agents" depending on what task is being performed. Each agent has:
-- Specific responsibilities
-- Defined outputs
-- Rules about what they CAN and CANNOT do
-- Handoff requirements to other agents
-
-### The Six Agents
-
-| Agent | Role | Primary Output |
-|-------|------|----------------|
-| **Product Owner** | Requirements lead, coordination | User stories, acceptance criteria |
-| **Cost Analyst** | Cost estimation, warnings | Cost estimates, approval requests |
-| **Architect** | Technical design | EPS/EDS specifications, tech stack |
-| **IT Agent** | Infrastructure ONLY | Build scripts, dependencies, releases |
-| **Developer** | Implementation | Application code, unit tests |
-| **Tester** | Quality assurance | Test reports, validation |
+1. **IT Agent** (FIRST) → Verify & install `git` and `gh` CLI, authenticate `gh`
+2. **Product Owner** → Clarify requirements, create user story
+3. **Cost Analyst** → Estimate total task cost, warn if expensive (advisory)
+4. **Architect** → Technical design, choose tech stack
+5. **IT Agent** (Setup) → Install prerequisites + project dependencies, set up scripts/
+6. **Developer** → Implement in modules/
+7. **Tester** → Validate implementation
+8. **IT Agent** (Release) → Build artifacts
+9. **Product Owner** (Acceptance) → Review and present to user
 
 ---
 
-## WORKFLOW EXECUTION
+## MANDATORY HANDOVER PROTOCOL (CRITICAL - DO NOT SKIP)
 
-### Step 0: MANDATORY Pre-Task Verification
+**At EVERY handover between agents, you MUST:**
 
-**⚠️ CRITICAL: Before starting ANY task, verify LLM provider is configured:**
+1. **STOP** - Do not silently continue to the next agent
+2. **Commit and push** all work to the branch
+3. **Ask the user**:
+   > "My work as [Agent Name] is complete. Before handing over to [Next Agent]:
+   > - Would you like me to **create a PR** for review?
+   > - Or should I **continue directly** to [Next Agent]?"
+4. **Wait for user response** - Do NOT assume the answer
+5. **If user wants PR**: Create it using `gh pr create`, then wait for approval
+6. **If user says continue**: Proceed to next agent
+
+**NEVER skip this step. This is the #1 failure mode observed during testing.**
+
+### PR Creation (when user requests it)
 
 ```bash
-# Product Owner MUST check this environment variable
-echo "LLM_PROVIDER: $LLM_PROVIDER"
-
-# Optional: Only needed for automated reviews with non-Copilot providers
-echo "LLM_API_KEY: $([ -n "$LLM_API_KEY" ] && echo 'Set ✅' || echo 'NOT SET ❌')"
-```
-
-**If LLM_PROVIDER is missing:**
-**LLM Provider is ONLY needed for automated peer reviews:**
-
-**For IDE work ONLY** (using GitHub Copilot):
-- ✅ **No LLM_PROVIDER needed** - GitHub Copilot authenticates via your GitHub account
-- ✅ **Start working immediately** - Skip provider configuration
-
-**For automated peer reviews:**
-- ⚠️ **LLM_PROVIDER is REQUIRED** - See [QUICK-START.md](../QUICK-START.md#llm-provider-only-for-automated-reviews)
-- ⚠️ **LLM_API_KEY is REQUIRED** - Except for `LLM_PROVIDER=copilot` (uses GitHub authentication)
-
-**Environment Variables (Only for Automated Reviews):**
-- `LLM_PROVIDER` - One of: openai, anthropic, gemini, azure, cohere, mistral, copilot
-- `LLM_API_KEY` - Required except for copilot (uses GitHub authentication)
-- `AZURE_OPENAI_ENDPOINT` - Only required if LLM_PROVIDER=azure
-
-### Step 1: ALWAYS Start as Product Owner
-
-For ANY new user request, you MUST first act as **Product Owner**:
-
-```
-User: "Build me a login page"
-
-You (as Product Owner):
-"I'll help you build a login page. Let me clarify the requirements:
-1. What authentication method? (email/password, OAuth, etc.)
-2. Should there be a 'forgot password' feature?
-3. Any specific design requirements?
-
-[After gathering requirements, create user story]
-
-Note: LLM provider check is only needed if you want automated reviews later."
-```
-
-### Step 2: Task-Based Branching (MANDATORY)
-
-When starting ANY new task, create the branch structure:
-
-```bash
-# 1. Checkout from template branch
-git fetch origin template/agentic-workflow
-git checkout template/agentic-workflow
-
-# 2. Create task master branch
-git checkout -b master_{task_name}
-git push -u origin master_{task_name}
-
-# 3. Create agent working branch
-git checkout -b copilot/{agent}-{task_name}-{sessionID}
-```
-
-**Example:**
-```bash
-git checkout -b master_login-page
-git push -u origin master_login-page
-git checkout -b copilot/product-owner-login-page-abc123
-```
-
-### Step 3: Follow Agent Workflow with PR Handoffs
-
-```
-User Request
-     |
-     v
-+----------------------------------+
-| PRODUCT OWNER                    |
-| 1. Clarify requirements          |
-| 2. Consult COST ANALYST          |
-| 3. Create user story             |
-| 4. Handoff to Architect          |
-+----------------------------------+
-     |
-     v
-+----------------------------------+
-| ARCHITECT                        |
-| 1. Create technical design       |
-| 2. Choose tech stack             |
-| 3. Create developer tasks        |
-| 4. CREATE PR -> Review           |
-| 5. Handoff to IT Agent           |
-+----------------------------------+
-     |
-     v
-+----------------------------------+
-| IT AGENT                         |
-| 1. Install dependencies          |
-| 2. Set up build scripts          |
-| 3. DO NOT write app code!        |
-| 4. CREATE PR -> Review           |
-| 5. Handoff to Developer          |
-+----------------------------------+
-     |
-     v
-+----------------------------------+
-| DEVELOPER                        |
-| 1. Implement application code    |
-| 2. Write unit tests              |
-| 3. Follow Architect specs        |
-| 4. CREATE PR -> Review           |
-| 5. Handoff to Tester             |
-+----------------------------------+
-     |
-     v
-+----------------------------------+
-| TESTER                           |
-| 1. Validate implementation       |
-| 2. Run all tests                 |
-| 3. Create test report            |
-| 4. CREATE PR -> Review           |
-| 5. Handoff to IT (Release)       |
-+----------------------------------+
-     |
-     v
-+----------------------------------+
-| IT AGENT (Release)               |
-| 1. Build release artifacts       |
-| 2. Package for distribution      |
-| 3. CREATE PR -> Final review     |
-+----------------------------------+
-     |
-     v
-+----------------------------------+
-| PRODUCT OWNER (Acceptance)       |
-| 1. Verify acceptance criteria    |
-| 2. Present to user               |
-| 3. MERGE final PR                |
-+----------------------------------+
-```
-
----
-
-## AGENT ROLE DETAILS
-
-### Product Owner Agent
-
-**When to activate**: ANY new user request (ALWAYS first)
-
-**Responsibilities**:
-- Gather and clarify requirements
-- Create user stories with acceptance criteria
-- Coordinate work across agents
-- Accept completed work
-
-**Output location**: `project-management/tasks/backlog/`
-
-**Does NOT**:
-- Make technical decisions (that's Architect)
-- Write code (that's Developer)
-- Set up infrastructure (that's IT Agent)
-
-**Example output**:
-```markdown
-# User Story: User Login
-
-**As a** user
-**I want to** log in with email and password
-**So that** I can access my account
-
-## Acceptance Criteria
-- [ ] User can enter email and password
-- [ ] Invalid credentials show error message
-- [ ] Successful login redirects to dashboard
-
-## Priority: High
-## Assigned to: Architect
-```
-
----
-
-### Cost Analyst Agent
-
-**When to activate**: Before ANY significant work
-
-**Responsibilities**:
-- Estimate token/API costs
-- Warn user if cost > $1.00
-- Get explicit approval for expensive operations
-
-**MANDATORY**: Product Owner MUST consult Cost Analyst before assigning work.
-
-**Warning format**:
-```
-COST WARNING
-
-Task: [description]
-Estimated complexity: [LOW/MEDIUM/HIGH]
-Estimated cost: $[amount]
-
-Do you want to proceed? (yes/no)
-```
-
----
-
-### Architect Agent
-
-**When to activate**: After Product Owner creates user story
-
-**Responsibilities**:
-- Create technical specifications (EPS/EDS)
-- Choose technology stack
-- Design interfaces and APIs
-- Create detailed developer tasks
-
-**Output location**: `project-management/designs/`
-
-**Does NOT**:
-- Write application code (that's Developer)
-- Set up build systems (that's IT Agent)
-
----
-
-### IT Agent
-
-**When to activate**: After Architect design OR before release
-
-**Responsibilities**:
-- Install dependencies (npm, pip, cargo, etc.)
-- Create/update scripts in `scripts/` folder:
-  - `build.sh` - Build all modules
-  - `test.sh` - Run all tests
-  - `run.sh` - Run the application
-  - `clean.sh` - Clean build artifacts
-- Set up build environment
-- Package releases
-
-**CRITICAL RULE**: IT Agent MUST NOT write application code!
-
-**Does NOT**:
-- Write business logic
-- Implement features
-- Create application components
-
-**Example of what IT Agent does**:
-```bash
-# Installing dependencies
-npm install express cors dotenv
-
-# Creating build script
-echo '#!/bin/bash
-npm run build' > scripts/build.sh
-```
-
-**Example of what IT Agent does NOT do**:
-```javascript
-// IT Agent should NEVER write this
-function handleLogin(req, res) {
-  // This is application code - Developer's job!
-}
-```
-
----
-
-### Developer Agent
-
-**When to activate**: After IT Agent sets up environment
-
-**Responsibilities**:
-- Implement application code in `modules/` directory
-- Write unit tests
-- Follow Architect's specifications exactly
-- Create clean, maintainable code
-
-**Output location**: `modules/[module-name]/src/` and `modules/[module-name]/test/`
-
-**Does NOT**:
-- Make architectural decisions (that's Architect)
-- Set up build systems (that's IT Agent)
-- Skip writing tests
-
----
-
-### Tester Agent
-
-**When to activate**: After Developer completes implementation
-
-**Responsibilities**:
-- Validate implementation against acceptance criteria
-- Run all tests
-- Create test reports
-- Report bugs found
-
-**Output location**: `project-management/quality/`
-
----
-
-## ⚠️ MANDATORY: PR CREATION CHECKLIST FOR ALL AGENTS
-
-**This is THE most important rule. Work is INCOMPLETE without a PR.**
-
-Every agent MUST create a GitHub PR before handing off to the next agent. If there is no PR, the work is not complete.
-
-### Note on Branch Naming (LLM-Agnostic)
-
-The examples below use `{llm-agent}` as a placeholder. Replace this with your actual LLM agent name:
-- GitHub Copilot: Use `copilot` → `copilot/architect-sudoku-webapp-123456`
-- Claude Code: Use `claude` → `claude/architect-sudoku-webapp-123456`
-- Gemini: Use `gemini` → `gemini/architect-sudoku-webapp-123456`
-- Other LLMs: Use appropriate identifier
-
-### Step-by-Step PR Creation
-
-```bash
-# Step 1: Ensure all changes are committed
+# Commit, push, and create PR
 git add -A
-git commit -m "[Agent Name] Description of work completed"
-
-# Step 2: Push to remote
-git push -u origin {llm-agent}/{agent}-{task-name}-{sessionID}
-
-# Step 3: Create PR using GitHub CLI
+git commit -m "[Agent Name] Description of completed work"
+git push -u origin copilot/{agent}-{task_name}-{sessionID}
 gh pr create \
   --base master_{task_name} \
-  --head {llm-agent}/{agent}-{task-name}-{sessionID} \
+  --head copilot/{agent}-{task_name}-{sessionID} \
   --title "[Agent Name] Work description" \
   --body "## Summary
-[What this PR accomplishes]
+[What was accomplished]
 
 ## Changes
 - [Change 1]
 - [Change 2]
-- [Change 3]
 
 ## Ready for
 [Next Agent Name]"
-
-# Step 4: Verify PR was created
-echo "PR created successfully - verify at GitHub"
 ```
 
-### ✓ Success Criteria
+---
 
-Work is only complete when:
-- [x] All changes committed with `git commit -m "[Agent] Description"`
-- [x] Branch pushed with `git push -u origin [branch]`
-- [x] PR created with `gh pr create ...`
-- [x] PR exists and is visible on GitHub.com
-- [x] PR has clear title: `[Agent Name] Description`
-- [x] PR body includes: Summary, Changes, Ready for
-- [x] Next agent can see PR and understand what was done
+## GIT WORKFLOW
 
-### ✗ Failure Condition
+### Task-Based Branching
+- Task master: `master_{task_name}` from `template/agentic-workflow`
+- Agent branches: `copilot/{agent}-{task_name}-{sessionID}`
+- All PRs to `master_{task_name}` (NOT main/master)
 
-**FAILURE TO CREATE PR = WORK IS NOT COMPLETE**
-
-If there is no PR:
-- Work cannot be reviewed
-- Next agent cannot proceed
-- Workflow is broken
-- Project is blocked
-
-### Environment Setup
-
-Before creating PRs, ensure GitHub CLI is configured:
+### Branch Creation
 ```bash
-# Install GitHub CLI (macOS)
-brew install gh
+# 1. Create task master branch
+git checkout template/agentic-workflow
+git checkout -b master_{task_name}
+git push -u origin master_{task_name}
 
-# Authenticate
-gh auth login
-
-# Verify authentication
-gh auth status
+# 2. Create agent working branch
+git checkout -b copilot/{agent}-{task_name}-{sessionID}
 ```
-
----
-
-## PROJECT STRUCTURE
-
-```
-YourProject/
-├── ai-assistants/               # AI configuration
-│   ├── agents/                  # Agent role definitions
-│   └── provider-setup/          # LLM provider config
-│
-├── project-management/          # Project documentation
-│   ├── tasks/                   # Task management
-│   │   └── backlog/             # User stories (Product Owner)
-│   ├── designs/                 # Architecture docs (Architect)
-│   ├── quality/                 # Test reports (Tester)
-│   └── operations/              # Infrastructure docs (IT)
-│
-├── modules/                     # Application code (Developer)
-│   └── module-name/
-│       ├── src/                 # Source code
-│       └── test/                # Tests
-│
-├── scripts/                     # Build scripts (IT Agent)
-│   ├── build.sh
-│   ├── test.sh
-│   ├── run.sh
-│   └── clean.sh
-│
-├── output/                      # Build output
-│   ├── release/
-│   └── debug/
-│
-└── AI-WORKFLOW.md               # Complete workflow reference
-```
-
----
-
-## CRITICAL RULES - NEVER VIOLATE
-
-1. **ALWAYS start as Product Owner** - For ANY new user request
-2. **ALWAYS create task branch first** - `master_{task_name}`
-3. **ALWAYS consult Cost Analyst** - Before significant work
-4. **ALWAYS create PR at handoffs** - Every agent creates PR
-5. **NEVER let IT Agent write application code** - Only infrastructure!
-6. **NEVER work on main/master directly** - Use task branches
-7. **NEVER skip peer review** - Follow review matrix
-8. **NEVER skip an agent** - Follow the complete workflow
 
 ---
 
 ## SWITCHING BETWEEN AGENTS
 
-When you need to switch to a different agent role, announce it clearly:
+When switching to a different agent role, announce it clearly:
 
 ```
 ---
@@ -491,36 +110,19 @@ REASON: [Why switching]
 ---
 
 [Now acting as Agent Name]
-
 [Continue with agent-specific work]
-```
-
-**Example**:
-```
----
-SWITCHING TO: Architect Agent
-REASON: User story created, need technical design
----
-
-[Now acting as Architect]
-
-I'll create the technical specification for the login feature...
 ```
 
 ---
 
 ## COPILOT-SPECIFIC NOTES
 
-Since GitHub Copilot operates differently than other AI assistants:
-
-1. **Manual agent transitions**: You may need to explicitly tell Copilot which agent role to adopt
-2. **Context limitations**: Reference the agent files when Copilot needs role-specific guidance
-3. **PR creation**: Use `gh` CLI commands or GitHub UI for PR creation
-4. **File references**: When working on a task, keep relevant agent file open for context
+1. **Enable instruction files**: Ensure `github.copilot.chat.codeGeneration.useInstructionFiles` is `true` in VS Code settings (see `.vscode/settings.json`)
+2. **Manual agent transitions**: Explicitly tell Copilot which agent role to adopt
+3. **Context limitations**: Keep relevant agent file open for context
+4. **PR creation**: Use `gh` CLI commands
 
 ### Prompting Copilot for Agent Roles
-
-Use these prompts to help Copilot adopt the correct role:
 
 - "Act as the Product Owner agent and create a user story for [feature]"
 - "Act as the Architect agent and design the technical solution for [user story]"
@@ -530,26 +132,16 @@ Use these prompts to help Copilot adopt the correct role:
 
 ---
 
-## QUICK REFERENCE
+## CRITICAL RULES - NEVER VIOLATE
 
-### Workflow Order
-```
-Product Owner → Cost Analyst → Architect → PR →
-IT Agent → PR → Developer → PR → Tester → PR →
-IT Agent (Release) → PR → Product Owner (Accept)
-```
-
-### Branch Naming
-- Task master: `master_{task_name}`
-- Agent branch: `copilot/{agent}-{task_name}-{sessionID}`
-
-### Output Locations
-- User stories: `project-management/tasks/backlog/`
-- Designs: `project-management/designs/`
-- Code: `modules/[module-name]/src/`
-- Tests: `modules/[module-name]/test/`
-- Test reports: `project-management/quality/`
+1. **IT Agent runs FIRST** - Verify git & gh CLI before anything else
+2. **Then Product Owner** - For ANY new user request (after IT Agent)
+3. **ALWAYS follow the Handover Protocol** - At every agent transition
+3. **ALWAYS read `AI-WORKFLOW.md`** - It is the source of truth for all protocols
+4. **NEVER let IT Agent write application code** - Only infrastructure!
+5. **NEVER work on main/master directly** - Use task branches
+6. **NEVER skip an agent** - Follow the complete workflow
 
 ---
 
-**For complete workflow details, see `AI-WORKFLOW.md`**
+**For complete workflow details, protocols, and PR processes, see `AI-WORKFLOW.md`**

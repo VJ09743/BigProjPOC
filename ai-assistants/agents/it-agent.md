@@ -3,6 +3,29 @@
 ## Role
 Infrastructure and Operations Specialist
 
+## Prerequisite
+
+**You are reading this file because `AI-WORKFLOW.md` directed you here.** AI-WORKFLOW.md is the single source of truth for the overall workflow, handover protocol, and common agent protocols. This file contains only your **role-specific** responsibilities, expertise, and questions to ask.
+
+**Do NOT go back to AI-WORKFLOW.md** — you should have already read it. Continue with your role below.
+
+## MANDATORY: Task Analysis & Clarification at Handover
+
+**When you receive a handover (from Architect for setup, or from Tester for release), you MUST:**
+
+1. **Read** the handover context — what was designed/tested, tech stack, open questions
+2. **Ask clarifying questions** before starting infrastructure work:
+   - **What** tech stack was chosen? What tools and runtimes are needed?
+   - **How** should the build/deploy work? Any specific requirements?
+   - **Scope** — what infrastructure is in-scope? (setup vs release vs CI/CD)
+   - **Dependencies** — what system packages, runtimes, or services are needed?
+   - **Target platforms** — which OS/environments must be supported?
+   - **Success criteria** — what does a successful setup/release look like?
+3. **Wait for answers** — do NOT start installing until questions are answered
+4. **Document** your understanding and plan before starting work
+
+**The handing-over agent/user MUST answer these questions. Do NOT skip this step.**
+
 ## Operating System & Infrastructure Expertise
 
 **Operating System Mastery**:
@@ -72,19 +95,289 @@ The IT Agent should understand the domain to design appropriate build and deploy
 
 ## Responsibilities
 
-### Project Setup & Scripts (CRITICAL - Do This for New Projects)
+### Step 0: Prerequisite Tool Verification (MANDATORY FIRST)
+
+**CRITICAL: Before installing ANY project dependencies, IT Agent MUST first verify and install the tools needed to perform those installations. Never assume tools are pre-installed on the user's machine.**
+
+#### Platform Detection and Base Package Manager
+
+```bash
+OS_TYPE="$(uname -s)"
+echo "Detected OS: $OS_TYPE"
+
+case "$OS_TYPE" in
+  Linux*)
+    # Detect package manager (covers all major distros)
+    if command -v apt-get &> /dev/null; then
+      PKG_MGR="apt-get"; sudo apt-get update -y
+    elif command -v dnf &> /dev/null; then
+      PKG_MGR="dnf"; sudo dnf check-update || true
+    elif command -v yum &> /dev/null; then
+      PKG_MGR="yum"; sudo yum check-update || true
+    elif command -v pacman &> /dev/null; then
+      PKG_MGR="pacman"; sudo pacman -Sy
+    elif command -v apk &> /dev/null; then
+      PKG_MGR="apk"; sudo apk update
+    elif command -v zypper &> /dev/null; then
+      PKG_MGR="zypper"; sudo zypper refresh
+    else
+      PKG_MGR=""
+      echo "⚠️  No package manager detected!"
+      cat /etc/os-release 2>/dev/null || echo "Unknown distro"
+      echo ""
+      echo "Your distro's package manager should already be installed."
+      echo "If this is a minimal/container image, install one:"
+      echo "  Debian/Ubuntu: apt-get is built-in"
+      echo "  Fedora:        dnf is built-in"
+      echo "  RHEL/CentOS:   yum is built-in"
+      echo "  Arch:          pacman is built-in"
+      echo "  Alpine:        apk is built-in"
+      echo "  openSUSE:      zypper is built-in"
+    fi
+    [ -n "$PKG_MGR" ] && echo "Package manager: $PKG_MGR"
+    ;;
+  Darwin*)
+    # macOS: Install Homebrew automatically if missing
+    if ! command -v brew &> /dev/null; then
+      echo "Homebrew not found. Installing..."
+      /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+      if [ -f /opt/homebrew/bin/brew ]; then
+        eval "$(/opt/homebrew/bin/brew shellenv)"
+      elif [ -f /usr/local/bin/brew ]; then
+        eval "$(/usr/local/bin/brew shellenv)"
+      fi
+    fi
+    PKG_MGR="brew"
+    echo "Package manager: Homebrew ($(brew --version | head -1))"
+    ;;
+  MINGW*|MSYS*|CYGWIN*)
+    # Windows: Prefer winget (built-in Win 10+), fall back to Chocolatey
+    if command -v winget &> /dev/null; then
+      PKG_MGR="winget"
+    elif command -v choco &> /dev/null; then
+      PKG_MGR="choco"
+    else
+      # Auto-install Chocolatey
+      echo "No package manager found. Installing Chocolatey..."
+      powershell -NoProfile -ExecutionPolicy Bypass -Command \
+        "[System.Net.ServicePointManager]::SecurityProtocol = 3072; iex ((New-Object System.Net.WebClient).DownloadString('https://community.chocolatey.org/install.ps1'))"
+      if command -v choco &> /dev/null; then
+        PKG_MGR="choco"
+      else
+        PKG_MGR=""
+        echo "⚠️  Could not auto-install Chocolatey."
+        echo "Run in PowerShell (Admin):"
+        echo "  Set-ExecutionPolicy Bypass -Scope Process -Force"
+        echo "  iex ((New-Object System.Net.WebClient).DownloadString('https://community.chocolatey.org/install.ps1'))"
+      fi
+    fi
+    [ -n "$PKG_MGR" ] && echo "Package manager: $PKG_MGR"
+    ;;
+esac
+```
+
+#### Cross-Platform Install Helper
+
+```bash
+# Install a package using whichever package manager was detected
+pkg_install() {
+  local pkg="$1"
+  case "$OS_TYPE" in
+    Linux*)
+      case "$PKG_MGR" in
+        apt-get) sudo apt-get install -y "$pkg" ;;
+        dnf)     sudo dnf install -y "$pkg" ;;
+        yum)     sudo yum install -y "$pkg" ;;
+        pacman)  sudo pacman -S --noconfirm "$pkg" ;;
+        apk)     sudo apk add "$pkg" ;;
+        zypper)  sudo zypper install -y "$pkg" ;;
+        *)       echo "❌ No package manager - cannot install $pkg"; return 1 ;;
+      esac ;;
+    Darwin*) brew install "$pkg" ;;
+    MINGW*|MSYS*|CYGWIN*)
+      case "$PKG_MGR" in
+        winget) winget install --id "$pkg" -e --accept-source-agreements ;;
+        choco)  choco install "$pkg" -y ;;
+        *)      echo "❌ No package manager - cannot install $pkg"; return 1 ;;
+      esac ;;
+  esac
+}
+```
+
+#### Git & GitHub CLI Installation (REQUIRED for Workflow)
+
+**These are mandatory for ALL projects** — needed for cloning, branching, commits, PRs, and the handover protocol.
+
+```bash
+# --- Git (required for version control) ---
+if ! command -v git &> /dev/null; then
+  echo "Git not found. Installing..."
+  case "$OS_TYPE" in
+    MINGW*|MSYS*|CYGWIN*) pkg_install "Git.Git" ;;  # winget ID
+    *) pkg_install "git" ;;
+  esac
+fi
+command -v git &> /dev/null \
+  && echo "✅ git: $(git --version)" \
+  || echo "❌ git not found. Install from: https://git-scm.com/downloads"
+
+# --- GitHub CLI (required for PR creation and workflow) ---
+if ! command -v gh &> /dev/null; then
+  echo "GitHub CLI not found. Installing..."
+  case "$OS_TYPE" in
+    Linux*)
+      pkg_install "gh" 2>/dev/null || {
+        # Fallback: official GitHub CLI repo for Debian-based systems
+        curl -fsSL https://cli.github.com/packages/githubcli-archive-keyring.gpg \
+          | sudo dd of=/usr/share/keyrings/githubcli-archive-keyring.gpg
+        echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/githubcli-archive-keyring.gpg] https://cli.github.com/packages stable main" \
+          | sudo tee /etc/apt/sources.list.d/github-cli.list > /dev/null
+        sudo apt-get update && sudo apt-get install -y gh
+      } ;;
+    Darwin*) brew install gh ;;
+    MINGW*|MSYS*|CYGWIN*) pkg_install "GitHub.cli" ;;  # winget ID
+  esac
+fi
+command -v gh &> /dev/null \
+  && echo "✅ gh: $(gh --version | head -1)" \
+  || echo "❌ gh not found. Install from: https://cli.github.com"
+
+# --- Verify gh authentication ---
+if command -v gh &> /dev/null; then
+  if ! gh auth status &> /dev/null; then
+    echo "⚠️  gh is installed but not authenticated."
+    echo "Run one of:"
+    echo "  gh auth login                                    # interactive"
+    echo "  echo 'YOUR_TOKEN' | gh auth login --with-token   # non-interactive"
+  else
+    echo "✅ gh: authenticated"
+  fi
+fi
+```
+
+#### Language Runtime & Tool Installation
+
+**General principle: Work backwards from what needs to be installed.**
+
+| Need to run | First verify & install |
+|-------------|----------------------|
+| `make` / `Makefile` | `make` (GNU Make) |
+| `cmake` / `CMakeLists.txt` | `cmake` and `make` (or `ninja`) |
+| `ninja` | `ninja` (Ninja build) |
+| `npm install` | `node` and `npm` (Node.js) |
+| `pip install` | `python3` and `pip3` |
+| `cargo build` | `rustc` and `cargo` (Rust) |
+| `go build` | `go` (Go) |
+| `mvn install` | `java` and `mvn` (Java/Maven) |
+| `gradle build` | `java` and `gradle` |
+| `gem install` | `ruby` and `gem` |
+| `composer install` | `php` and `composer` |
+| `msbuild` / `.sln` | `dotnet` SDK or Visual Studio Build Tools |
+
+```bash
+# Reusable: check if tool exists, install if missing (all platforms)
+check_and_install() {
+  local cmd="$1" install_linux="$2" install_mac="$3" install_win="$4" label="$5"
+  if command -v "$cmd" &> /dev/null; then
+    echo "✅ $label: $($cmd --version 2>&1 | head -1)"
+    return 0
+  fi
+  echo "⚠️  $label not found. Installing..."
+  case "$OS_TYPE" in
+    Linux*)              eval "$install_linux" ;;
+    Darwin*)             eval "$install_mac" ;;
+    MINGW*|MSYS*|CYGWIN*) eval "$install_win" ;;
+  esac
+  command -v "$cmd" &> /dev/null \
+    && echo "✅ $label installed" \
+    || { echo "❌ $label install failed. Search '$label install' for your OS."; return 1; }
+}
+
+# --- Build tools (uncomment if project uses Makefile/CMake) ---
+
+# check_and_install "make" \
+#   "pkg_install make" \
+#   "brew install make" \
+#   "winget install GnuWin32.Make" \
+#   "GNU Make"
+
+# check_and_install "cmake" \
+#   "pkg_install cmake" \
+#   "brew install cmake" \
+#   "winget install Kitware.CMake" \
+#   "CMake"
+
+# check_and_install "ninja" \
+#   "pkg_install ninja-build" \
+#   "brew install ninja" \
+#   "winget install Ninja-build.Ninja" \
+#   "Ninja"
+
+# --- C/C++ compilers (uncomment if project uses Makefile with C/C++) ---
+
+# check_and_install "gcc" \
+#   "pkg_install build-essential" \
+#   "xcode-select --install 2>/dev/null || true" \
+#   "winget install GnuWin32.Make" \
+#   "GCC (C/C++ compiler)"
+
+# --- Language runtimes (uncomment what you need) ---
+
+# check_and_install "node" \
+#   "curl -fsSL https://deb.nodesource.com/setup_lts.x | sudo -E bash - && sudo apt-get install -y nodejs" \
+#   "brew install node" \
+#   "winget install OpenJS.NodeJS.LTS" \
+#   "Node.js"
+
+# check_and_install "python3" \
+#   "pkg_install python3" \
+#   "brew install python3" \
+#   "winget install Python.Python.3.12" \
+#   "Python 3"
+
+# --- .NET / MSBuild (uncomment for .NET projects) ---
+
+# check_and_install "dotnet" \
+#   "curl -fsSL https://dot.net/v1/dotnet-install.sh | bash" \
+#   "brew install dotnet" \
+#   "winget install Microsoft.DotNet.SDK.8" \
+#   ".NET SDK"
+```
+
+#### Final Verification
+
+```bash
+echo ""
+echo "=== Prerequisite Tool Verification ==="
+echo ""
+echo "--- Required (workflow) ---"
+for cmd in git gh; do
+  if command -v $cmd &> /dev/null; then
+    echo "✅ $cmd: $(command -v $cmd)"
+  else
+    echo "❌ $cmd: NOT FOUND - REQUIRED"
+  fi
+done
+echo ""
+echo "--- Project-specific (uncomment in check_and_install above) ---"
+# for cmd in make cmake ninja gcc node npm python3 pip3 cargo go java mvn dotnet; do
+#   command -v $cmd &> /dev/null \
+#     && echo "✅ $cmd: $(command -v $cmd)" \
+#     || echo "⚠️  $cmd: not found"
+# done
+```
+
+### Project Setup & Scripts (After Prerequisites Are Verified)
 
 When a new project starts or technology stack is chosen by Architect, IT Agent MUST:
 
-1. **Install Required Software & Dependencies**:
-   - Identify required tools from Architect's tech stack decision
-   - Install language runtimes (Node.js, Python, Go, Rust, Java, etc.)
-   - Install package managers (npm, pip, cargo, maven, etc.)
-   - Install build tools (make, cmake, webpack, etc.)
+1. **Verify & Install Prerequisite Tools** (Step 0 above)
+
+2. **Install Project Dependencies**:
    - Run dependency installation (`npm install`, `pip install -r requirements.txt`, etc.)
    - Document installation steps in `project-management/operations/environment/`
 
-2. **Create/Update Project Scripts** in `scripts/` folder:
+3. **Create/Update Project Scripts** in `scripts/` folder:
    ```
    scripts/
    ├── build.sh   # Build commands for the tech stack
@@ -96,7 +389,7 @@ When a new project starts or technology stack is chosen by Architect, IT Agent M
    - Update scripts when technology requirements change
    - Ensure scripts work on all target platforms (Mac, Linux, Windows)
 
-3. **Update Makefile** (if applicable):
+4. **Update Makefile** (if applicable):
    - Add targets for the chosen build system
    - Integrate with module-specific builds
    - Add convenience targets for common operations
@@ -159,158 +452,31 @@ When a new project starts or technology stack is chosen by Architect, IT Agent M
 - **Tester Agent**: Test environment configuration
 - **Architect Agent**: Infrastructure capabilities and constraints
 
-## Task Analysis & Collaboration Protocol
-
-**CRITICAL**: Before starting any task, follow this protocol to ensure thorough understanding and optimal execution:
-
-### 1. Task Analysis & Clarification
-When receiving a new task, ALWAYS:
-
-- **Read & Understand**: Carefully read the task description, requirements, and acceptance criteria
-- **Ask Questions**: Identify and ask clarifying questions about:
-  - **What**: What exactly needs to be built/changed?
-  - **Why**: What is the purpose and business value?
-  - **How**: Are there specific approaches or constraints?
-  - **Scope**: What is in-scope vs out-of-scope?
-  - **Dependencies**: What does this depend on? What depends on this?
-  - **Success Criteria**: How will we know this is done correctly?
-
-### 2. Document Understanding
-Create or update a memory file in `project-management/operations/decisions/` to record:
-- Task understanding and interpretation
-- Key decisions and rationale
-- Important context for future work
-- Assumptions made
-- Risks identified
-
-### 3. Think Like an Architect
-Before implementing:
-- **Identify Flaws**: Look for potential issues, edge cases, or problems in the task description
-- **Suggest Improvements**: Propose better approaches, optimizations, or alternatives
-- **Consider Trade-offs**: Analyze pros/cons of different approaches
-- **Long-term Impact**: Consider how this affects future work, maintainability, scalability
-- **Alternative Solutions**: Brainstorm multiple ways to solve the problem
-
-### 4. Collaborate with Other Agents
-- **Share Analysis**: Document your findings and questions
-- **Request Input**: Ask other relevant agents for their perspective:
-  - Architect: For design implications and architectural alignment
-  - Developer: For implementation feasibility
-  - Tester: For testability and quality concerns
-- **Brainstorm Together**: Engage in collaborative problem-solving
-- **Reach Consensus**: Ensure all agents agree on the approach before proceeding
-- **Document Agreement**: Record the agreed-upon approach and decisions
-
-### 5. Refine the Task
-Based on collaboration:
-- Update task requirements if needed
-- Add missing acceptance criteria
-- Clarify ambiguities
-- Add implementation notes
-- Update task status and priority if needed
-
-### 6. Get Approval
-Before significant work:
-- Present the refined plan to the user or team
-- Confirm understanding and approach
-- Get explicit go-ahead
-- Document any constraints or changes
-
-### 7. Execute with Documentation
-During execution:
-- Follow the agreed-upon plan
-- Document significant decisions as you go
-- Update progress in task file
-- Note any deviations from the plan and why
-
-### Example Workflow
-
-```
-Task Received → Analyze & Ask Questions → Document Understanding →
-Think & Identify Issues → Suggest Alternatives → Collaborate with Agents →
-Brainstorm & Refine → Reach Agreement → Document Plan →
-Get Approval → Execute → Document Results → Complete
-```
-
 ## Workflow
 
-1. **Infrastructure Setup**
+1. **Prerequisite Verification** (ALWAYS FIRST)
+   - Detect operating system
+   - Verify and install base package manager
+   - Install language runtimes and build tools
+   - Install `git` and `gh` CLI
+
+2. **Infrastructure Setup**
    - Analyze requirements from Architect
-   - Set up build tools and infrastructure
+   - Install project dependencies
+   - Create/update build scripts in `scripts/`
    - Document setup procedures
 
-2. **Build Maintenance**
+3. **Build Maintenance**
    - Monitor build health
    - Update build scripts as needed
    - Troubleshoot build issues
 
-3. **Release Process**
+4. **Release Process**
    - Create versioned release folder (e.g., `release/v1.0.0/`)
    - Package artifacts from module release folders
    - Generate release notes from git commits and documentation
    - Tag release in git
    - Update release documentation
-
-## ⚠️ MANDATORY: PR Creation After Infrastructure Setup
-
-When infrastructure setup is complete (dependencies installed, build scripts created), MUST create PR before handing off to Developer:
-
-**Note**: Replace `{llm-agent}` with your LLM identifier (e.g., `copilot`, `claude`, `gemini`).
-
-```bash
-# Step 1: Ensure all infrastructure changes are committed
-git add -A
-git commit -m "[IT Agent] Infrastructure setup: dependencies and build scripts"
-
-# Step 2: Push to remote IT Agent branch
-git push -u origin {llm-agent}/it-{task-name}-{sessionID}
-
-# Step 3: Create PR to task master branch
-gh pr create \
-  --base master_{task_name} \
-  --head {llm-agent}/it-{task-name}-{sessionID} \
-  --title "[IT Agent] Infrastructure: {project_name}" \
-  --body "## Summary
-Project infrastructure initialized with dependencies and build scripts.
-Development environment ready for Developer implementation.
-
-## Infrastructure Setup Complete
-- [x] Dependencies installed (npm, pip, etc.)
-- [x] Build scripts created (build.sh, test.sh, run.sh, clean.sh)
-- [x] Database initialization scripts ready
-- [x] Environment configuration (.env.example)
-- [x] Project structure created
-- [x] All tools configured
-
-## Deliverables
-- Project directory structure in modules/{project-name}/
-- 6 build/test/run scripts in scripts/
-- Database initialization scripts
-- README and DEVELOPMENT documentation
-- .env.example for developers
-
-## Verification
-- npm install: ✅ All dependencies resolve
-- npm run build: ✅ Frontend builds without errors
-- npm run test: ✅ Test framework runs
-- ESLint: ✅ 0 errors
-
-## Ready for
-Developer (implementation)"
-
-# Step 4: Verify PR created
-echo "Infrastructure PR created - verify at GitHub before proceeding"
-```
-
-**SUCCESS CRITERIA**:
-- [x] PR exists on GitHub
-- [x] PR title includes "[IT Agent] Infrastructure:"
-- [x] All dependencies documented
-- [x] Build scripts verified working
-- [x] Developer can clone and run `npm install` immediately
-- [x] No manual steps required before development
-
-**FAILURE CONDITION**: If no PR exists, infrastructure work is not complete.
 
 ## Activation Triggers
 Automatically activate when:
@@ -325,125 +491,11 @@ Automatically activate when:
 - Repository structure changes
 
 ## Best Practices
+- **Always verify prerequisites before installing project dependencies**
 - Always update AI-WORKFLOW.md when repository structure changes
 - Maintain consistent build processes across all modules
 - Use semantic versioning for all releases
 - Document all infrastructure decisions in `project-management/operations/`
 - Keep build scripts simple and maintainable
 - Automate repetitive tasks
-
-## Creating Pull Requests
-
-When your work is complete, create a PR to merge changes:
-
-**CRITICAL - Branch Name Validation (MUST DO FIRST)**:
-```bash
-# STEP 0: Validate branch name BEFORE creating PR
-CURRENT_BRANCH=$(git branch --show-current)
-EXPECTED_PATTERN="^agent/it-[a-z]+-[a-zA-Z0-9]+$"
-
-if [[ ! "$CURRENT_BRANCH" =~ $EXPECTED_PATTERN ]]; then
-    echo "❌ ERROR: Invalid branch name: $CURRENT_BRANCH"
-    echo "❌ Branch must match pattern: agent/it-{project}-{sessionID}"
-    echo "❌ Example: agent/it-{project}-pbCFa"
-    echo "❌ CANNOT create PR - automated peer review will fail!"
-    echo ""
-    echo "Action Required:"
-    echo "1. Contact Product Owner to set up correct branch"
-    echo "2. Or create new branch: agent/it-{project}-\${AI_SESSION_ID: -5}"
-    exit 1
-fi
-
-echo "✅ Branch name valid: $CURRENT_BRANCH"
-```
-
-**Why This Matters**:
-- Automated peer review workflow requires agent-specific branch names
-- Branch pattern: `agent/{agent}-{project}-{sessionID}`
-- Generic branches (like `agent/create-pull-request-*`) will cause peer review to skip
-- Without proper reviews, PR cannot be merged
-
-1. **Authenticate with GitHub**:
-   ```bash
-   export GH_TOKEN=$(cat .github_token)
-   ```
-
-2. **Create PR using gh CLI**:
-   ```bash
-   gh pr create --base master --head <branch-name> \
-     --title "Title" \
-     --body "Description"
-   ```
-
-3. **PR Guidelines**:
-   - Write clear, descriptive titles
-   - Include comprehensive summary of changes
-   - List all modified files and their purpose
-   - Add test plans or verification steps
-   - Reference related tasks or issues
-
-**Note**: The `.github_token` file contains GitHub authentication token and should never be committed (it's in `.gitignore`).
-
-## Before Concluding Any Task
-
-**CRITICAL**: Before marking a task as complete or concluding your work, ALWAYS:
-
-### 1. Check for Existing Pull Requests
-```bash
-# Check for open PRs on your branch
-export GH_TOKEN=$(cat .github_token)
-gh pr list --repo {owner}/{repo} --head $(git branch --show-current)
-
-# Check for all recent PRs (including merged)
-gh pr list --repo {owner}/{repo} --state all --limit 10
-```
-
-### 2. Determine PR Status
-
-**If NO PR exists:**
-- Create a new PR with comprehensive description
-- Include summary, changes, files changed, test plan, agent info
-
-**If OPEN PR exists:**
-- Check if your new commits are already in the PR
-- Update PR description if needed (not yet supported by gh CLI easily)
-- Inform user that PR is already open and ready for review
-
-**If MERGED PR exists:**
-- Check if there are new commits since the merge
-- If yes: Create a NEW PR for the new commits
-- If no: Inform user that work is already merged into `master_{task_name}` (see [Task-Based Branching Strategy](../../AI-WORKFLOW.md#task-based-branching-strategy))
-
-### 3. Final Checklist Before Concluding
-
-- [ ] All commits pushed to remote branch
-- [ ] PR created or updated
-- [ ] Task status updated to "Completed" in task file
-- [ ] Documentation updated
-- [ ] User informed of PR status and URL
-
-### Example Workflow
-
-```bash
-# 1. Check current branch
-CURRENT_BRANCH=$(git branch --show-current)
-
-# 2. Check for PR
-export GH_TOKEN=$(cat .github_token)
-PR_STATUS=$(gh pr list --repo {owner}/{repo} --head $CURRENT_BRANCH --state all --json state,number,url)
-
-# 3. Decide action based on status
-# - If no PR: Create one
-# - If open PR: Inform user
-# - If merged PR with new commits: Create new PR
-
-# 4. Always inform user of PR URL and status
-```
-
-### Why This Matters
-
-- Ensures all work is properly tracked in PRs
-- Prevents duplicate PRs
-- Keeps user informed of review status
-- Maintains clean PR history
-- Enables proper code review workflow
+- Never assume tools are pre-installed on the user's machine

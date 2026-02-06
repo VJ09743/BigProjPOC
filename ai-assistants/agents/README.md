@@ -6,9 +6,12 @@ This directory contains agent role definitions for the multi-agent workflow. The
 
 | Tool | Provider(s) | Setup |
 |------|-------------|-------|
+| Claude Code | Anthropic | Reads `CLAUDE.md` automatically |
+| GitHub Copilot | GitHub/OpenAI | Reads `.github/copilot-instructions.md` via `.vscode/settings.json` |
+| Cursor | OpenAI, Anthropic | Reads `.cursorrules` automatically |
+| Windsurf | Multiple | Reads `.windsurfrules` automatically |
+| Continue | Multiple | Reads `.continuerules` automatically |
 | Aider | OpenAI, Anthropic, Ollama | Configure in `.aider.conf.yml` |
-| Cursor | OpenAI, Anthropic | Add to `.cursorrules` |
-| Continue | Multiple | Reference in system prompt |
 | Any CLI | Any provider | Read these files as context |
 
 ## Agent Files

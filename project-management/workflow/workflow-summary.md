@@ -2,15 +2,15 @@
 
 ## Complete Workflow from Task to PR Review
 
-### Step 1: Give Task to Team Leader
+### Step 1: Give Task to Product Owner
 
 **You (User)**: Give a task in conversation
 
 Example: "Implement a temperature monitoring feature"
 
-### Step 2: Team Leader Assigns to Agent
+### Step 2: Product Owner Assigns to Agent
 
-**Team Leader Agent** (Claude Code acting as Team Leader):
+**Product Owner Agent** (Claude Code acting as Product Owner):
 - Analyzes the task
 - Reviews agent capabilities
 - Determines the best agent for the job
@@ -80,9 +80,9 @@ EOF
 - Determines reviewers based on agent type:
   - **Developer PR** → Reviewed by: Architect + Tester (2 reviewers)
   - **Architect PR** → Reviewed by: Developer + Tester (2 reviewers)
-  - **Tester PR** → Reviewed by: Developer + Team Leader (2 reviewers)
+  - **Tester PR** → Reviewed by: Developer + Product Owner (2 reviewers)
   - **IT PR** → Reviewed by: Architect (1 reviewer)
-  - **Team Leader PR** → Reviewed by: Architect (1 reviewer)
+  - **Product Owner PR** → Reviewed by: Architect (1 reviewer)
 
 - Each reviewer agent:
   1. Reviews code using Claude API
@@ -164,7 +164,7 @@ When you re-trigger the workflow on a PR that already has reviews:
 ```
 User Task
     ↓
-Team Leader Analyzes → Assigns to Agent
+Product Owner Analyzes → Assigns to Agent
     ↓
 Agent Works → Commits → Creates PR (with correct branch naming)
     ↓
@@ -202,7 +202,7 @@ The workflow is **manually triggered** to save API costs:
 
 Ready to try it! Here's what to do:
 1. Give me a task
-2. I'll act as Team Leader and assign to appropriate agent
+2. I'll act as Product Owner and assign to appropriate agent
 3. Agent creates PR with correct branch naming
 4. You manually trigger the peer review workflow on GitHub
 5. Check the review comments

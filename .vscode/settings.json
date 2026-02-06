@@ -1,0 +1,14 @@
+{
+  "// GitHub Copilot": "Enable custom instruction files for Copilot Chat",
+  "github.copilot.chat.codeGeneration.useInstructionFiles": true,
+
+  "// Copilot Custom Instructions": "Point Copilot to read the workflow files",
+  "github.copilot.chat.codeGeneration.instructions": [
+    {
+      "file": ".github/copilot-instructions.md"
+    },
+    {
+      "file": "AI-WORKFLOW.md"
+    }
+  ]
+}

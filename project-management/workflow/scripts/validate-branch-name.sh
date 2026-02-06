@@ -23,7 +23,7 @@ if [[ ! "$CURRENT_BRANCH" =~ $EXPECTED_PATTERN ]]; then
     echo "📝 Generic branches (agent/create-pull-request-*) cause reviews to skip"
     echo ""
     echo "Action Required:"
-    echo "1. Contact Team Leader to set up correct branch, OR"
+    echo "1. Contact Product Owner to set up correct branch, OR"
     echo "2. Create new branch with current session ID:"
     echo ""
     echo "   SESSION_ID=\"\${AI_SESSION_ID: -5}\""

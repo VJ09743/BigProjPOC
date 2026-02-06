@@ -23,22 +23,31 @@ These scripts are **templates only**. When Architect chooses a technology stack,
 
 ## Usage (After IT Agent Customizes)
 
+**Linux/macOS:**
 ```bash
 # Make scripts executable (first time only)
 chmod +x scripts/*.sh
 
-# Build the project
+# Build / Test / Run / Clean
 ./scripts/build.sh
-
-# Run tests
 ./scripts/test.sh
-
-# Run the application
 ./scripts/run.sh
-
-# Clean build artifacts
 ./scripts/clean.sh
 ```
+
+**Windows (PowerShell / Git Bash):**
+```powershell
+# No chmod needed on Windows. Run with bash (from Git Bash) or sh:
+bash scripts/build.sh
+bash scripts/test.sh
+bash scripts/run.sh
+bash scripts/clean.sh
+
+# Or if using PowerShell scripts (.ps1), create equivalents:
+# .\scripts\build.ps1
+```
+
+> **Note for IT Agent**: When creating scripts for cross-platform projects, consider providing both `.sh` (Linux/macOS) and `.ps1` or `.bat` (Windows) versions. Alternatively, use a `Makefile` or `package.json` scripts which work cross-platform.
 
 ## IT Agent: How to Customize
 
@@ -82,7 +91,15 @@ rm -rf __pycache__ *.egg-info .pytest_cache
 
 ## Adding New Scripts
 
+**Linux/macOS:**
 1. Create your script in this folder
 2. Add `#!/bin/bash` at the top
 3. Make it executable: `chmod +x scripts/your-script.sh`
 4. Document it in this README
+
+**Windows:**
+1. Create a `.ps1` (PowerShell) or `.bat` script in this folder
+2. Or use the `.sh` scripts via Git Bash: `bash scripts/your-script.sh`
+3. Document it in this README
+
+**Cross-platform alternative:** Use `Makefile` targets or `package.json` scripts instead of shell scripts for maximum portability.

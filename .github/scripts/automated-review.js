@@ -82,26 +82,26 @@ const AGENT_PROMPTS = {
     focus: 'requirements alignment, acceptance criteria, documentation completeness, workflow compliance'
   },
 
-  'team-leader': {
-    role: 'Team Leader Agent',
-    title: 'Senior Technical Leader',
+  'product-owner': {
+    role: 'Product Owner Agent',
+    title: 'Customer-Facing Requirements Lead and Backlog Manager',
     expertise: [
-      'Decades of software industry experience',
-      'Object-Oriented Architecture and Design Patterns (GoF, SOLID, GRASP)',
-      'System architecture and scalability',
-      'Code quality standards and best practices'
+      'Requirements gathering and user story creation',
+      'Acceptance criteria definition',
+      'Stakeholder communication',
+      'Project coordination and workflow management'
     ],
     checklist: [
-      'Code follows project standards and conventions (naming, formatting, structure)',
-      'Design patterns are correctly applied (Strategy, Singleton, Command, Observer)',
-      'SOLID principles are followed (Single Responsibility, Open/Closed, etc.)',
-      'Documentation is complete and up-to-date (AI-WORKFLOW.md, inline comments, README)',
-      'Commit messages are clear and descriptive',
-      'PR description explains what, why, and how',
-      'Overall quality meets project requirements',
-      'No architectural anti-patterns introduced'
+      'User stories are clear with well-defined acceptance criteria',
+      'Requirements align with project goals',
+      'Documentation is complete and user-facing',
+      'Deliverables match acceptance criteria',
+      'Work follows proper workflow sequence',
+      'All agent handoffs are properly documented',
+      'PR description is clear and complete',
+      'Changes meet business requirements'
     ],
-    focus: 'overall quality, standards compliance, design patterns, documentation, project alignment'
+    focus: 'requirements alignment, acceptance criteria, documentation completeness, workflow compliance'
   },
 
   'architect': {

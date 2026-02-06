@@ -29,7 +29,7 @@ The **Automated Multi-Agent Peer Review System** uses LLM APIs (OpenAI, Anthropi
 ### Key Features
 
 ✅ **Fully Automated**: No manual review needed - agents review automatically
-✅ **Sequential Reviews**: Team Leader → Architect → Tester (or Developer) review one after another
+✅ **Sequential Reviews**: Product Owner → Architect → Tester (or Developer) review one after another
 ✅ **Intelligent Feedback**: Each agent applies their expertise and detailed checklist
 ✅ **Inline Comments**: Issues appear directly on specific lines in "Files changed" tab
 ✅ **Approval Tracking**: Automatically tracks approvals and marks PR when threshold met
@@ -94,11 +94,11 @@ Based on PR branch name `agent/{agent}-{project}-{sessionID}`:
 
 | PR Author | Automated Reviewers |
 |-----------|---------------------|
-| Developer | Team Leader, Architect, Tester |
-| Architect | Team Leader, Developer |
-| Tester | Team Leader, Developer |
-| IT | Team Leader, Architect |
-| Team Leader | Architect, Developer, Tester |
+| Developer | Product Owner, Architect, Tester |
+| Architect | Product Owner, Developer |
+| Tester | Product Owner, Developer |
+| IT | Product Owner, Architect |
+| Product Owner | Architect, Developer, Tester |
 
 ---
 
@@ -108,9 +108,9 @@ Based on PR branch name `agent/{agent}-{project}-{sessionID}`:
 
 1. **Developer** creates PR from `agent/developer-rtdcs-pbCFa`
 2. **Workflow triggers** automatically
-3. **Team Leader Agent** reviews:
+3. **Product Owner Agent** reviews:
    - Fetches PR diff and files
-   - Calls LLM API with Team Leader prompt and checklist
+   - Calls LLM API with Product Owner prompt and checklist
    - LLM analyzes code for standards, patterns, documentation
    - Posts review comment: "✅ APPROVED" or "🔴 CHANGES REQUESTED"
 4. **Architect Agent** reviews:
@@ -140,7 +140,7 @@ Based on PR branch name `agent/{agent}-{project}-{sessionID}`:
 
 Each agent has a specific role, expertise, and checklist that the LLM API uses for review.
 
-### 4.1 Team Leader Agent
+### 4.1 Product Owner Agent
 
 **Role**: Senior Technical Leader
 **Expertise**: OO Architecture, Design Patterns, Code Quality Standards
@@ -308,7 +308,7 @@ if (approvals >= 2 && changesRequested === 0) {
 
 **Round 1**:
 1. Developer creates PR
-2. Team Leader: 🔴 CHANGES REQUESTED (naming issues)
+2. Product Owner: 🔴 CHANGES REQUESTED (naming issues)
 3. Architect: 🔴 CHANGES REQUESTED (SOLID violation)
 4. Tester: ✅ APPROVED (tests are good)
 5. **Result**: Changes requested (2 agents requested changes)
@@ -320,7 +320,7 @@ if (approvals >= 2 && changesRequested === 0) {
 - Pushes: `git push`
 
 **Round 2** (auto-triggered on push):
-1. Team Leader: ✅ APPROVED (naming fixed)
+1. Product Owner: ✅ APPROVED (naming fixed)
 2. Architect: ✅ APPROVED (SOLID principles now correct)
 3. Tester: ✅ APPROVED (tests still good)
 4. **Result**: 3/2 approvals → **APPROVED** ✅
@@ -348,11 +348,11 @@ Reviews appear in **two locations**:
    - See comments directly on problematic lines
    - Each comment shows severity and recommendation
 
-### 8.2 Example Review Comment (Team Leader)
+### 8.2 Example Review Comment (Product Owner)
 
 **In Conversation Tab**:
 ```markdown
-## 🤖 **Team Leader Agent Review**
+## 🤖 **Product Owner Agent Review**
 
 ### Summary
 This PR implements BigModuleA (ThermalMonitor) with good adherence to design patterns and standards. The Singleton pattern for SharedMemoryManager and Strategy pattern for temperature patterns are correctly applied. However, there are some documentation gaps and a few minor convention issues.
@@ -372,7 +372,7 @@ This PR implements BigModuleA (ThermalMonitor) with good adherence to design pat
 ```
 src/ThermalMonitor.cpp:45
 ┌─────────────────────────────────────────────
-│ 🤖 Team Leader Agent
+│ 🤖 Product Owner Agent
 │
 │ **[Severity: Major]** Missing error handling
 │
@@ -398,7 +398,7 @@ src/ThermalMonitor.cpp:45
 
 ---
 
-*Automated review by Team Leader Agent | Agent expertise: overall quality, standards compliance, design patterns, documentation, project alignment*
+*Automated review by Product Owner Agent | Agent expertise: overall quality, standards compliance, design patterns, documentation, project alignment*
 ```
 
 ### 8.2 Example Approval Summary
@@ -413,7 +413,7 @@ After 2+ approvals:
 ✨ This PR has passed all peer reviews and is **ready for user review and merge**.
 
 ---
-*Automated peer review by Team Leader, Architect, and Tester agents*
+*Automated peer review by Product Owner, Architect, and Tester agents*
 ```
 
 ---

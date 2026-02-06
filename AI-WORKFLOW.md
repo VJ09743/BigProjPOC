@@ -4,13 +4,13 @@
 
 ## MANDATORY INSTRUCTIONS FOR AI ASSISTANTS
 
-**CRITICAL**: If you are an AI assistant (Claude, GPT, Gemini, etc.), you MUST follow these instructions for EVERY user request:
+**CRITICAL**: If you are an AI assistant (Claude, GPT, Gemini, Copilot, Cursor, Windsurf, Continue, Aider, Cody, etc.), you MUST follow these instructions for EVERY user request:
 
 ### 0. ⚠️ OPTIONAL: LLM Provider Configuration (Only for Automated Reviews)
 
 **LLM Provider is ONLY needed for automated peer reviews (GitHub Actions).**
 
-**For IDE work ONLY** (Copilot, Claude Code, Cursor, etc.):
+**For IDE work ONLY** (Copilot, Claude Code, Cursor, Windsurf, Continue, Aider, Cody, etc.):
 - ✅ **No LLM_PROVIDER needed** - Your AI tool authenticates separately
 - ✅ **No LLM_API_KEY needed** - IDE handles authentication  
 - ✅ **Start working immediately** - Skip provider setup
@@ -52,7 +52,7 @@ fi
 2. **LLM_API_KEY is REQUIRED** - Except for `LLM_PROVIDER=copilot` (uses GitHub authentication)
 3. **See**: [QUICK-START.md](QUICK-START.md#mandatory-choose-your-llm-provider) for setup
 
-**If you're only using IDE tools (Copilot, Claude Code, Cursor, etc.):**
+**If you're only using IDE tools (Copilot, Claude Code, Cursor, Windsurf, Continue, Aider, Cody, etc.):**
 1. **LLM_PROVIDER is NOT needed** - Your AI tool authenticates separately
 2. **LLM_API_KEY is NOT needed** - IDE handles authentication
 3. **You can skip** the provider setup and start working immediately
@@ -64,9 +64,36 @@ fi
 
 **Summary**: IDE work doesn't need LLM_PROVIDER. Only automated peer reviews need it.
 
-### 1. ALWAYS Start as Product Owner
-- Read `ai-assistants/agents/product-owner-agent.md`
-- Adopt Product Owner role BEFORE any other action
+### 1. Reading Order (NO CIRCULAR REFERENCES)
+
+**This file (AI-WORKFLOW.md) is the single entry point.** Read agent files only when this workflow tells you to. Agent files contain role-specific content only — they do NOT redirect you back here.
+
+```
+Reading flow (one-way, no loops):
+
+Tool entry file (CLAUDE.md, .cursorrules, etc.)
+    → AI-WORKFLOW.md (you are here — workflow, protocols, common rules)
+        → ai-assistants/agents/it-agent.md      (when adopting IT Agent role)
+        → ai-assistants/agents/product-owner-agent.md (when adopting PO role)
+        → ai-assistants/agents/cost-analyst-agent.md  (when adopting Cost Analyst role)
+        → ai-assistants/agents/architect-agent.md     (when adopting Architect role)
+        → ai-assistants/agents/developer-agent.md     (when adopting Developer role)
+        → ai-assistants/agents/tester-agent.md        (when adopting Tester role)
+```
+
+**Rules:**
+- Read each agent file **only when you adopt that role** in the workflow below
+- Agent files do NOT send you back to this file — you've already read it
+- All workflow, handover, and common protocols are HERE (not in agent files)
+
+### 1b. IT Agent Runs FIRST
+- Read `ai-assistants/agents/it-agent.md` for role-specific instructions
+- Verify & install `git` and `gh` CLI, authenticate `gh`
+- This ensures all agents can branch, commit, and create PRs
+
+### 1c. Then Start as Product Owner
+- Read `ai-assistants/agents/product-owner-agent.md` for role-specific instructions
+- Adopt Product Owner role for requirements gathering
 - Never skip straight to coding
 
 ### 2. First Task? Customize the Template
@@ -82,10 +109,12 @@ When this is the FIRST task in a NEW project, Product Owner MUST:
 
 ### 3. Follow the Agent Workflow
 ```
-User Request → Product Owner (ALWAYS FIRST)
-    → Architect (design) → Developer (implement)
-    → Tester (validate) → Product Owner (accept)
+User Request → IT Agent (verify git & gh CLI)
+    → Product Owner (requirements) → Cost Analyst (estimate cost)
+    → Architect (design) → IT Agent (setup) → Developer (implement)
+    → Tester (validate) → IT Agent (release) → Product Owner (accept)
 ```
+**Cost Analyst** is advisory — consulted after Product Owner and before any expensive operation.
 
 ### 4. Never Skip Steps
 Even for "simple" tasks, follow the workflow. This ensures quality and documentation.
@@ -105,7 +134,7 @@ This is a **provider-agnostic template** for setting up a multi-agent AI workflo
 - Any OpenAI-compatible API
 
 **Compatible AI Coding Tools:**
-- Claude Code, Aider, Cursor, Continue, Cody, and more
+- Claude Code, GitHub Copilot, Cursor, Windsurf, Continue, Aider, Cody, and more
 
 **This template is designed for non-programmers** who want to leverage AI-assisted development workflows.
 
@@ -128,8 +157,15 @@ See `ai-assistants/provider-setup/README.md` for detailed setup instructions.
 # 1. Copy the config template
 cp ai-assistants/provider-setup/config.template.json ai-assistants/provider-setup/config.json
 
-# 2. Set your API key (add to ~/.bashrc or ~/.zshrc)
+# 2. Set your API key
+# Linux/macOS (add to ~/.bashrc or ~/.zshrc):
 export LLM_API_KEY="your-api-key"
+
+# Windows (PowerShell — add to $PROFILE for persistence):
+# $env:LLM_API_KEY = "your-api-key"
+
+# Windows (CMD):
+# set LLM_API_KEY=your-api-key
 
 # 3. Start your AI tool
 # For Claude Code:
@@ -185,7 +221,7 @@ All agents should understand your project's domain to make informed decisions. U
 YourProject/
 ├── ai-assistants/               # AI configuration
 │   ├── agents/                  # Agent role definitions
-│   │   ├── team-leader-agent.md     # Orchestrator and planner
+│   │   ├── product-owner-agent.md    # Requirements lead and backlog manager
 │   │   ├── it-agent.md              # Infrastructure specialist
 │   │   ├── architect-agent.md       # System designer
 │   │   ├── developer-agent.md       # Implementation specialist
@@ -295,6 +331,7 @@ This template uses a **multi-agent system** where the AI assistant adopts specia
 
 - **⚠️ MANDATORY FIRST STEP**: Verify LLM_PROVIDER and LLM_API_KEY are set
 
+- **Installs prerequisite tools** before project dependencies (see below)
 - Maintains build infrastructure
 - Manages releases and versioning
 - Sets up CI/CD pipelines
@@ -302,15 +339,50 @@ This template uses a **multi-agent system** where the AI assistant adopts specia
 
 **Activates for**: Build systems, releases, infrastructure, tools
 
-#### Cost Analyst Agent
-**Role**: Resource Analyst and Cost Optimization Specialist
+**⚠️ IT Agent: Prerequisite Tool Verification (MANDATORY FIRST)**:
 
+Before installing ANY project dependencies, IT Agent MUST verify and install the tools needed to perform those installations. This includes package managers, language runtimes, `git`, and `gh` CLI. See `ai-assistants/agents/it-agent.md` for full scripts.
+
+**Summary of what IT Agent does automatically:**
+
+1. **Detects OS** (Linux, macOS, Windows)
+2. **Detects/installs package manager**:
+   - Linux: `apt-get`, `dnf`, `yum`, `pacman`, `apk`, `zypper` (all major distros)
+   - macOS: Installs Homebrew automatically if missing
+   - Windows: Uses `winget` if available, otherwise auto-installs Chocolatey
+3. **Installs `git`** (required for version control, branching, commits)
+4. **Installs `gh` CLI** (required for PR creation and the handover protocol)
+5. **Verifies `gh` authentication** (prompts user to run `gh auth login` if needed)
+6. **Installs project-specific tools** from Architect's tech stack (Node.js, Python, Rust, etc.)
+
+```bash
+# Quick reference - IT Agent runs these steps automatically:
+
+# Step 0: Detect OS and package manager
+OS_TYPE="$(uname -s)"  # Linux, Darwin, MINGW/MSYS/CYGWIN
+
+# Step 1: Detect package manager (apt-get/dnf/yum/pacman/apk/zypper/brew/winget/choco)
+# Step 2: Install git and gh CLI using detected package manager
+# Step 3: Verify gh authentication
+# Step 4: Install project-specific tools from Architect's tech stack
+# Step 5: Final verification of all tools
+
+# See it-agent.md for complete cross-platform scripts
+```
+
+**The general principle**: If a tool is needed to install project dependencies (e.g., `npm` needs `node`, `pip` needs `python`, `cargo` needs `rust`), IT Agent MUST install that tool first. IT Agent also installs `git` and `gh` CLI which are required for the workflow's branching and PR creation. Never assume tools are pre-installed on the user's machine.
+
+#### Cost Analyst Agent
+**Role**: Resource Analyst and Cost Optimization Specialist (ADVISORY)
+
+- **Runs after Product Owner** creates the user story — estimates total task cost
 - Estimates token consumption before expensive operations
-- Warns user before high-cost tasks
+- Warns user before high-cost tasks (> $1.00 requires explicit approval)
 - Logs usage for transparency
 - Recommends cost optimization strategies
+- **Does NOT create PRs or deliverables** — reports estimates back to Product Owner/user
 
-**Activates for**: Large operations, cost estimation, usage reporting
+**Activates for**: After every user story (mandatory), before expensive operations (any agent can request), cost estimation, usage reporting
 
 ### Agent Workflow
 
@@ -321,36 +393,81 @@ The agents work together in a collaborative workflow:
 ```
 User Request
     ↓
-[Step 0: Verify LLM_PROVIDER & LLM_API_KEY are set] ← ALL AGENTS
+Read ai-assistants/agents/it-agent.md → IT Agent (verify git, gh CLI)  ← FIRST
     ↓
-Product Owner (Clarifies requirements, creates user story)
+[Optional: Verify LLM_PROVIDER & LLM_API_KEY — only for automated reviews]
     ↓
-[Verify LLM configuration] ← Architect checks before starting
+Read ai-assistants/agents/product-owner-agent.md → Product Owner (requirements)
     ↓
-Architect (Chooses tech stack, designs solution)
+Read ai-assistants/agents/cost-analyst-agent.md → Cost Analyst (estimate cost)  ← ADVISORY
     ↓
-[Verify LLM configuration] ← IT Agent checks before starting
+Read ai-assistants/agents/architect-agent.md → Architect (design)
     ↓
-IT Agent (Installs dependencies, sets up scripts/)  ← CRITICAL STEP
+Read ai-assistants/agents/it-agent.md → IT Agent (install deps, setup scripts/)
     ↓
-[Verify LLM configuration] ← Developer checks before starting
+Read ai-assistants/agents/developer-agent.md → Developer (implement in modules/)
     ↓
-Developer (Implements code in modules/)
+Read ai-assistants/agents/tester-agent.md → Tester (validate)
     ↓
-[Verify LLM configuration] ← Tester checks before starting
+Read ai-assistants/agents/it-agent.md → IT Agent (build release artifacts)
     ↓
-Tester (Validates implementation)
-    ↓
-[Verify LLM configuration] ← IT Agent checks before release
-    ↓
-IT Agent (Builds release artifacts)
-    ↓
-Product Owner (Accepts & presents to user)
+Read ai-assistants/agents/product-owner-agent.md → Product Owner (accept & present)
 ```
 
-**IMPORTANT**: 
-- **LLM Configuration Check**: ALL agents verify configuration before starting work
-- **IT Agent activates TWICE**: After Architect (setup) and before Release (build)
+**IMPORTANT**:
+- **IT Agent runs FIRST**: Before any other agent, IT Agent verifies that `git` and `gh` CLI are installed and authenticated. Without these, no agent can branch, commit, or create PRs.
+- **IT Agent activates THREE times**: First (git/gh setup), after Architect (project setup), and before Release (build)
+- **Cost Analyst is ADVISORY**: Consulted after Product Owner creates the user story. Also consulted by any agent before expensive operations (> $1.00). Does NOT create PRs or deliverables — reports cost estimates back to Product Owner for go/no-go decision.
+- **LLM Configuration Check**: Only needed for automated peer reviews, not for IDE work
+
+### MANDATORY HANDOVER PROTOCOL (ALL AGENTS)
+
+**CRITICAL: This is a BLOCKING GATE. Every agent MUST complete this before the next agent starts.**
+
+When an agent finishes their work and is ready to hand over to the next agent:
+
+1. **STOP** - Do not proceed to the next agent role yet
+2. **Commit all work** to your branch: `git add -A && git commit -m "[Agent Name] Description"`
+3. **Push to remote**: `git push -u origin {llm-agent}/{agent}-{task_name}-{sessionID}`
+4. **Provide handover context** — the outgoing agent MUST document:
+   - What was completed
+   - Key decisions made and why
+   - Any open questions or known issues
+   - What the next agent needs to know
+5. **Ask the user**:
+   > "My work as [Agent Name] is complete. Before handing over to [Next Agent]:
+   > - Would you like me to **create a PR** for review? (Recommended)
+   > - Or should I **continue directly** to [Next Agent] without a PR?
+   >
+   > Creating a PR allows you to review my work before proceeding."
+6. **Wait for user response** - Do NOT assume the answer
+7. **If user wants PR**: Create PR using the [PR Creation Process](#pr-creation-process) below, then WAIT for user approval before proceeding
+8. **If user says continue**: Proceed to the next agent role, noting that work is committed on the branch
+
+**When the NEXT agent starts, it MUST** (see [Task Analysis & Collaboration Protocol](#task-analysis--collaboration-protocol)):
+- Read the handover context from the previous agent
+- Ask clarifying questions about anything unclear (**What**, **Why**, **How**, **Scope**, **Dependencies**, **Success Criteria**)
+- The previous agent (or user) MUST answer these questions before work begins
+- Document understanding and assumptions before starting work
+
+**NEVER silently skip this step.** The user MUST be consulted at every handover.
+
+**Why this matters**: Without this gate, agents skip PR creation entirely, breaking the review workflow. This was the #1 observed failure mode during testing.
+
+#### Handover Points in the Workflow
+
+| Completing Agent | Next Agent | Handover Gate |
+|-----------------|------------|---------------|
+| IT Agent (git/gh) | Product Owner | No gate — continue immediately |
+| Product Owner | Cost Analyst | No gate — Cost Analyst reviews the user story |
+| Cost Analyst | Architect | Reports cost estimate to user. If approved, continue to Architect |
+| Architect | IT Agent (setup) | Ask user: PR or continue? |
+| IT Agent (setup) | Developer | Ask user: PR or continue? |
+| Developer | Tester | Ask user: PR or continue? |
+| Tester | IT Agent (release) | Ask user: PR or continue? |
+| IT Agent (release) | Product Owner | Ask user: PR or continue? |
+
+**Note**: Cost Analyst can also be consulted mid-workflow by any agent before expensive operations. Any agent can request a cost estimate; Cost Analyst reports back to the requesting agent and the user.
 
 ### Task-Based Branching Strategy
 
@@ -394,46 +511,50 @@ git worktree add ../worktree-developer {llm-agent}/developer-{task_name}-{sessio
 # When done, create PR to master_{task_name} (the task's main branch)
 ```
 
-### Pull Request Process
+### PR Creation Process
 
-**⚠️ CRITICAL: Agents MUST create PRs when work is complete. This is NOT optional.**
+**⚠️ CRITICAL: When creating a PR (either because user requested it at handover, or at task completion), follow this exact process:**
 
-The process is:
+```bash
+# Step 1: Commit all changes
+git add -A
+git commit -m "[Agent Name] Description of completed work"
 
-1. **Complete work** in agent's task branch
-2. **Commit changes** with clear, descriptive messages: `git add -A && git commit -m "[Agent Name] Description"`
-3. **Agent pushes** to remote branch: `git push -u origin [agent-branch]`
-4. **Agent CREATES PR** to `master_{task_name}` branch using:
-   ```bash
-   gh pr create --base master_{task_name} --head [agent-branch] \
-     --title "[Agent Name] Work description" \
-     --body "## Summary
+# Step 2: Push to remote
+git push -u origin {llm-agent}/{agent}-{task_name}-{sessionID}
 
-   [Description]
+# Step 3: Create PR to task master branch (NOT main/master)
+gh pr create \
+  --base master_{task_name} \
+  --head {llm-agent}/{agent}-{task_name}-{sessionID} \
+  --title "[Agent Name] Work description" \
+  --body "## Summary
+[What was accomplished]
 
-   ## Changes
-   - [List changes]
+## Changes
+- [Change 1]
+- [Change 2]
 
-   ## Ready for
-   [Next Agent Name]"
-   ```
-5. **Verify PR exists** on GitHub before considering work complete
-6. **Peer review** - other agents review before user accepts
+## Ready for
+[Next Agent Name]"
 
-**REQUIREMENT**: Ensure `GITHUB_TOKEN` environment variable is set before starting work.
+# Step 4: Verify PR was created
+gh pr list --head $(git branch --show-current)
+```
 
-### ⚠️ MANDATORY: PR Checklist for ALL Agents
+**If PR creation fails**: Show the error to the user and ask for help resolving it (e.g., missing GITHUB_TOKEN, authentication issues). Note: `gh` CLI should already be installed by IT Agent in Step 0.
 
-**Work is NOT complete until:**
+**REQUIREMENT**: Ensure `GITHUB_TOKEN` environment variable or `gh auth login` is configured before creating PRs.
+
+### ⚠️ PR Checklist for ALL Agents
+
+**When creating a PR, verify:**
 - [ ] All files committed: `git add -A && git commit -m "[Agent] Description"`
 - [ ] Branch pushed: `git push -u origin [branch-name]`
 - [ ] PR created on GitHub: `gh pr create ...`
-- [ ] PR URL verified in browser
 - [ ] PR has title: `[Agent Name] Description`
 - [ ] PR body includes Summary, Changes, and Ready for field
-- [ ] ONLY THEN can agent consider work "complete"
-
-**FAILURE TO CREATE PR = WORK IS INCOMPLETE**
+- [ ] User informed of PR URL
 
 ### Peer Review Process (CRITICAL)
 
@@ -530,15 +651,21 @@ pending → in-progress → completed → archived
 Before running any workflow, set up your GitHub token:
 
 ```bash
-# Set as environment variable (REQUIRED for automatic PR creation)
+# Linux/macOS:
 export GITHUB_TOKEN="your_github_token"
+
+# Windows (PowerShell):
+# $env:GITHUB_TOKEN = "your_github_token"
+
+# Windows (CMD):
+# set GITHUB_TOKEN=your_github_token
 ```
 
 **To create a GitHub token:**
 1. Go to https://github.com/settings/tokens
 2. Click "Generate new token (classic)"
 3. Select scopes: `repo`, `workflow`, `admin:repo_hook`
-4. Copy the token and set it as shown above
+4. Copy the token and set it using the command for your OS above
 
 ### Automated PR Creation
 
@@ -552,18 +679,27 @@ Agents will automatically create PRs after completing their work. This requires:
 
 ### Installing `gh` CLI (If Not Already Installed)
 
+**Note:** IT Agent (Step 0) installs `gh` automatically. If you need to install manually:
+
 ```bash
-# Ubuntu/Debian
+# Linux (Debian/Ubuntu):
 sudo apt-get update && sudo apt-get install -y gh
 
-# macOS
+# Linux (Fedora):
+sudo dnf install -y gh
+
+# macOS:
 brew install gh
 
-# After installation, authenticate
+# Windows (PowerShell):
+# winget install GitHub.cli
+# OR: choco install gh -y
+
+# After installation, authenticate (all platforms):
 gh auth login
 ```
 
-**Verify setup:**
+**Verify setup (all platforms):**
 ```bash
 gh auth status
 ```
@@ -606,7 +742,11 @@ Modify `.github/workflows/` for your CI/CD needs.
 ### Claude Code (Example Tool)
 ```bash
 npm install -g @anthropic-ai/claude-code
+
+# Linux/macOS:
 export ANTHROPIC_API_KEY="your-key"
+# Windows (PowerShell): $env:ANTHROPIC_API_KEY = "your-key"
+
 cd your-project
 claude  # or use your preferred AI tool
 ```
@@ -614,7 +754,11 @@ claude  # or use your preferred AI tool
 ### Aider
 ```bash
 pip install aider-chat
+
+# Linux/macOS:
 export OPENAI_API_KEY="your-key"  # or ANTHROPIC_API_KEY
+# Windows (PowerShell): $env:OPENAI_API_KEY = "your-key"
+
 cd your-project
 aider
 ```
@@ -624,17 +768,28 @@ aider
 2. Open your project
 3. Use Cmd/Ctrl+K for AI assistance
 
+### Windsurf
+1. Download from codeium.com/windsurf
+2. Open your project
+3. Use AI chat panel — reads `.windsurfrules` automatically
+
 ### Continue (VS Code)
 1. Install Continue extension
 2. Configure your API key
-3. Use the Continue panel
+3. Use the Continue panel — reads `.continuerules` automatically
+
+### GitHub Copilot
+1. Install GitHub Copilot extension in VS Code
+2. Sign in with your GitHub account
+3. Enable instruction files in `.vscode/settings.json` (already configured in this template)
+4. Use Copilot Chat — reads `.github/copilot-instructions.md` automatically
 
 ---
 
 ## Notes for AI Assistants
 
 - Automatically adopt appropriate agent role based on task
-- Read agent configs in `ai-assistants/agents/` for responsibilities
+- Read agent file in `ai-assistants/agents/` **only when adopting that role** (not upfront)
 - Follow peer review process before creating PRs
 - Document decisions in appropriate project-management folders
 - Keep this file updated when structure changes
@@ -665,5 +820,84 @@ aider
 
 ---
 
-**Template Version**: 2.1
-**Last Updated**: 2026-01-25
+## Common Agent Protocols
+
+**All agents MUST follow these protocols. Individual agent files reference this section instead of duplicating it.**
+
+### Task Analysis & Collaboration Protocol
+
+**CRITICAL — MANDATORY AT EVERY HANDOVER**: When an agent receives work from another agent (or from the user), it MUST follow this protocol BEFORE starting any implementation. The handing-over agent (or user) MUST answer the receiving agent's questions.
+
+#### 1. Task Analysis & Clarification (MANDATORY)
+When receiving a handover or new task, ALWAYS:
+
+- **Read the handover context**: What did the previous agent complete? What decisions were made?
+- **Read & Understand**: Carefully read the task description, requirements, and acceptance criteria
+- **Ask Clarifying Questions** — the receiving agent MUST ask, and the handing-over agent/user MUST answer:
+  - **What**: What exactly needs to be built/changed?
+  - **Why**: What is the purpose and business value?
+  - **How**: Are there specific approaches or constraints?
+  - **Scope**: What is in-scope vs out-of-scope?
+  - **Dependencies**: What does this depend on? What depends on this?
+  - **Success Criteria**: How will we know this is done correctly?
+- **Do NOT proceed until questions are answered** — if answers are unclear, ask again
+
+#### 2. Document Understanding
+Record in the appropriate `project-management/` subfolder:
+- Task understanding and interpretation
+- Key decisions and rationale
+- Assumptions made
+- Risks identified
+
+#### 3. Think Critically Before Implementing
+- **Identify Flaws**: Look for potential issues, edge cases, or problems
+- **Suggest Improvements**: Propose better approaches or alternatives
+- **Consider Trade-offs**: Analyze pros/cons of different approaches
+- **Long-term Impact**: Consider maintainability and scalability
+
+#### 4. Collaborate with Other Agents
+- **Share Analysis**: Document findings and questions
+- **Request Input**: Ask relevant agents for their perspective
+- **Reach Consensus**: Ensure agreement on approach before proceeding
+- **Document Agreement**: Record the agreed-upon approach
+
+#### 5. Get Approval Before Significant Work
+- Present the refined plan to the user
+- Confirm understanding and approach
+- Get explicit go-ahead
+
+#### 6. Execute with Documentation
+- Follow the agreed-upon plan
+- Document significant decisions as you go
+- Note any deviations from the plan and why
+
+**Why this matters**: Without this protocol, agents make assumptions, build the wrong thing, or miss requirements. Asking clarifying questions catches misunderstandings early — before code is written.
+
+### Before Concluding Any Task (ALL AGENTS)
+
+**CRITICAL**: Before marking a task as complete, ALWAYS:
+
+1. **Check for uncommitted changes**: `git status`
+2. **Commit all work**: `git add -A && git commit -m "[Agent Name] Description"`
+3. **Push to remote**: `git push -u origin [branch-name]`
+4. **Follow the [Handover Protocol](#mandatory-handover-protocol-all-agents)**: Ask user about PR
+5. **If PR created**: Verify it exists on GitHub and inform user of the URL
+6. **Update task status**: Mark task as completed in the task file
+
+### Branch Name Validation (ALL AGENTS)
+
+Before creating a PR, validate your branch name:
+```bash
+CURRENT_BRANCH=$(git branch --show-current)
+echo "Current branch: $CURRENT_BRANCH"
+
+# Branch should match: {llm-agent}/{agent}-{task_name}-{sessionID}
+# Examples: copilot/architect-login-page-abc123, claude/developer-api-xyz789
+```
+
+**Why this matters**: Automated peer review requires agent-specific branch names matching `{llm-agent}/{agent}-{task_name}-{sessionID}`. Generic branch names will cause peer review automation to skip the PR.
+
+---
+
+**Template Version**: 2.2
+**Last Updated**: 2026-02-06

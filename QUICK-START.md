@@ -13,9 +13,12 @@ Welcome! This guide will help you set up the AI-assisted workflow.
 Before choosing an AI tool path, you **MUST** set up these prerequisites:
 
 ### 1. Git Installation
-- **Mac**: `brew install git`
-- **Windows**: Download from https://git-scm.com/
-- **Linux**: `sudo apt install git`
+- **Mac**: `brew install git` (or `xcode-select --install`)
+- **Windows**: `winget install Git.Git` or download from https://git-scm.com/
+- **Linux (Debian/Ubuntu)**: `sudo apt install git`
+- **Linux (Fedora)**: `sudo dnf install git`
+
+> **Note:** IT Agent (Step 0) will also verify and install `git` automatically when the workflow starts.
 
 ### 2. GitHub Account
 - Go to https://github.com and sign up (or sign in)
@@ -61,15 +64,23 @@ brew install gh
 winget install GitHub.cli --accept-package-agreements --accept-source-agreements
 ```
 
-**On Linux (Ubuntu/Debian):**
+**On Linux (Debian/Ubuntu):**
 ```bash
 sudo apt update && sudo apt install -y gh
 ```
 
-**Verify installation:**
+**On Linux (Fedora):**
 ```bash
-gh auth status
+sudo dnf install -y gh
 ```
+
+**Verify installation (all platforms):**
+```bash
+gh auth login   # First time: authenticate
+gh auth status  # Verify authentication
+```
+
+> **Note:** IT Agent (Step 0) will also verify and install `gh` automatically when the workflow starts.
 
 ---
 
@@ -112,15 +123,16 @@ Click on your chosen provider's setup guide above. Each guide includes:
 
 After setup, verify your provider is configured:
 
+**Linux/macOS (bash):**
 ```bash
-# Check environment variable (only needed for automated reviews)
 echo "LLM_PROVIDER: ${LLM_PROVIDER:-'Not set (IDE work only)'}"
+echo "LLM_API_KEY is set: $([ -n "$LLM_API_KEY" ] && echo 'Yes' || echo 'No (IDE work only)')"
+```
 
-# Check API key (only needed for automated reviews with non-Copilot providers)
-echo "LLM_API_KEY is set: $([ -n "$LLM_API_KEY" ] && echo 'Yes ✅' || echo 'No (IDE work only)')"
-
-# For Azure users, also check:
-echo "AZURE_OPENAI_ENDPOINT: $AZURE_OPENAI_ENDPOINT"
+**Windows (PowerShell):**
+```powershell
+Write-Host "LLM_PROVIDER: $($env:LLM_PROVIDER ?? 'Not set (IDE work only)')"
+Write-Host "LLM_API_KEY is set: $(if ($env:LLM_API_KEY) { 'Yes' } else { 'No (IDE work only)' })"
 ```
 
 **Summary**:

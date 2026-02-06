@@ -98,7 +98,7 @@ The automated multi-agent peer review system uses **Claude API** (Anthropic) to 
 4. **Verify Reviews**:
    - Go back to PR
    - You should see 3 review comments:
-     - Team Leader Agent Review
+     - Product Owner Agent Review
      - Architect Agent Review
      - Tester Agent Review
    - Each should have detailed feedback and a decision (APPROVED or CHANGES REQUESTED)
@@ -122,7 +122,7 @@ The automated multi-agent peer review system uses **Claude API** (Anthropic) to 
 
 4. **Check Logs**:
    - View workflow run logs
-   - Should see "Calling Claude API as team-leader..." etc.
+   - Should see "Calling Claude API as product-owner..." etc.
    - No API key errors should appear
 
 ---
@@ -329,7 +329,7 @@ Use this checklist to verify setup:
 
 **Setup Complete!** 🎉
 
-Your automated multi-agent peer review system is now ready to review Developer PRs automatically using Team Leader, Architect, and Tester agents powered by Claude API.
+Your automated multi-agent peer review system is now ready to review Developer PRs automatically using Product Owner, Architect, and Tester agents powered by Claude API.
 
 ---
 

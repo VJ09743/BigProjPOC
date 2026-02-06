@@ -7,9 +7,9 @@ name: PR Review Assignment (Manual)
 # Review Assignment Rules (updated to reduce reviewers):
 # - Developer PRs: Architect and Tester (2 reviewers)
 # - Architect PRs: Developer and Tester (2 reviewers)
-# - Tester PRs: Developer and Team Leader (2 reviewers)
+# - Tester PRs: Developer and Product Owner (2 reviewers)
 # - IT PRs: Architect (1 reviewer)
-# - Team Leader PRs: Architect (1 reviewer)
+# - Product Owner PRs: Architect (1 reviewer)
 #
 # The workflow adds labels and creates a comment with review checklist.
 
@@ -66,7 +66,7 @@ jobs:
               return;
             }
 
-            const agentType = match[1]; // e.g., "developer", "architect", "tester", "it", "team-leader"
+            const agentType = match[1]; // e.g., "developer", "architect", "tester", "it", "product-owner"
             const projectName = match[2]; // e.g., "rtdcs"
             const sessionId = match[3]; // e.g., "pbCFa"
 
@@ -87,19 +87,19 @@ jobs:
                 description: 'Architect design PRs must be reviewed by Developer and Tester before merge.'
               },
               'tester': {
-                reviewers: ['Developer', 'Team Leader'],
-                labels: ['peer-review:tester', 'awaiting-developer-review', 'awaiting-team-leader-review'],
-                description: 'Tester QA PRs must be reviewed by Developer and Team Leader before merge.'
+                reviewers: ['Developer', 'Product Owner'],
+                labels: ['peer-review:tester', 'awaiting-developer-review', 'awaiting-product-owner-review'],
+                description: 'Tester QA PRs must be reviewed by Developer and Product Owner before merge.'
               },
               'it': {
                 reviewers: ['Architect'],
                 labels: ['peer-review:it', 'awaiting-architect-review'],
                 description: 'IT infrastructure PRs must be reviewed by Architect before merge.'
               },
-              'team-leader': {
+              'product-owner': {
                 reviewers: ['Architect'],
-                labels: ['peer-review:team-leader', 'awaiting-architect-review'],
-                description: 'Team Leader PRs must be reviewed by Architect before merge.'
+                labels: ['peer-review:product-owner', 'awaiting-architect-review'],
+                description: 'Product Owner PRs must be reviewed by Architect before merge.'
               }
             };
 
@@ -151,7 +151,7 @@ jobs:
 
             ### Review Checklist
 
-            **Team Leader** (if assigned):
+            **Product Owner** (if assigned):
             - [ ] Code follows project standards and conventions
             - [ ] Design patterns and SOLID principles are correctly applied
             - [ ] Documentation is clear and comprehensive

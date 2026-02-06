@@ -9,10 +9,11 @@ This template includes configuration files that instruct AI assistants to follow
 | AI Tool | Config File | Purpose |
 |---------|-------------|---------|
 | Claude Code | `CLAUDE.md` | Instructions for Claude Code CLI |
+| GitHub Copilot | `.github/copilot-instructions.md` + `.vscode/settings.json` | Instructions for GitHub Copilot |
 | Cursor | `.cursorrules` | Instructions for Cursor IDE |
-| Aider | `.aider.conf.yml` + `.aider.conventions.md` | Instructions for Aider CLI |
 | Windsurf | `.windsurfrules` | Instructions for Windsurf IDE |
 | Continue | `.continuerules` | Instructions for Continue extension |
+| Aider | `.aider.conf.yml` + `.aider.conventions.md` | Instructions for Aider CLI |
 
 These files ensure the AI **always starts as Product Owner** and follows the complete workflow.
 
@@ -40,8 +41,12 @@ Pick one AI service to use:
 # Copy the template
 cp ai-assistants/provider-setup/config.template.json ai-assistants/provider-setup/config.json
 
-# Set your API key (add to ~/.bashrc or ~/.zshrc for persistence)
+# Set your API key:
+# Linux/macOS (add to ~/.bashrc or ~/.zshrc for persistence):
 export LLM_API_KEY="your-api-key-here"
+
+# Windows (PowerShell — add to $PROFILE for persistence):
+# $env:LLM_API_KEY = "your-api-key-here"
 ```
 
 ### Step 4: Install an AI Coding Tool

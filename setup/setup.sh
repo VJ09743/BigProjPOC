@@ -17,9 +17,7 @@ set -e
 
 REPO_OWNER="meenusinha"
 REPO_NAME="BigProjPOC"
-# NOTE: Change this to "template/agentic-workflow-gui" after merging the PR.
-# Using the working branch for pre-merge testing.
-REPO_BRANCH="claude/create-setup-wizard-gOvpL"
+REPO_BRANCH="template/agentic-workflow-gui"
 TARBALL_URL="https://github.com/${REPO_OWNER}/${REPO_NAME}/archive/refs/heads/${REPO_BRANCH}.tar.gz"
 
 # Colors for output

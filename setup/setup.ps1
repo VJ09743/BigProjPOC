@@ -16,9 +16,7 @@ $ErrorActionPreference = "Stop"
 
 $RepoOwner = "meenusinha"
 $RepoName = "BigProjPOC"
-# NOTE: Change this to "template/agentic-workflow-gui" after merging the PR.
-# Using the working branch for pre-merge testing.
-$RepoBranch = "claude/create-setup-wizard-gOvpL"
+$RepoBranch = "template/agentic-workflow-gui"
 $ZipUrl = "https://github.com/$RepoOwner/$RepoName/archive/refs/heads/$RepoBranch.zip"
 
 function Write-Info($msg) { Write-Host "[INFO] $msg" -ForegroundColor Blue }

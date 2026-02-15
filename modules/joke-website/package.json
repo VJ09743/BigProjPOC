@@ -10,7 +10,7 @@
         "build:css": "concat-cli -f src/public/css/*.css -o build/main.css",
         "build:js": "browserify src/public/js/main.js -o build/bundle.js",
         "test": "jest",
-        "seed": "node src/utils/seedDatabase.js"
+        "seed": "node src/server/seeds/seedDatabase.js"
     },
     "dependencies": {
         "express": "^4.18.2",

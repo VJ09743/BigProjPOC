@@ -1,0 +1,18 @@
+🎭 FamilyJokes - Favicon Instructions
+
+A favicon.ico file should be placed in this directory for the website icon.
+
+You can:
+1. Create a 16x16 or 32x32 pixel image with a joke/comedy theme
+2. Use an online favicon generator to convert an image to .ico format
+3. Use a simple emoji-based favicon generator
+
+For now, browsers will use a default icon if this file is missing.
+
+Suggested favicon ideas:
+- 😄 Laughing face emoji  
+- 🎭 Comedy/drama masks
+- 😊 Simple smiley face
+- 🤡 Comedy-themed icon
+
+The favicon helps users identify the website in browser tabs and bookmarks.

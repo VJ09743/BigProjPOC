@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="FamilyJokes - Family-friendly humor with dad jokes, one-liners, knock-knock jokes, riddles, animal jokes, and tech jokes. PG-13 rated content for all ages.">
+    <meta name="keywords" content="jokes, humor, family-friendly, dad jokes, riddles, knock-knock jokes, clean humor">
+    <title>FamilyJokes - Family-Friendly Humor for Everyone</title>
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/x-icon" href="/favicon.ico">
+    
+    <!-- CSS -->
+    <link rel="stylesheet" href="/css/styles.css">
+    
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="container">
+            <div class="header-content">
+                <div class="logo">
+                    <h1>🎭 FamilyJokes</h1>
+                    <p class="tagline">Family-friendly humor for everyone</p>
+                </div>
+                
+                <nav class="main-nav">
+                    <button class="nav-btn active" data-view="browse">Browse Jokes</button>
+                    <button class="nav-btn" data-view="search">Search</button>
+                    <button class="nav-btn" data-view="submit">Submit Joke</button>
+                    <button class="nav-btn" data-view="about">About</button>
+                </nav>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <div class="container">
+            
+            <!-- Browse View -->
+            <div id="browse-view" class="view active">
+                <!-- Category Filter -->
+                <div class="category-filter">
+                    <h2>Choose Your Humor Style</h2>
+                    <div class="category-buttons">
+                        <button class="category-btn active" data-category="all">All Jokes</button>
+                        <button class="category-btn" data-category="dad-jokes">Dad Jokes</button>
+                        <button class="category-btn" data-category="one-liners">One-Liners</button>
+                        <button class="category-btn" data-category="knock-knock">Knock-Knock</button>
+                        <button class="category-btn" data-category="riddles">Riddles</button>
+                        <button class="category-btn" data-category="animal-jokes">Animal Jokes</button>
+                        <button class="category-btn" data-category="tech-jokes">Tech Jokes</button>
+                    </div>
+                </div>
+
+                <!-- Joke Display -->
+                <div class="joke-display">
+                    <div class="joke-card" id="current-joke">
+                        <div class="joke-content">
+                            <div class="joke-text">
+                                <p class="joke-setup">Loading a great joke for you...</p>
+                                <p class="joke-punchline" style="display: none;"></p>
+                            </div>
+                            
+                            <div class="joke-reveal" id="joke-reveal" style="display: none;">
+                                <button class="reveal-btn">Show Punchline! 🎉</button>
+                            </div>
+                        </div>
+
+                        <div class="joke-meta">
+                            <div class="joke-category">
+                                <span class="category-tag"></span>
+                            </div>
+                            
+                            <div class="joke-rating">
+                                <div class="rating-display">
+                                    <span class="rating-stars">⭐ <span class="rating-value">0.0</span></span>
+                                    <span class="rating-count">(0 votes)</span>
+                                </div>
+                                
+                                <div class="rating-buttons">
+                                    <button class="rate-btn" data-rating="1" title="Rate 1 star">⭐</button>
+                                    <button class="rate-btn" data-rating="2" title="Rate 2 stars">⭐</button>
+                                    <button class="rate-btn" data-rating="3" title="Rate 3 stars">⭐</button>
+                                    <button class="rate-btn" data-rating="4" title="Rate 4 stars">⭐</button>
+                                    <button class="rate-btn" data-rating="5" title="Rate 5 stars">⭐</button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="joke-actions">
+                            <button class="action-btn next-joke-btn">Next Joke</button>
+                            <button class="action-btn share-btn">Share</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Search View -->
+            <div id="search-view" class="view">
+                <div class="search-section">
+                    <h2>Find the Perfect Joke</h2>
+                    <div class="search-form">
+                        <input type="text" id="search-input" placeholder="Search jokes by keyword..." class="search-input">
+                        <button id="search-btn" class="search-btn">Search</button>
+                    </div>
+                </div>
+
+                <div class="search-results" id="search-results">
+                    <div class="search-status">
+                        <p>Enter a keyword to find jokes!</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Submit View -->
+            <div id="submit-view" class="view">
+                <div class="submit-section">
+                    <h2>Share Your Clean Humor</h2>
+                    <p class="submit-description">
+                        Help grow our collection of family-friendly jokes! All submissions are reviewed to ensure they meet our PG-13 standards.
+                    </p>
+
+                    <form id="joke-submit-form" class="submit-form">
+                        <div class="form-group">
+                            <label for="joke-category">Category</label>
+                            <select id="joke-category" name="category" required>
+                                <option value="">Select a category</option>
+                                <option value="dad-jokes">Dad Jokes</option>
+                                <option value="one-liners">One-Liners</option>
+                                <option value="knock-knock">Knock-Knock Jokes</option>
+                                <option value="riddles">Riddles</option>
+                                <option value="animal-jokes">Animal Jokes</option>
+                                <option value="tech-jokes">Tech Jokes</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="joke-setup">Joke Setup</label>
+                            <textarea id="joke-setup" name="setup" 
+                                placeholder="Enter the setup or question part of your joke..."
+                                rows="3" required></textarea>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="joke-punchline">Punchline <span class="optional">(Optional for riddles without clear punchlines)</span></label>
+                            <textarea id="joke-punchline" name="punchline" 
+                                placeholder="Enter the punchline or answer..."
+                                rows="2"></textarea>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="submitter-name">Your Name <span class="optional">(Optional)</span></label>
+                            <input type="text" id="submitter-name" name="submitter_name" 
+                                placeholder="Enter your name or nickname">
+                        </div>
+
+                        <div class="form-guidelines">
+                            <h4>Submission Guidelines:</h4>
+                            <ul>
+                                <li>Keep it family-friendly (PG-13 rating)</li>
+                                <li>No offensive language or inappropriate content</li>
+                                <li>Original jokes or properly attributed classics welcome</li>
+                                <li>All submissions are reviewed before publishing</li>
+                            </ul>
+                        </div>
+
+                        <button type="submit" class="submit-btn">Submit Joke</button>
+                    </form>
+
+                    <div id="submit-status" class="submit-status" style="display: none;"></div>
+                </div>
+            </div>
+
+            <!-- About View -->
+            <div id="about-view" class="view">
+                <div class="about-section">
+                    <h2>About FamilyJokes</h2>
+                    <div class="about-content">
+                        <p>
+                            Welcome to FamilyJokes - your destination for clean, family-friendly humor that everyone can enjoy! 
+                            Our carefully curated collection features the best dad jokes, clever one-liners, classic knock-knock 
+                            jokes, brain-teasing riddles, silly animal jokes, and tech humor.
+                        </p>
+
+                        <h3>Our Promise</h3>
+                        <ul>
+                            <li><strong>Family-Safe Content:</strong> All jokes are rated PG-13 and suitable for all ages</li>
+                            <li><strong>Quality Humor:</strong> Each joke is reviewed for quality and appropriateness</li>
+                            <li><strong>Easy Browsing:</strong> Simple, intuitive interface for quick joke discovery</li>
+                            <li><strong>Community-Driven:</strong> Submit your own clean jokes to share with others</li>
+                        </ul>
+
+                        <h3>Categories</h3>
+                        <div class="category-descriptions">
+                            <div class="category-desc">
+                                <h4>🧔 Dad Jokes</h4>
+                                <p>Classic groan-worthy puns and wholesome humor that dads everywhere love to share.</p>
+                            </div>
+                            <div class="category-desc">
+                                <h4>⚡ One-Liners</h4>
+                                <p>Quick, witty jokes that pack a punch in just one sentence.</p>
+                            </div>
+                            <div class="category-desc">
+                                <h4>🚪 Knock-Knock Jokes</h4>
+                                <p>Interactive classics that never go out of style.</p>
+                            </div>
+                            <div class="category-desc">
+                                <h4>🧩 Riddles</h4>
+                                <p>Brain teasers and clever wordplay that make you think and laugh.</p>
+                            </div>
+                            <div class="category-desc">
+                                <h4>🐾 Animal Jokes</h4>
+                                <p>Funny stories and puns featuring our favorite furry, feathered, and finned friends.</p>
+                            </div>
+                            <div class="category-desc">
+                                <h4>💻 Tech Jokes</h4>
+                                <p>Programming, computer, and technology humor for the digital age.</p>
+                            </div>
+                        </div>
+
+                        <h3>Get Involved</h3>
+                        <p>
+                            Have a great clean joke to share? Use our submission form to contribute to the collection! 
+                            All submissions are reviewed to maintain our high standards for family-friendly content.
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <p>&copy; 2024 FamilyJokes. Spreading smiles one joke at a time.</p>
+                <p class="rating-info">PG-13 Rating | Family-Friendly Content | Community Guidelines Apply</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Loading Overlay -->
+    <div id="loading-overlay" class="loading-overlay" style="display: none;">
+        <div class="loading-spinner">
+            <div class="spinner"></div>
+            <p>Loading jokes...</p>
+        </div>
+    </div>
+
+    <!-- JavaScript -->
+    <script src="/js/app.js"></script>
+</body>
+</html>

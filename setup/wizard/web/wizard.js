@@ -1,0 +1,594 @@
+/**
+ * Setup Wizard - Client-side logic
+ *
+ * Manages screen navigation, API calls to the Python backend,
+ * and UI updates for the setup wizard.
+ */
+
+const state = {
+  currentScreen: 0,
+  totalScreens: 10,
+  workflowMode: null,      // 'github' or 'local'
+  osInfo: null,
+  projectPath: null,
+  selectedTool: null,
+  selectedProvider: null,
+};
+
+// --- API helpers ---
+
+async function api(path, body) {
+  const opts = { headers: { 'Content-Type': 'application/json' } };
+  if (body !== undefined) {
+    opts.method = 'POST';
+    opts.body = JSON.stringify(body);
+  }
+  const res = await fetch(path, opts);
+  return res.json();
+}
+
+// --- Screen navigation ---
+
+function showScreen(index) {
+  document.querySelectorAll('.screen').forEach((el, i) => {
+    el.classList.toggle('active', i === index);
+  });
+  state.currentScreen = index;
+  updateProgress();
+}
+
+function nextScreen() {
+  let next = state.currentScreen + 1;
+
+  // Skip logic based on workflow mode
+  if (state.workflowMode === 'local') {
+    // Skip screens not needed for local mode:
+    // 2 (prerequisites - git/gh), 3 (GitHub account), 4 (token), 6 (LLM)
+    const skipScreens = [2, 3, 4, 6];
+    while (skipScreens.includes(next) && next < state.totalScreens) {
+      next++;
+    }
+  }
+
+  if (next < state.totalScreens) {
+    showScreen(next);
+    initScreen(next);
+  }
+}
+
+function prevScreen() {
+  let prev = state.currentScreen - 1;
+
+  if (state.workflowMode === 'local') {
+    const skipScreens = [2, 3, 4, 6];
+    while (skipScreens.includes(prev) && prev > 0) {
+      prev--;
+    }
+  }
+
+  if (prev >= 0) {
+    showScreen(prev);
+  }
+}
+
+function updateProgress() {
+  document.querySelectorAll('.progress-step').forEach((el, i) => {
+    el.classList.remove('active', 'completed');
+    if (i < state.currentScreen) el.classList.add('completed');
+    if (i === state.currentScreen) el.classList.add('active');
+  });
+}
+
+// --- Screen initializers ---
+
+async function initScreen(index) {
+  switch (index) {
+    case 0: await initWelcome(); break;
+    case 2: await initPrerequisites(); break;
+    case 3: await initGitHubAccount(); break;
+    case 4: await initToken(); break;
+    case 5: await initForkClone(); break;
+    case 7: await initToolSelect(); break;
+  }
+}
+
+// Screen 0: Welcome
+async function initWelcome() {
+  const info = await api('/api/os-info');
+  state.osInfo = info;
+  state.userCwd = info.user_cwd || '';
+  document.getElementById('os-display').textContent = info.display_name || 'Unknown OS';
+}
+
+// Screen 2: Prerequisites
+async function initPrerequisites() {
+  await refreshPrerequisites();
+}
+
+async function refreshPrerequisites() {
+  const status = await api('/api/prerequisites/status');
+
+  updateStatusItem('git-status', status.git);
+  updateStatusItem('gh-status', status.gh);
+
+  // Enable next only if both installed
+  const allInstalled = status.git.installed && status.gh.installed;
+  const nextBtn = document.getElementById('prereq-next');
+  if (nextBtn) nextBtn.disabled = !allInstalled;
+}
+
+function updateStatusItem(id, info) {
+  const el = document.getElementById(id);
+  if (!el) return;
+  const icon = el.querySelector('.status-icon');
+  const version = el.querySelector('.version');
+  const actionBtn = el.querySelector('.action-btn');
+
+  if (info.installed) {
+    icon.textContent = '\u2705';
+    version.textContent = info.version || 'Installed';
+    if (actionBtn) actionBtn.style.display = 'none';
+  } else {
+    icon.textContent = '\u274c';
+    version.textContent = 'Not installed';
+    if (actionBtn) actionBtn.style.display = '';
+  }
+}
+
+async function installPrerequisite(tool) {
+  const btn = event.target;
+  const origText = btn.textContent;
+  btn.textContent = 'Installing...';
+  btn.disabled = true;
+
+  const result = await api('/api/prerequisites/install', { tool });
+
+  if (result.success) {
+    await refreshPrerequisites();
+  } else {
+    showAlert('prereq-alerts', result.message, 'danger');
+  }
+
+  btn.textContent = origText;
+  btn.disabled = false;
+}
+
+// Screen 3: GitHub Account
+async function initGitHubAccount() {
+  const status = await api('/api/github/auth-status');
+  const el = document.getElementById('gh-auth-info');
+
+  if (status.authenticated) {
+    el.innerHTML = `
+      <div class="alert alert-success">
+        Signed in as <strong>${status.username || 'GitHub user'}</strong>
+      </div>`;
+    document.getElementById('gh-account-next').disabled = false;
+  } else {
+    el.innerHTML = `
+      <div class="alert alert-warning">Not signed in to GitHub</div>`;
+    document.getElementById('gh-account-next').disabled = true;
+  }
+}
+
+async function githubLogin() {
+  const btn = event.target;
+  btn.textContent = 'Starting sign-in...';
+  btn.disabled = true;
+
+  const result = await api('/api/github/login', {});
+
+  if (result.success && result.device_code) {
+    // Show device code and link in the UI
+    const url = result.verification_url || 'https://github.com/login/device';
+    showAlert('gh-account-alerts', `
+      <div style="text-align:center; padding:10px 0;">
+        <p style="margin-bottom:12px;">Open this URL and enter the code below:</p>
+        <p><a href="${url}" target="_blank" style="color:#2563eb; font-size:1.1em;">${url}</a></p>
+        <p style="font-size:2em; font-weight:bold; letter-spacing:6px; margin:16px 0; font-family:monospace; user-select:all;">${result.device_code}</p>
+        <p style="color:#666;">After you authorize, click <strong>Check Status</strong> below.</p>
+      </div>`, 'info');
+    btn.textContent = 'Check Status';
+    btn.disabled = false;
+    // Change button behavior to poll
+    btn.onclick = async function() {
+      btn.textContent = 'Checking...';
+      btn.disabled = true;
+      // Poll the login endpoint (returns status) and re-check auth
+      await api('/api/github/login', {});
+      await initGitHubAccount();
+      // If still not authenticated, restore button
+      const status = await api('/api/github/auth-status');
+      if (!status.authenticated) {
+        btn.textContent = 'Check Status';
+        btn.disabled = false;
+      }
+    };
+  } else if (result.success && result.status === 'complete') {
+    showAlert('gh-account-alerts', 'Successfully signed in!', 'success');
+    await initGitHubAccount();
+    btn.textContent = 'Sign In with Browser';
+    btn.disabled = false;
+    btn.onclick = githubLogin;
+  } else {
+    showAlert('gh-account-alerts', result.message || 'Login failed. Try using a token instead (next screen).', 'warning');
+    btn.textContent = 'Sign In with Browser';
+    btn.disabled = false;
+    btn.onclick = githubLogin;
+  }
+}
+
+// Screen 4: GitHub Token
+async function initToken() {
+  const status = await api('/api/github/auth-status');
+  if (status.authenticated) {
+    // Already signed in via browser — token is optional
+    showAlert('token-alerts', `
+      <div>
+        You're already signed in as <strong>${status.username || 'GitHub user'}</strong> via browser login.
+        A token is <strong>optional</strong> — you can skip this step or add one for extra automation.
+      </div>`, 'success');
+    document.getElementById('token-next').disabled = false;
+  }
+}
+
+async function saveGitHubToken() {
+  const input = document.getElementById('github-token-input');
+  const token = input.value.trim();
+  if (!token) {
+    showAlert('token-alerts', 'Please paste your GitHub token.', 'warning');
+    return;
+  }
+
+  const btn = document.getElementById('save-token-btn');
+  btn.textContent = 'Saving...';
+  btn.disabled = true;
+
+  const result = await api('/api/github/token', { token });
+
+  if (result.success) {
+    showAlert('token-alerts', 'Token saved and authenticated!', 'success');
+    document.getElementById('token-next').disabled = false;
+  } else {
+    showAlert('token-alerts', result.message, 'danger');
+  }
+
+  btn.textContent = 'Save Token';
+  btn.disabled = false;
+}
+
+// Screen 5: Fork & Clone / Local Copy
+async function initForkClone() {
+  // Default to the directory where the user ran the curl command
+  const defaultPath = state.userCwd || '';
+  if (defaultPath) {
+    state.projectPath = defaultPath;
+    // Pre-fill both path inputs (github and local)
+    const ghInput = document.getElementById('custom-path-input');
+    const localInput = document.getElementById('local-custom-path');
+    if (ghInput) ghInput.value = defaultPath;
+    if (localInput) localInput.value = defaultPath;
+  }
+}
+
+function useCustomPath() {
+  const input = document.getElementById('custom-path-input') || document.getElementById('local-custom-path');
+  if (input && input.value.trim()) {
+    state.projectPath = input.value.trim();
+  }
+}
+
+async function browsePath(targetInputId) {
+  const result = await api('/api/paths/browse');
+  if (result.success && result.path) {
+    state.projectPath = result.path;
+    const input = document.getElementById(targetInputId);
+    if (input) input.value = result.path;
+  } else if (result.message) {
+    showAlert('clone-alerts', result.message, 'warning');
+    showAlert('local-alerts', result.message, 'warning');
+  }
+}
+
+async function forkAndClone() {
+  const btn = document.getElementById('fork-clone-btn');
+  const projectName = document.getElementById('project-name-input').value.trim() || 'BigProjPOC';
+  btn.textContent = 'Forking & Cloning...';
+  btn.disabled = true;
+
+  const result = await api('/api/github/fork-clone', {
+    path: state.projectPath,
+    project_name: projectName,
+  });
+
+  if (result.success) {
+    state.projectPath = result.project_path;
+    showAlert('clone-alerts', result.message, 'success');
+    document.getElementById('clone-next').disabled = false;
+  } else {
+    showAlert('clone-alerts', result.message, 'danger');
+  }
+
+  btn.textContent = 'Fork & Clone';
+  btn.disabled = false;
+}
+
+// Screen 5 (local): Copy files
+async function copyLocal() {
+  const btn = document.getElementById('local-copy-btn');
+  const projectName = document.getElementById('local-project-name').value.trim() || 'BigProjPOC';
+  btn.textContent = 'Copying files...';
+  btn.disabled = true;
+
+  const result = await api('/api/local/copy', {
+    path: state.projectPath,
+    project_name: projectName,
+  });
+
+  if (result.success) {
+    state.projectPath = result.project_path;
+    showAlert('local-alerts', result.message, 'success');
+    document.getElementById('local-next').disabled = false;
+  } else {
+    showAlert('local-alerts', result.message, 'danger');
+  }
+
+  btn.textContent = 'Copy Project Files';
+  btn.disabled = false;
+}
+
+// Screen 6: LLM Provider
+const PROVIDERS = [
+  { id: 'copilot', name: 'GitHub Copilot', cost: 'FREE*', needs_key: false,
+    note: 'Uses repository authentication. Requires Copilot Enterprise for automated reviews.' },
+  { id: 'openai', name: 'OpenAI (GPT-4)', cost: '$$',
+    url: 'https://platform.openai.com/api-keys',
+    steps: ['Go to platform.openai.com/api-keys', 'Sign in or create account', 'Click "Create new secret key"', 'Copy the key (starts with sk-...)'] },
+  { id: 'anthropic', name: 'Anthropic (Claude)', cost: '$$$',
+    url: 'https://console.anthropic.com/',
+    steps: ['Go to console.anthropic.com', 'Sign in or create account', 'Go to "API Keys" section', 'Click "Create Key"', 'Copy the key (starts with sk-ant-...)'] },
+  { id: 'gemini', name: 'Google Gemini', cost: '$',
+    url: 'https://makersuite.google.com/app/apikey',
+    steps: ['Go to makersuite.google.com/app/apikey', 'Sign in with Google account', 'Click "Create API Key"', 'Select or create a project', 'Copy the key'] },
+  { id: 'azure', name: 'Azure OpenAI', cost: '$$$', needs_endpoint: true,
+    url: 'https://portal.azure.com/',
+    steps: ['Go to portal.azure.com', 'Search for "Azure OpenAI"', 'Create a resource', 'Go to "Keys and Endpoint"', 'Copy Key 1 and the Endpoint URL'] },
+  { id: 'cohere', name: 'Cohere', cost: '$',
+    url: 'https://dashboard.cohere.com/',
+    steps: ['Go to dashboard.cohere.com', 'Sign in or create account', 'Go to "API Keys"', 'Copy your Production key'] },
+  { id: 'mistral', name: 'Mistral AI', cost: '$',
+    url: 'https://console.mistral.ai/',
+    steps: ['Go to console.mistral.ai', 'Sign in or create account', 'Go to "API Keys"', 'Click "Create new key"', 'Copy the key'] },
+];
+
+function selectProvider(id) {
+  state.selectedProvider = id;
+  const provider = PROVIDERS.find(p => p.id === id);
+  document.querySelectorAll('.radio-option').forEach(el => {
+    el.classList.toggle('selected', el.dataset.provider === id);
+  });
+
+  const detail = document.getElementById('provider-detail');
+  if (provider.needs_key === false) {
+    detail.innerHTML = `
+      <div class="alert alert-info">${provider.note}</div>
+      <p>No API key needed!</p>`;
+    document.getElementById('llm-api-key-group').style.display = 'none';
+    document.getElementById('azure-endpoint-group').style.display = 'none';
+    document.getElementById('llm-next').disabled = false;
+  } else {
+    let stepsHtml = '<ol>' + provider.steps.map(s => `<li>${s}</li>`).join('') + '</ol>';
+    detail.innerHTML = `
+      <div class="provider-info">
+        <div class="provider-cost">Cost: ${provider.cost}</div>
+        <a href="${provider.url}" target="_blank" class="btn btn-outline btn-sm" style="margin-bottom:12px">
+          Open ${provider.name} &rarr;
+        </a>
+        <div class="instructions">${stepsHtml}</div>
+      </div>`;
+    document.getElementById('llm-api-key-group').style.display = '';
+    document.getElementById('azure-endpoint-group').style.display = provider.needs_endpoint ? '' : 'none';
+    document.getElementById('llm-next').disabled = true;
+  }
+}
+
+async function saveLLMConfig() {
+  const provider = state.selectedProvider;
+  const apiKey = document.getElementById('llm-api-key').value.trim();
+  const azureEndpoint = document.getElementById('azure-endpoint')?.value.trim() || '';
+
+  if (!provider) {
+    showAlert('llm-alerts', 'Please select a provider.', 'warning');
+    return;
+  }
+
+  const providerInfo = PROVIDERS.find(p => p.id === provider);
+  if (providerInfo.needs_key !== false && !apiKey) {
+    showAlert('llm-alerts', 'Please enter your API key.', 'warning');
+    return;
+  }
+
+  const btn = document.getElementById('save-llm-btn');
+  btn.textContent = 'Saving...';
+  btn.disabled = true;
+
+  const result = await api('/api/llm/configure', {
+    provider, api_key: apiKey, azure_endpoint: azureEndpoint,
+  });
+
+  if (result.success) {
+    showAlert('llm-alerts', `${providerInfo.name} configured!`, 'success');
+    document.getElementById('llm-next').disabled = false;
+  } else {
+    showAlert('llm-alerts', result.message, 'danger');
+  }
+
+  btn.textContent = 'Save Configuration';
+  btn.disabled = false;
+}
+
+// Screen 7: AI Tool Selection
+async function initToolSelect() {
+  const data = await api('/api/tools/list');
+  const grid = document.getElementById('tool-grid');
+  grid.innerHTML = '';
+
+  (data.tools || []).forEach(tool => {
+    const card = document.createElement('div');
+    card.className = 'tool-card';
+    card.dataset.tool = tool.id;
+    card.innerHTML = `
+      <div class="tool-name">${tool.name}</div>
+      <div class="tool-desc">${tool.description}</div>
+      <span class="tool-difficulty">${tool.difficulty}</span>`;
+    card.onclick = () => selectTool(tool.id);
+    grid.appendChild(card);
+  });
+}
+
+async function selectTool(id) {
+  state.selectedTool = id;
+  document.querySelectorAll('.tool-card').forEach(el => {
+    el.classList.toggle('selected', el.dataset.tool === id);
+  });
+
+  // Check if the tool is already installed
+  const installBtn = document.getElementById('install-tool-btn');
+  const launchBtn = document.getElementById('launch-tool-btn');
+  const nextBtn = document.getElementById('tool-next');
+
+  installBtn.disabled = true;
+  installBtn.textContent = 'Checking...';
+  showAlert('tool-alerts', '', 'info');
+
+  const status = await api('/api/tools/check', { tool: id });
+
+  if (status.installed) {
+    showAlert('tool-alerts', `${id} is already installed!`, 'success');
+    installBtn.textContent = 'Already Installed';
+    installBtn.disabled = true;
+    launchBtn.style.display = '';
+    nextBtn.disabled = false;
+  } else {
+    showAlert('tool-alerts', '', 'info');
+    installBtn.textContent = 'Install';
+    installBtn.disabled = false;
+    launchBtn.style.display = 'none';
+    nextBtn.disabled = true;
+  }
+}
+
+async function installTool() {
+  if (!state.selectedTool) return;
+
+  const btn = document.getElementById('install-tool-btn');
+  btn.innerHTML = '<span class="spinner"></span> Installing...';
+  btn.disabled = true;
+
+  const result = await api('/api/tools/install', { tool: state.selectedTool });
+
+  if (result.success) {
+    showAlert('tool-alerts', result.message, 'success');
+    document.getElementById('launch-tool-btn').style.display = '';
+    document.getElementById('tool-next').disabled = false;
+  } else {
+    showAlert('tool-alerts', result.message, 'danger');
+  }
+
+  btn.textContent = 'Install';
+  btn.disabled = false;
+}
+
+async function launchTool() {
+  if (!state.selectedTool || !state.projectPath) {
+    showAlert('tool-alerts', 'No project path set. Please go back and set up your project.', 'warning');
+    return;
+  }
+
+  const btn = document.getElementById('launch-tool-btn');
+  btn.textContent = 'Launching...';
+  btn.disabled = true;
+
+  const result = await api('/api/tools/launch', {
+    tool: state.selectedTool,
+    project_path: state.projectPath,
+  });
+
+  if (result.success) {
+    showAlert('tool-alerts', result.message, 'success');
+  } else {
+    showAlert('tool-alerts', result.message, 'danger');
+  }
+
+  btn.textContent = 'Launch';
+  btn.disabled = false;
+}
+
+// Screen 8: Verification
+const TOOL_INSTRUCTIONS = {
+  'cursor': { file: '.cursorrules', name: 'Cursor' },
+  'windsurf': { file: '.windsurfrules', name: 'Windsurf' },
+  'claude-code': { file: 'CLAUDE.md', name: 'Claude Code' },
+  'vscode': { file: '.continuerules', name: 'VS Code + Continue' },
+  'copilot': { file: '.github/copilot-instructions.md', name: 'VS Code + GitHub Copilot' },
+  'aider': { file: '.aider.conf.yml', name: 'Aider' },
+};
+
+function initVerification() {
+  const tool = TOOL_INSTRUCTIONS[state.selectedTool] || { file: 'CLAUDE.md', name: 'your AI tool' };
+  document.getElementById('verify-tool-name').textContent = tool.name;
+  document.getElementById('verify-instruction-file').textContent = tool.file;
+
+  // Expected first agent depends on workflow mode
+  const firstAgent = state.workflowMode === 'local' ? 'Product Owner' : 'IT Agent';
+  const firstRole = state.workflowMode === 'local' ? 'Product Owner' : 'IT Agent';
+
+  document.getElementById('verify-expected-agent').textContent = `"${firstAgent}"`;
+  document.getElementById('verify-expected-agent-2').textContent = firstAgent;
+
+  const fallbackPrompt = `Please read the file ${tool.file} in the project root and follow the agentic workflow defined there. Start by reading AI-WORKFLOW.md and adopt the ${firstRole} role.`;
+  document.getElementById('fallback-prompt').textContent = fallbackPrompt;
+}
+
+// --- Utility functions ---
+
+function showAlert(containerId, message, type) {
+  const container = document.getElementById(containerId);
+  if (!container) return;
+  container.innerHTML = `<div class="alert alert-${type}">${message}</div>`;
+}
+
+function copyToClipboard(text) {
+  navigator.clipboard.writeText(text).then(() => {
+    const btn = event.target;
+    const orig = btn.textContent;
+    btn.textContent = 'Copied!';
+    setTimeout(() => { btn.textContent = orig; }, 1500);
+  });
+}
+
+// Screen 1: Workflow mode selection
+function selectWorkflow(mode) {
+  state.workflowMode = mode;
+  document.querySelectorAll('#screen-1 .radio-option').forEach(el => {
+    el.classList.toggle('selected', el.dataset.mode === mode);
+  });
+  document.getElementById('workflow-next').disabled = false;
+
+  // Show/hide local-mode project screen (screen index 5 is reused)
+  if (mode === 'local') {
+    // We'll show a local copy screen instead of fork/clone
+    document.getElementById('fork-clone-section').style.display = 'none';
+    document.getElementById('local-copy-section').style.display = '';
+  } else {
+    document.getElementById('fork-clone-section').style.display = '';
+    document.getElementById('local-copy-section').style.display = 'none';
+  }
+}
+
+// --- Initialization ---
+
+document.addEventListener('DOMContentLoaded', () => {
+  showScreen(0);
+  initScreen(0);
+});

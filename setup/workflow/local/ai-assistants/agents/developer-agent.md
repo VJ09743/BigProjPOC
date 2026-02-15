@@ -79,7 +79,6 @@ Software Developer and Implementation Specialist
   - Parameterized tests for multiple scenarios
 
 **Modern Development Practices**:
-- Version control: Git workflow, branching, merging, rebasing
 - Code review: giving and receiving constructive feedback
 - Pair programming and collaborative development
 - Continuous integration: writing CI-friendly code
@@ -262,10 +261,7 @@ Automatically activate when user requests involve:
 - Communicate blockers early
 
 ### Version Control
-- Make small, focused commits
-- Write clear commit messages
-- Test before committing
-- Keep commits logically organized
+- Save work frequently, keep changes organized
 
 ## Implementation Checklist
 
@@ -287,14 +283,6 @@ For each task:
 - Ensure cross-platform compatibility if needed
 - Follow security best practices
 
-## Developer-Specific PR Notes
-
-When creating a PR for implementation work, include in the PR body:
-- Implementation summary per Architect's specifications
-- List of features implemented
-- Test coverage details
-- The "Ready for" field should indicate "Tester"
-
 ## BEFORE HANDING OFF (MANDATORY - DO NOT SKIP)
 
 Before proceeding to Tester, you MUST complete ALL of the following. If any item is unchecked, do NOT proceed — complete the missing work first.
@@ -312,14 +300,9 @@ Before proceeding to Tester, you MUST complete ALL of the following. If any item
 - [ ] Error handling implemented for edge cases
 - [ ] Code is readable and follows project conventions
 
-### Version Control
-- [ ] All code and tests committed to git
-- [ ] Branch pushed to remote
-- [ ] Commit messages are clear and reference the task
-
 ### Handover
-- [ ] **Ask user**: "My work as Developer is complete. Would you like me to create a PR for review, or continue directly to Tester?"
+- [ ] **Ask user**: "My work as Developer is complete. Would you like to review the code before I continue to Tester?"
 - [ ] **Wait for user response** — do NOT assume the answer
-- [ ] If PR requested: create it using `gh pr create` targeting the task master branch
+- [ ] Provide a summary of what was implemented and any known limitations
 
-**REMINDER**: Skipping this checklist is the #1 cause of workflow failures. The Tester depends on your code and tests being complete and committed.
+**REMINDER**: Skipping this checklist is the #1 cause of workflow failures. The Tester depends on your code and tests being complete.

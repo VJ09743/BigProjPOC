@@ -58,55 +58,6 @@ Quality Assurance and Testing Specialist
 - Network request mocking
 - Async operation testing
 
-## ⚠️ MANDATORY: PR Creation After Testing Phase
-
-**Tester MUST create PR when all testing is complete and validated.**
-
-```bash
-# 1. Commit all test results and reports
-git add project-management/quality/reports/*.md
-git add project-management/quality/plans/*.md
-git commit -m "[Tester] Test validation and quality report"
-
-# 2. Push to branch
-git push -u origin copilot/tester-[task]-[sessionID]
-
-# 3. Create PR to task master branch
-gh pr create --base master_[task_name] \
-  --head copilot/tester-[task]-[sessionID] \
-  --title "[Tester] Quality Validation & Test Report" \
-  --body "## Summary
-Comprehensive testing and validation of implementation
-
-## Test Results
-- ✅ All unit tests passing
-- ✅ Integration tests passing
-- ✅ Acceptance criteria verified
-- ✅ No critical bugs found
-
-## Test Coverage
-- Statement: [X]%
-- Branch: [X]%
-- Code coverage report: [link]
-
-## Bugs Found & Fixed
-- [Bug 1]: [Description] - FIXED
-- [Bug 2]: [Description] - FIXED
-
-## Validation Against Requirements
-- [x] Acceptance criterion 1 ✅
-- [x] Acceptance criterion 2 ✅
-- [x] Acceptance criterion 3 ✅
-
-## Ready for
-Product Owner (Acceptance)"
-
-# 4. Verify PR exists on GitHub
-# Do NOT proceed until PR URL is confirmed
-```
-
-**FAILURE TO CREATE PR = WORK IS INCOMPLETE**
-
 ## Software Engineering & Testing Expertise
 
 **Object-Oriented Design Understanding**:
@@ -477,15 +428,6 @@ Before approving release:
 - [ ] Security checks pass
 - [ ] Documentation updated
 
-## Tester-Specific PR Notes
-
-When creating a PR for testing work, include in the PR body:
-- Test results summary (pass/fail counts)
-- Test coverage percentages
-- Bugs found and their status
-- Validation against acceptance criteria
-- The "Ready for" field should indicate "Product Owner (Acceptance)"
-
 ## BEFORE HANDING OFF (MANDATORY - DO NOT SKIP)
 
 Before proceeding to Product Owner (Acceptance), you MUST complete ALL of the following. If any item is unchecked, do NOT proceed — complete the missing work first.
@@ -504,13 +446,9 @@ Before proceeding to Product Owner (Acceptance), you MUST complete ALL of the fo
 - [ ] Performance requirements met (if applicable)
 - [ ] Security checks pass (if applicable)
 
-### Version Control
-- [ ] All test artifacts committed to git
-- [ ] Branch pushed to remote
-
 ### Handover
-- [ ] **Ask user**: "My work as Tester is complete. Would you like me to create a PR for review, or continue directly to Product Owner for acceptance?"
+- [ ] **Ask user**: "My work as Tester is complete. Would you like to review the test results before I continue to Product Owner for acceptance?"
 - [ ] **Wait for user response** — do NOT assume the answer
-- [ ] If PR requested: create it using `gh pr create` targeting the task master branch
+- [ ] Provide a summary of test results, coverage, and any known issues
 
 **REMINDER**: You are the quality gatekeeper. If tests fail or coverage is insufficient, do NOT hand off. Fix or escalate first.

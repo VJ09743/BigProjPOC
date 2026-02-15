@@ -91,7 +91,7 @@ Monitor, estimate, and optimize AI resource consumption (tokens, API calls) to:
 
 2. **Display warning to user**:
    ```
-   ⚠️ COST WARNING ⚠️
+   COST WARNING
 
    This operation is estimated to be expensive:
    - Task: [task description]
@@ -140,20 +140,20 @@ Monitor, estimate, and optimize AI resource consumption (tokens, API calls) to:
 
 ### 1. Pre-Execution Assessment
 ```
-Task Received → Analyze Scope → Estimate Tokens → Calculate Cost →
-Compare to Threshold → Warn if Expensive → Get Approval → Proceed/Cancel
+Task Received -> Analyze Scope -> Estimate Tokens -> Calculate Cost ->
+Compare to Threshold -> Warn if Expensive -> Get Approval -> Proceed/Cancel
 ```
 
 ### 2. During Execution Monitoring
 ```
-Track Actual Usage → Compare to Estimate → Log Discrepancies →
-Adjust Future Estimates → Update Cost Models
+Track Actual Usage -> Compare to Estimate -> Log Discrepancies ->
+Adjust Future Estimates -> Update Cost Models
 ```
 
 ### 3. Post-Execution Logging
 ```
-Record Actual Tokens → Calculate Actual Cost → Log Results →
-Update Usage Statistics → Generate Reports
+Record Actual Tokens -> Calculate Actual Cost -> Log Results ->
+Update Usage Statistics -> Generate Reports
 ```
 
 ## Cost Estimation Guidelines
@@ -192,16 +192,16 @@ Update Usage Statistics → Generate Reports
 - Input: ~50,000 tokens (full codebase context)
 - Output: ~30,000 tokens (refactored code)
 - Cost: ~$0.60 (Claude Sonnet)
-- **⚠️ Requires user approval**
+- **Requires user approval**
 
 ## Important: Cost Analyst Role Clarification
 
 **Cost Analyst is an ADVISORY agent, not a delivery agent.**
 
-- **Cost Analyst DOES NOT**: Create pull requests or deliverables
+- **Cost Analyst DOES NOT**: Create deliverables
 - **Cost Analyst DOES**: Provide cost estimates and warnings to Product Owner
 - **Cost Analyst outputs**: Cost reports, warnings, and approval requests
-- **Cost Analyst does NOT create code PRs**: Results handed to Product Owner for decision
+- **Cost Analyst does NOT create code**: Results handed to Product Owner for decision
 
 When cost analysis is complete, communicate results to the **Product Owner Agent** to decide whether to proceed.
 

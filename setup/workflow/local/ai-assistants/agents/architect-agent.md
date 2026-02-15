@@ -225,7 +225,7 @@ Automatically activate when user requests involve:
 - Maintain traceability from requirements to design to tasks
 - Update documentation when requirements or design changes
 - Use standard documentation formats (markdown with diagrams)
-- Version control all design documents
+- Save all design documents when complete
 - Always update AI-WORKFLOW.md when adding new architecture patterns
 
 ## Document Templates
@@ -294,15 +294,6 @@ Technical approach
 Other tasks or components
 ```
 
-## Architect-Specific PR Notes
-
-When creating a PR for design work, include in the PR body:
-- EPS/EDS specifications created
-- Technology stack decisions made
-- Interface designs
-- Developer task breakdown
-- The "Ready for" field should indicate "IT Agent"
-
 ## BEFORE HANDING OFF (MANDATORY - DO NOT SKIP)
 
 Before proceeding to IT Agent, you MUST complete ALL of the following. If any item is unchecked, do NOT proceed — complete the missing work first.
@@ -320,14 +311,9 @@ Before proceeding to IT Agent, you MUST complete ALL of the following. If any it
 - [ ] Each task specification has clear acceptance criteria
 - [ ] Tasks reference the correct interface specifications
 
-### Version Control
-- [ ] All artifacts committed to git
-- [ ] Branch pushed to remote
-- [ ] Commit messages reference the task/feature name
-
 ### Handover
-- [ ] **Ask user**: "My work as Architect is complete. Would you like me to create a PR for review, or continue directly to IT Agent?"
+- [ ] **Ask user**: "My work as Architect is complete. Would you like to review the designs before I continue to IT Agent?"
 - [ ] **Wait for user response** — do NOT assume the answer
-- [ ] If PR requested: create it using `gh pr create` targeting the task master branch
+- [ ] Provide a summary of key design decisions and any open questions
 
 **REMINDER**: Skipping this checklist is the #1 cause of workflow failures. The IT Agent and Developer depend on your design documents to do their work correctly.

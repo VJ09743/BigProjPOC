@@ -1,0 +1,252 @@
+"""Windows-specific installation logic."""
+
+import os
+import shutil
+
+from setup.wizard.utils.shell import run, is_installed
+
+
+def _is_vscode_installed():
+    """Check if VS Code is installed on Windows."""
+    return _find_vscode_cmd() is not None
+
+
+def _find_vscode_cmd():
+    """Find the VS Code executable, returning the full path or None.
+
+    Always returns an absolute path — bare 'code' won't work with
+    subprocess shell=False since CreateProcess can't find .cmd files by name.
+    """
+    # Resolve 'code' to full path (e.g. C:\...\bin\code.cmd)
+    from setup.wizard.utils.shell import _get_env
+    for name in ["code", "code.cmd"]:
+        full_path = shutil.which(name, path=_get_env().get("PATH"))
+        if full_path:
+            return full_path
+    # Check common install locations
+    for path in [
+        os.path.expandvars(r"%LOCALAPPDATA%\Programs\Microsoft VS Code\bin\code.cmd"),
+        os.path.expandvars(r"%LOCALAPPDATA%\Programs\Microsoft VS Code\Code.exe"),
+        os.path.expandvars(r"%ProgramFiles%\Microsoft VS Code\bin\code.cmd"),
+        os.path.expandvars(r"%ProgramFiles%\Microsoft VS Code\Code.exe"),
+        os.path.expandvars(r"%ProgramFiles(x86)%\Microsoft VS Code\bin\code.cmd"),
+        os.path.expandvars(r"%ProgramFiles(x86)%\Microsoft VS Code\Code.exe"),
+    ]:
+        if os.path.isfile(path):
+            return path
+    return None
+
+
+def install_git():
+    """Install git on Windows."""
+    if is_installed("git"):
+        return {"success": True, "message": "Git is already installed", "skipped": True}
+
+    if is_installed("winget"):
+        result = run(
+            "winget install Git.Git --accept-package-agreements --accept-source-agreements",
+            timeout=300,
+        )
+        if result["success"]:
+            return {"success": True, "message": "Git installed via winget"}
+
+    if is_installed("choco"):
+        result = run("choco install git -y", timeout=300)
+        if result["success"]:
+            return {"success": True, "message": "Git installed via Chocolatey"}
+
+    return {
+        "success": False,
+        "message": "Could not install git automatically. Download from https://git-scm.com/download/win",
+    }
+
+
+def install_gh():
+    """Install GitHub CLI on Windows."""
+    if is_installed("gh"):
+        return {"success": True, "message": "GitHub CLI is already installed", "skipped": True}
+
+    if is_installed("winget"):
+        result = run(
+            "winget install GitHub.cli --accept-package-agreements --accept-source-agreements",
+            timeout=300,
+        )
+        if result["success"]:
+            return {"success": True, "message": "GitHub CLI installed via winget"}
+
+    if is_installed("choco"):
+        result = run("choco install gh -y", timeout=300)
+        if result["success"]:
+            return {"success": True, "message": "GitHub CLI installed via Chocolatey"}
+
+    return {
+        "success": False,
+        "message": "Could not install gh automatically. Download from https://cli.github.com/",
+    }
+
+
+def check_ai_tool(tool):
+    """Check if an AI tool is already installed on Windows.
+
+    Returns dict with 'installed' (bool) and 'message'.
+    """
+    checks = {
+        "cursor": lambda: is_installed("cursor"),
+        "windsurf": lambda: is_installed("windsurf"),
+        "claude-code": lambda: is_installed("claude"),
+        "vscode": lambda: _is_vscode_installed(),
+        "copilot": lambda: _is_vscode_installed(),
+        "aider": lambda: is_installed("aider"),
+    }
+    checker = checks.get(tool)
+    if not checker:
+        return {"installed": False, "message": f"Unknown tool: {tool}"}
+    found = checker()
+    return {
+        "installed": found,
+        "message": f"{tool} is already installed" if found else f"{tool} is not installed",
+    }
+
+
+def install_ai_tool(tool):
+    """Install an AI tool on Windows."""
+    # Skip if already installed
+    status = check_ai_tool(tool)
+    if status["installed"]:
+        return {"success": True, "message": status["message"], "skipped": True}
+
+    installers = {
+        "cursor": _install_cursor,
+        "windsurf": _install_windsurf,
+        "claude-code": _install_claude_code,
+        "vscode": _install_vscode,
+        "copilot": _install_copilot,
+        "aider": _install_aider,
+    }
+    installer = installers.get(tool)
+    if not installer:
+        return {"success": False, "message": f"Unknown tool: {tool}"}
+    return installer()
+
+
+def _install_cursor():
+    if is_installed("winget"):
+        result = run(
+            "winget install Anysphere.Cursor --accept-package-agreements --accept-source-agreements",
+            timeout=300,
+        )
+        if result["success"]:
+            return {"success": True, "message": "Cursor installed via winget"}
+    return {
+        "success": False,
+        "message": "Please download Cursor from https://cursor.sh",
+    }
+
+
+def _install_windsurf():
+    if is_installed("winget"):
+        result = run(
+            "winget install Codeium.Windsurf --accept-package-agreements --accept-source-agreements",
+            timeout=300,
+        )
+        if result["success"]:
+            return {"success": True, "message": "Windsurf installed via winget"}
+    return {
+        "success": False,
+        "message": "Please download Windsurf from https://codeium.com/windsurf",
+    }
+
+
+def _install_claude_code():
+    if not is_installed("npm"):
+        # Try installing Node.js
+        if is_installed("winget"):
+            node_result = run(
+                "winget install OpenJS.NodeJS --accept-package-agreements --accept-source-agreements",
+                timeout=300,
+            )
+            if not node_result["success"]:
+                return {"success": False, "message": "Failed to install Node.js (required for Claude Code)"}
+        else:
+            return {"success": False, "message": "npm is required. Install Node.js from https://nodejs.org"}
+
+    result = run("npm install -g @anthropic-ai/claude-code", timeout=120)
+    if result["success"]:
+        return {"success": True, "message": "Claude Code installed successfully"}
+    return {"success": False, "message": f"Failed to install Claude Code: {result['stderr']}"}
+
+
+def _install_vscode():
+    if is_installed("winget"):
+        result = run(
+            "winget install Microsoft.VisualStudioCode --accept-package-agreements --accept-source-agreements",
+            timeout=300,
+        )
+        if result["success"]:
+            vscode_cmd = _find_vscode_cmd() or "code"
+            run([vscode_cmd, "--install-extension", "continue.continue"], timeout=60)
+            return {"success": True, "message": "VS Code + Continue extension installed"}
+    return {
+        "success": False,
+        "message": "Please download VS Code from https://code.visualstudio.com",
+    }
+
+
+def _install_copilot():
+    # Install VS Code if not present, then add Copilot extension
+    vscode_cmd = _find_vscode_cmd()
+    if not vscode_cmd:
+        if is_installed("winget"):
+            result = run(
+                "winget install Microsoft.VisualStudioCode --accept-package-agreements --accept-source-agreements",
+                timeout=300,
+            )
+            if not result["success"]:
+                return {"success": False, "message": "Please download VS Code from https://code.visualstudio.com"}
+            vscode_cmd = _find_vscode_cmd() or "code"
+        else:
+            return {"success": False, "message": "Please download VS Code from https://code.visualstudio.com"}
+    run([vscode_cmd, "--install-extension", "GitHub.copilot"], timeout=60)
+    run([vscode_cmd, "--install-extension", "GitHub.copilot-chat"], timeout=60)
+    return {"success": True, "message": "VS Code + GitHub Copilot extension installed"}
+
+
+def _install_aider():
+    if not is_installed("pip") and not is_installed("pip3"):
+        return {"success": False, "message": "pip is required. Install Python from https://python.org"}
+    pip = "pip3" if is_installed("pip3") else "pip"
+    result = run(f"{pip} install aider-chat", timeout=120)
+    if result["success"]:
+        return {"success": True, "message": "Aider installed successfully"}
+    return {"success": False, "message": f"Failed to install Aider: {result['stderr']}"}
+
+
+def launch_ai_tool(tool, project_path):
+    """Launch an AI tool pointed at the project directory."""
+    if tool == "cursor":
+        result = run(f'start "" cursor "{project_path}"')
+        return {"success": True, "message": "Cursor launched"}
+
+    if tool == "windsurf":
+        result = run(f'start "" windsurf "{project_path}"')
+        return {"success": True, "message": "Windsurf launched"}
+
+    if tool == "claude-code":
+        result = run(f'start cmd /k "cd /d "{project_path}" && claude"')
+        return {"success": True, "message": "Claude Code launched in Command Prompt"}
+
+    if tool == "vscode" or tool == "copilot":
+        vscode_cmd = _find_vscode_cmd()
+        if not vscode_cmd:
+            return {"success": False, "message": "VS Code not found. Please reinstall."}
+        label = "VS Code + GitHub Copilot" if tool == "copilot" else "VS Code"
+        result = run([vscode_cmd, project_path])
+        if result["success"]:
+            return {"success": True, "message": f"{label} launched"}
+        return {"success": False, "message": f"Failed to launch: {result['stderr']}"}
+
+    if tool == "aider":
+        result = run(f'start cmd /k "cd /d "{project_path}" && aider"')
+        return {"success": True, "message": "Aider launched in Command Prompt"}
+
+    return {"success": False, "message": f"Unknown tool: {tool}"}

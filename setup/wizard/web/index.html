@@ -1,0 +1,439 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Project Setup Wizard</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="wizard-container">
+    <div class="wizard-header">
+      <h1>Project Setup Wizard</h1>
+      <p class="subtitle">Get up and running in minutes</p>
+    </div>
+
+    <!-- Progress bar -->
+    <div class="progress-bar">
+      <div class="progress-step active"></div>
+      <div class="progress-step"></div>
+      <div class="progress-step"></div>
+      <div class="progress-step"></div>
+      <div class="progress-step"></div>
+      <div class="progress-step"></div>
+      <div class="progress-step"></div>
+      <div class="progress-step"></div>
+      <div class="progress-step"></div>
+    </div>
+
+    <!-- ===== Screen 0: Welcome ===== -->
+    <div class="screen active" id="screen-0">
+      <h2>Welcome!</h2>
+      <p class="description">This wizard will set up everything you need. No technical experience required.</p>
+
+      <div class="os-badge">
+        Detected: <strong id="os-display">Detecting...</strong>
+      </div>
+
+      <p style="margin-top:16px; font-size:14px; color:var(--text-muted)">
+        We'll walk you through each step. You can go back at any time.
+      </p>
+
+      <div class="btn-row">
+        <span></span>
+        <button class="btn btn-primary" onclick="nextScreen()">Get Started &rarr;</button>
+      </div>
+    </div>
+
+    <!-- ===== Screen 1: Workflow Mode ===== -->
+    <div class="screen" id="screen-1">
+      <h2>How would you like to work?</h2>
+      <p class="description">Choose how you want to manage your project.</p>
+
+      <div class="radio-group">
+        <div class="radio-option" data-mode="github" onclick="selectWorkflow('github')">
+          <input type="radio" name="workflow" value="github">
+          <div>
+            <div class="option-label">Use GitHub (Recommended)</div>
+            <div class="option-desc">
+              Full workflow with version control, automatic Pull Requests, and code reviews.
+              Requires a free GitHub account.
+            </div>
+          </div>
+        </div>
+        <div class="radio-option" data-mode="local" onclick="selectWorkflow('local')">
+          <input type="radio" name="workflow" value="local">
+          <div>
+            <div class="option-label">Work Locally</div>
+            <div class="option-desc">
+              Everything stays on your computer. No GitHub, no accounts, no internet needed after setup.
+              Great for trying it out.
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="btn-row">
+        <button class="btn btn-secondary" onclick="prevScreen()">&larr; Back</button>
+        <button class="btn btn-primary" id="workflow-next" onclick="nextScreen()" disabled>Next &rarr;</button>
+      </div>
+    </div>
+
+    <!-- ===== Screen 2: Prerequisites ===== -->
+    <div class="screen" id="screen-2">
+      <h2>Installing Prerequisites</h2>
+      <p class="description">We need a couple of tools installed on your computer.</p>
+
+      <div id="prereq-alerts"></div>
+
+      <div class="status-list">
+        <div class="status-item" id="git-status">
+          <span class="status-icon">...</span>
+          <div class="status-text">
+            <div class="label">Git</div>
+            <div class="version">Checking...</div>
+          </div>
+          <button class="btn btn-sm btn-outline action-btn" onclick="installPrerequisite('git')" style="display:none">Install</button>
+        </div>
+        <div class="status-item" id="gh-status">
+          <span class="status-icon">...</span>
+          <div class="status-text">
+            <div class="label">GitHub CLI (gh)</div>
+            <div class="version">Checking...</div>
+          </div>
+          <button class="btn btn-sm btn-outline action-btn" onclick="installPrerequisite('gh')" style="display:none">Install</button>
+        </div>
+      </div>
+
+      <div class="alert alert-info">
+        If the "Install" button doesn't work, you may need to install these manually.
+        Check the <a href="https://git-scm.com" target="_blank">Git website</a> and
+        <a href="https://cli.github.com" target="_blank">GitHub CLI website</a>.
+      </div>
+
+      <div class="btn-row">
+        <button class="btn btn-secondary" onclick="prevScreen()">&larr; Back</button>
+        <button class="btn btn-primary" id="prereq-next" onclick="nextScreen()" disabled>Next &rarr;</button>
+      </div>
+    </div>
+
+    <!-- ===== Screen 3: GitHub Account ===== -->
+    <div class="screen" id="screen-3">
+      <h2>GitHub Account</h2>
+      <p class="description">Sign in to your GitHub account, or create one if you don't have one.</p>
+
+      <div id="gh-auth-info">
+        <div class="alert alert-info">Checking GitHub sign-in status...</div>
+      </div>
+      <div id="gh-account-alerts"></div>
+
+      <div style="margin:20px 0; display:flex; gap:12px; flex-wrap:wrap;">
+        <button class="btn btn-primary" onclick="githubLogin()">Sign In with GitHub</button>
+        <a href="https://github.com/signup" target="_blank" class="btn btn-outline">Create Free Account &rarr;</a>
+        <button class="btn btn-secondary" onclick="initGitHubAccount()">Refresh Status</button>
+      </div>
+
+      <div class="instructions">
+        <strong>How it works:</strong>
+        <ol>
+          <li>Click "Sign In with GitHub" above</li>
+          <li>A one-time code will appear here</li>
+          <li>Open the link and paste the code to authorize</li>
+          <li>Come back here and click "Check Status"</li>
+        </ol>
+        <p style="margin-top:8px;"><strong>Don't have an account?</strong> Click "Create Free Account" first.</p>
+      </div>
+
+      <div class="btn-row">
+        <button class="btn btn-secondary" onclick="prevScreen()">&larr; Back</button>
+        <button class="btn btn-primary" id="gh-account-next" onclick="nextScreen()" disabled>Next &rarr;</button>
+      </div>
+    </div>
+
+    <!-- ===== Screen 4: GitHub Token ===== -->
+    <div class="screen" id="screen-4">
+      <h2>GitHub Token</h2>
+      <p class="description">Create a personal access token so the AI agents can create Pull Requests for you.</p>
+
+      <div id="token-alerts"></div>
+
+      <div class="instructions">
+        <strong>Follow these steps:</strong>
+        <ol>
+          <li>
+            <a href="https://github.com/settings/tokens" target="_blank">Click here to open GitHub Token Settings &rarr;</a>
+          </li>
+          <li>Click the green <strong>"Generate new token (classic)"</strong> button</li>
+          <li>Give it a name, for example: <code>AI Agents</code></li>
+          <li>Under "Select scopes", check these boxes:
+            <ul style="margin-top:4px">
+              <li><code>repo</code> &mdash; Full control of repositories</li>
+              <li><code>workflow</code> &mdash; Update GitHub Actions</li>
+              <li><code>admin:repo_hook</code> &mdash; Access to hooks</li>
+            </ul>
+          </li>
+          <li>Scroll down and click <strong>"Generate token"</strong></li>
+          <li><strong>Copy the token immediately</strong> (you won't see it again!)</li>
+          <li>Paste it below</li>
+        </ol>
+      </div>
+
+      <div class="input-group">
+        <label for="github-token-input">Paste your token here:</label>
+        <input type="password" id="github-token-input" placeholder="ghp_xxxxxxxxxxxxxxxxxxxx">
+        <div class="input-hint">Your token starts with "ghp_" and is kept private on your computer.</div>
+      </div>
+
+      <button class="btn btn-primary" id="save-token-btn" onclick="saveGitHubToken()">Save Token</button>
+
+      <div class="btn-row">
+        <button class="btn btn-secondary" onclick="prevScreen()">&larr; Back</button>
+        <button class="btn btn-primary" id="token-next" onclick="nextScreen()" disabled>Next &rarr;</button>
+      </div>
+    </div>
+
+    <!-- ===== Screen 5: Fork & Clone / Local Copy ===== -->
+    <div class="screen" id="screen-5">
+
+      <!-- GitHub mode: Fork & Clone -->
+      <div id="fork-clone-section">
+        <h2>Get Your Project Copy</h2>
+        <p class="description">We'll create your own copy of the project and download it to your computer.</p>
+
+        <div id="clone-alerts"></div>
+
+        <div class="input-group">
+          <label>Where do you want to save it?</label>
+          <div style="display:flex; gap:8px; align-items:center">
+            <input type="text" id="custom-path-input" placeholder="Click Browse to choose a folder" oninput="useCustomPath()" style="flex:1">
+            <button class="btn btn-outline" onclick="browsePath('custom-path-input')" type="button">Browse...</button>
+          </div>
+        </div>
+
+        <div class="input-group">
+          <label for="project-name-input">Project folder name:</label>
+          <input type="text" id="project-name-input" value="BigProjPOC" placeholder="BigProjPOC">
+        </div>
+
+        <button class="btn btn-primary" id="fork-clone-btn" onclick="forkAndClone()">Fork & Clone</button>
+
+        <div class="btn-row">
+          <button class="btn btn-secondary" onclick="prevScreen()">&larr; Back</button>
+          <button class="btn btn-primary" id="clone-next" onclick="nextScreen()" disabled>Next &rarr;</button>
+        </div>
+      </div>
+
+      <!-- Local mode: Copy files -->
+      <div id="local-copy-section" style="display:none">
+        <h2>Set Up Your Project</h2>
+        <p class="description">We'll copy all the project files to your chosen location.</p>
+
+        <div id="local-alerts"></div>
+
+        <div class="input-group">
+          <label>Where do you want to save it?</label>
+          <div style="display:flex; gap:8px; align-items:center">
+            <input type="text" id="local-custom-path" placeholder="Click Browse to choose a folder" oninput="useCustomPath()" style="flex:1">
+            <button class="btn btn-outline" onclick="browsePath('local-custom-path')" type="button">Browse...</button>
+          </div>
+        </div>
+
+        <div class="input-group">
+          <label for="local-project-name">Project folder name:</label>
+          <input type="text" id="local-project-name" value="BigProjPOC" placeholder="BigProjPOC">
+        </div>
+
+        <button class="btn btn-primary" id="local-copy-btn" onclick="copyLocal()">Copy Project Files</button>
+
+        <div class="btn-row">
+          <button class="btn btn-secondary" onclick="prevScreen()">&larr; Back</button>
+          <button class="btn btn-primary" id="local-next" onclick="nextScreen()" disabled>Next &rarr;</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===== Screen 6: LLM Provider ===== -->
+    <div class="screen" id="screen-6">
+      <h2>AI Review Setup (Optional)</h2>
+      <p class="description">
+        Set up an AI provider for automatic code reviews on your Pull Requests.
+        This is optional &mdash; your AI tool works without it.
+      </p>
+
+      <div id="llm-alerts"></div>
+
+      <div class="radio-group" id="provider-list">
+        <div class="radio-option" data-provider="copilot" onclick="selectProvider('copilot')">
+          <input type="radio" name="provider" value="copilot">
+          <div>
+            <div class="option-label">GitHub Copilot <span style="color:var(--success);font-size:12px">FREE</span></div>
+            <div class="option-desc">No API key needed. Uses repository authentication.</div>
+          </div>
+        </div>
+        <div class="radio-option" data-provider="gemini" onclick="selectProvider('gemini')">
+          <input type="radio" name="provider" value="gemini">
+          <div>
+            <div class="option-label">Google Gemini <span style="color:var(--text-muted);font-size:12px">$</span></div>
+            <div class="option-desc">Fast and cost-effective.</div>
+          </div>
+        </div>
+        <div class="radio-option" data-provider="openai" onclick="selectProvider('openai')">
+          <input type="radio" name="provider" value="openai">
+          <div>
+            <div class="option-label">OpenAI (GPT-4) <span style="color:var(--text-muted);font-size:12px">$$</span></div>
+            <div class="option-desc">Most popular, fast and versatile.</div>
+          </div>
+        </div>
+        <div class="radio-option" data-provider="anthropic" onclick="selectProvider('anthropic')">
+          <input type="radio" name="provider" value="anthropic">
+          <div>
+            <div class="option-label">Anthropic (Claude) <span style="color:var(--text-muted);font-size:12px">$$$</span></div>
+            <div class="option-desc">Excellent code review quality, large context window.</div>
+          </div>
+        </div>
+        <div class="radio-option" data-provider="azure" onclick="selectProvider('azure')">
+          <input type="radio" name="provider" value="azure">
+          <div>
+            <div class="option-label">Azure OpenAI <span style="color:var(--text-muted);font-size:12px">$$$</span></div>
+            <div class="option-desc">Enterprise compliance, data residency.</div>
+          </div>
+        </div>
+        <div class="radio-option" data-provider="cohere" onclick="selectProvider('cohere')">
+          <input type="radio" name="provider" value="cohere">
+          <div>
+            <div class="option-label">Cohere <span style="color:var(--text-muted);font-size:12px">$</span></div>
+            <div class="option-desc">Fast responses, good for production.</div>
+          </div>
+        </div>
+        <div class="radio-option" data-provider="mistral" onclick="selectProvider('mistral')">
+          <input type="radio" name="provider" value="mistral">
+          <div>
+            <div class="option-label">Mistral AI <span style="color:var(--text-muted);font-size:12px">$</span></div>
+            <div class="option-desc">Open-source friendly, privacy-focused.</div>
+          </div>
+        </div>
+      </div>
+
+      <div id="provider-detail"></div>
+
+      <div class="input-group" id="llm-api-key-group" style="display:none">
+        <label for="llm-api-key">Paste your API key:</label>
+        <input type="password" id="llm-api-key" placeholder="Your API key">
+      </div>
+
+      <div class="input-group" id="azure-endpoint-group" style="display:none">
+        <label for="azure-endpoint">Azure OpenAI Endpoint:</label>
+        <input type="text" id="azure-endpoint" placeholder="https://your-resource.openai.azure.com/">
+      </div>
+
+      <div style="margin:16px 0; display:flex; gap:12px">
+        <button class="btn btn-primary" id="save-llm-btn" onclick="saveLLMConfig()">Save Configuration</button>
+      </div>
+
+      <div class="btn-row">
+        <button class="btn btn-secondary" onclick="prevScreen()">&larr; Back</button>
+        <div style="display:flex; gap:8px">
+          <button class="btn btn-secondary" onclick="nextScreen()">Skip &rarr;</button>
+          <button class="btn btn-primary" id="llm-next" onclick="nextScreen()" disabled>Next &rarr;</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===== Screen 7: AI Tool Selection ===== -->
+    <div class="screen" id="screen-7">
+      <h2>Choose Your AI Tool</h2>
+      <p class="description">Pick the AI tool you want to use for development.</p>
+
+      <div id="tool-alerts"></div>
+
+      <div class="tool-grid" id="tool-grid">
+        <!-- Populated by JS -->
+      </div>
+
+      <div style="margin:20px 0; display:flex; gap:12px; flex-wrap:wrap">
+        <button class="btn btn-primary" id="install-tool-btn" onclick="installTool()" disabled>Install</button>
+        <button class="btn btn-success" id="launch-tool-btn" onclick="launchTool()" style="display:none">Launch</button>
+      </div>
+
+      <div class="btn-row">
+        <button class="btn btn-secondary" onclick="prevScreen()">&larr; Back</button>
+        <button class="btn btn-primary" id="tool-next" onclick="nextScreen(); initVerification()" disabled>Next &rarr;</button>
+      </div>
+    </div>
+
+    <!-- ===== Screen 8: Verification ===== -->
+    <div class="screen" id="screen-8">
+      <h2>Almost Done! Let's Verify</h2>
+      <p class="description">Let's make sure <strong id="verify-tool-name">your AI tool</strong> is connected to the workflow.</p>
+
+      <div class="instructions">
+        <strong>Quick Check:</strong>
+        <ol>
+          <li>In your AI tool's chat, copy and paste this question:</li>
+        </ol>
+      </div>
+
+      <div class="copy-box">
+        <span class="copy-text">What is the first agent role you adopt for any task?</span>
+        <button class="copy-btn" onclick="copyToClipboard('What is the first agent role you adopt for any task?')">Copy</button>
+      </div>
+
+      <div class="alert alert-info" style="margin:16px 0">
+        <strong>Expected answer:</strong> It should mention <strong id="verify-expected-agent">"IT Agent"</strong> as the first role.
+      </div>
+
+      <div class="instructions" style="margin-top:20px">
+        <strong>If it did NOT mention <span id="verify-expected-agent-2">IT Agent</span>:</strong>
+        <ol>
+          <li>Copy and paste this prompt into your AI tool's chat:</li>
+        </ol>
+      </div>
+
+      <div class="copy-box">
+        <span class="copy-text" id="fallback-prompt">Please read the file .cursorrules in the project root and follow the agentic workflow defined there.</span>
+        <button class="copy-btn" onclick="copyToClipboard(document.getElementById('fallback-prompt').textContent)">Copy</button>
+      </div>
+
+      <div class="instructions" style="margin-top:16px">
+        <strong>Still not working? Check these:</strong>
+        <ol>
+          <li>Is the AI tool opened at the right project folder?
+            <br><em>Look for files like <code>AI-WORKFLOW.md</code> and <code id="verify-instruction-file">.cursorrules</code> in the sidebar.</em>
+          </li>
+          <li>Try closing and reopening the AI tool at the project folder.</li>
+        </ol>
+      </div>
+
+      <div class="btn-row">
+        <button class="btn btn-secondary" onclick="prevScreen()">&larr; Back</button>
+        <button class="btn btn-success" onclick="nextScreen()">Everything Works! &rarr;</button>
+      </div>
+    </div>
+
+    <!-- ===== Screen 9 (index 8): Done ===== -->
+    <div class="screen" id="screen-done">
+      <h2>You're All Set!</h2>
+      <p class="description">Your project is ready. Just describe what you want to build!</p>
+
+      <ul class="done-checklist">
+        <li><span class="check-icon">&#10003;</span> Project set up on your computer</li>
+        <li><span class="check-icon">&#10003;</span> AI tool installed and launched</li>
+        <li><span class="check-icon">&#10003;</span> Workflow connected</li>
+      </ul>
+
+      <div class="alert alert-success">
+        <strong>What to do next:</strong><br>
+        In your AI tool's chat, just describe what you want to build in plain English. For example:<br><br>
+        <em>"I want to create a simple todo list application where users can add, complete, and delete tasks"</em>
+      </div>
+
+      <div style="margin-top:24px; text-align:center;">
+        <button class="btn btn-primary" onclick="fetch('/api/shutdown'); window.close();">Close Wizard</button>
+      </div>
+    </div>
+
+  </div>
+
+  <script src="wizard.js"></script>
+</body>
+</html>

@@ -4,6 +4,38 @@ Welcome! This guide will help you set up the AI-assisted workflow.
 
 **No programming experience required.**
 
+---
+
+## Fastest Way: GUI Setup Wizard (Recommended)
+
+**Just paste ONE command** in your terminal — a browser-based wizard will guide you through everything:
+
+**Mac / Linux:**
+```bash
+curl -fsSL https://raw.githubusercontent.com/meenusinha/BigProjPOC/template/agentic-workflow-gui/setup/setup.sh | bash
+```
+
+**Windows (PowerShell):**
+```powershell
+irm https://raw.githubusercontent.com/meenusinha/BigProjPOC/template/agentic-workflow-gui/setup/setup.ps1 | iex
+```
+
+The wizard will open in your browser and walk you through:
+- Choosing workflow mode (GitHub or Local)
+- Installing prerequisites (Git, GitHub CLI)
+- GitHub authentication
+- Project location & forking
+- LLM provider configuration
+- AI tool selection & launch
+
+**That's it!** You can skip the rest of this guide if you use the wizard.
+
+---
+
+## Manual Setup (Alternative)
+
+If you prefer to set things up manually, or the wizard doesn't work for your environment, follow the steps below.
+
 > **New here?** First, [fork this template](README.md#fork-this-template) to create your own copy, then follow the steps below.
 
 ---

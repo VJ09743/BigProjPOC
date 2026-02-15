@@ -80,6 +80,22 @@ A structured approach to software development using specialized AI agents:
 
 ---
 
+## One-Command Setup (Recommended)
+
+Paste ONE command to launch a browser-based setup wizard that handles everything:
+
+**Mac / Linux:**
+```bash
+curl -fsSL https://raw.githubusercontent.com/meenusinha/BigProjPOC/template/agentic-workflow-gui/setup/setup.sh | bash
+```
+
+**Windows (PowerShell):**
+```powershell
+irm https://raw.githubusercontent.com/meenusinha/BigProjPOC/template/agentic-workflow-gui/setup/setup.ps1 | iex
+```
+
+---
+
 ## **New here? Start with [QUICK-START.md](QUICK-START.md)**
 
 A simple 5-step guide for non-programmers to get up and running.

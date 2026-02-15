@@ -1,0 +1,107 @@
+# CODEOWNERS - Automatic Code Review Assignment
+#
+# This file defines code ownership for automatic GitHub review assignment.
+# When a PR modifies files matching these patterns, the specified owners
+# are automatically requested as reviewers.
+#
+# Pattern: path/pattern @owner1 @owner2
+#
+# Note: Since we use agent-based workflows with automated branch detection,
+# this file serves as documentation of ownership rather than automatic assignment.
+# The primary review assignment is handled by .github/workflows/pr-review-assignment.yml
+
+# ============================================================================
+# Architecture and Design Documentation
+# ============================================================================
+
+# Architecture documentation - Architect Agent owns
+/docs/architecture/                @architect-agent
+/docs/requirements/                @architect-agent
+
+# Architecture Decision Records (ADRs)
+/docs/architecture/decisions/      @architect-agent
+
+# Development tasks - Architect creates, Developer reviews
+/docs/architecture/tasks/          @architect-agent @developer-agent
+
+# ============================================================================
+# Source Code
+# ============================================================================
+
+# Source code - Developer implements, Architect reviews
+/src/                              @developer-agent @architect-agent
+
+# ============================================================================
+# Build System and Infrastructure
+# ============================================================================
+
+# Build files - IT Agent owns
+Makefile                           @it-agent
+*.mk                               @it-agent
+package.json                       @it-agent
+
+# CI/CD workflows - IT Agent owns
+/.github/workflows/                @it-agent
+
+# Infrastructure documentation - IT Agent owns
+/docs/it/                          @it-agent
+
+# Release management - IT Agent owns
+/release/                          @it-agent
+
+# ============================================================================
+# Testing
+# ============================================================================
+
+# Unit tests - Developer owns
+/tests/unit/                       @developer-agent
+
+# Component tests - Tester Agent owns
+/tests/component/                  @tester-agent
+
+# Integration tests - Tester Agent owns
+/tests/integration/                @tester-agent
+
+# System tests - Tester Agent owns
+/tests/system/                     @tester-agent
+
+# Test documentation - Tester Agent owns
+/docs/tests/                       @tester-agent
+
+# ============================================================================
+# Project Documentation
+# ============================================================================
+
+# Main project documentation - Product Owner oversees
+/CLAUDE.md                         @product-owner-agent
+/README.md                         @product-owner-agent
+
+# Task management system - Product Owner manages
+/docs/tasks/                       @product-owner-agent
+
+# Product owner documentation
+/docs/product-owner/               @product-owner-agent
+
+# Agent configuration - Product Owner manages
+/.claude/agents/                   @product-owner-agent
+
+# ============================================================================
+# Notes
+# ============================================================================
+#
+# Ownership Philosophy:
+# - Architect: Designs the system, creates specifications
+# - Developer: Implements the design, writes unit tests
+# - Tester: Validates implementation, writes comprehensive tests
+# - IT: Manages build system, infrastructure, releases
+# - Product Owner: Orchestrates, reviews, ensures quality
+#
+# Review Process:
+# - All PRs require peer review before merge
+# - Developer PRs: Reviewed by Product Owner, Architect, Tester
+# - Architect PRs: Reviewed by Product Owner, Developer
+# - Tester PRs: Reviewed by Product Owner, Developer
+# - IT PRs: Reviewed by Product Owner, Architect
+# - Product Owner PRs: Reviewed by Architect, Developer, Tester
+#
+# See .github/workflows/pr-review-assignment.yml for automated review assignment

@@ -33,30 +33,31 @@ Quality Assurance and Testing Specialist
 
 ## Domain Expertise
 
-**Web Game Testing**:
-- Interactive UI testing (click, keyboard input, cell selection)
-- Game logic validation (rule checking, puzzle solving)
-- User experience testing (feedback, animations, error messages)
-- Cross-browser compatibility testing
+**Content Management System Testing**:
+- Content browsing and discovery functionality
+- Search and filtering system validation
+- Content categorization and organization testing
+- User-generated content submission workflows
 
-**Sudoku-Specific Testing**:
-- Puzzle generation validation (uniqueness, solvability)
-- Rule enforcement testing (no duplicates in row/column/box)
-- Hint system accuracy testing
-- Win condition detection testing
-- Edge cases: empty boards, invalid inputs, completed puzzles
+**Entertainment Web Application Testing**:
+- Content rating and interaction system testing
+- Social sharing functionality validation
+- Random joke selection and display testing
+- Content moderation and family-safe filtering verification
+- User interface responsiveness and cross-device compatibility
 
-**Full-Stack Testing**:
-- API endpoint testing (puzzle generation, moves, hints, reset)
-- Frontend-backend integration testing
-- Error handling across layers (network failures, validation errors)
-- State management testing (React hooks, game state consistency)
+**PG-13 Content Compliance Testing**:
+- Content appropriateness validation
+- Family-friendly filter effectiveness
+- User submission moderation workflow testing
+- Content reporting and removal system validation
 
 **Modern Web Testing**:
-- Jest for unit and integration tests
-- Manual browser testing for UI/UX
-- Network request mocking
-- Async operation testing
+- Cross-browser compatibility for content viewing
+- Performance testing for content-heavy pages
+- API endpoint testing for content delivery
+- Frontend-backend integration for user interactions
+- Search functionality and filtering accuracy
 
 ## ⚠️ MANDATORY: PR Creation After Testing Phase
 

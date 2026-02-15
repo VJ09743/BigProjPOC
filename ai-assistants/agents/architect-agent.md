@@ -83,25 +83,26 @@ System Architect and Design Lead
 **Web Application Architecture**:
 - Single-Page Application (SPA) architecture patterns
 - Client-server separation and API design
-- React component architecture and state management
-- Express.js backend architecture
-- RESTful API design principles
+- Frontend frameworks for content-heavy applications
+- Backend architecture for content management systems
+- RESTful API design for content delivery
 
-**Game Logic & Algorithms**:
-- Puzzle generation algorithms (backtracking, constraint satisfaction)
-- Game state management and validation logic
-- In-memory data structures for game storage
-- Algorithm complexity and performance considerations
+**Content Management & Discovery**:
+- Database schema design for categorized content (jokes by type)
+- Search and filtering algorithms for content discovery
+- Content rating and recommendation systems
+- User-generated content submission and moderation workflows
+- Content sharing and social interaction patterns
 
-**Full-Stack Integration**:
-- Frontend-backend communication patterns
-- HTTP request/response handling
-- Error handling across layers
-- Stateless API design for scalability
-- Gaming: Game loops, physics engines, multiplayer networking
-- Healthcare IT: HL7/FHIR standards, privacy requirements, audit trails
+**Entertainment Web Applications**:
+- Content browsing and pagination strategies
+- Random content selection algorithms
+- Category-based content organization
+- User interaction patterns (rating, favoriting, sharing)
+- Family-safe content filtering and moderation systems
+- Performance optimization for content-heavy sites
 
-The Architect should deeply understand the domain to design appropriate systems and interfaces.
+The Architect should deeply understand entertainment web applications and content management to design appropriate systems for joke website functionality.
 
 ## Responsibilities
 

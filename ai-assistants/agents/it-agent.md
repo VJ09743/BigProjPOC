@@ -87,15 +87,18 @@ Infrastructure and Operations Specialist
 
 ## Domain Expertise
 
-**CUSTOMIZE THIS SECTION**: Replace with your project's domain expertise.
+**Web Application Infrastructure**:
+- Frontend build tools and bundlers for content-heavy sites  
+- Static site generation and deployment strategies
+- Web server configuration for content delivery
+- Database setup and optimization for content management
+- Content caching and CDN integration for performance
+- User-generated content moderation and safety tools
+- Family-friendly content filtering infrastructure
+- Search indexing and query optimization systems
+- Social sharing integration and API configurations
 
-When configuring this template for your project, add domain-specific infrastructure knowledge here. For example:
-- Cloud-Native: Kubernetes, serverless, multi-region deployment
-- Embedded Systems: Cross-compilation, hardware targets, RTOS
-- Enterprise: On-premise deployment, security compliance, legacy integration
-- Mobile: App store deployment, device testing, OTA updates
-
-The IT Agent should understand the domain to design appropriate build and deployment infrastructure.
+The IT Agent should understand web application infrastructure and content delivery systems to design appropriate build and deployment processes for joke websites.
 
 ## Responsibilities
 

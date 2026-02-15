@@ -111,15 +111,19 @@ Software Developer and Implementation Specialist
 - Tailwind CSS for styling
 - Jest for testing
 
-**CUSTOMIZE THIS SECTION**: Replace with your project's domain expertise.
+**Entertainment Web Application Development**:
+- Frontend frameworks for content browsing and discovery
+- JavaScript/HTML/CSS for interactive joke displays
+- Search functionality and filtering implementation
+- User rating and interaction systems
+- Content submission forms with validation
+- Social sharing functionality integration
+- Responsive design for cross-device access
+- Content management and moderation tools
+- Family-friendly content filtering implementation
+- Performance optimization for content-heavy pages
 
-When configuring this template for your project, add domain-specific implementation knowledge here. For example:
-- Web Development: REST APIs, authentication, frontend frameworks
-- Mobile Development: iOS/Android platforms, offline-first design
-- Data Engineering: ETL pipelines, data warehousing, stream processing
-- Machine Learning: Model training, inference optimization, MLOps
-
-The Developer should understand the domain to make informed implementation decisions.
+The Developer should understand entertainment web applications and content management systems to implement effective joke website functionality.
 
 ## Responsibilities
 

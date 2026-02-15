@@ -177,41 +177,28 @@ aider --model gpt-4o  # or --model claude-3-opus
 
 ---
 
-## Domain: [Your Project Domain]
+## Domain: Entertainment Web Applications
 
-**CUSTOMIZE THIS SECTION** for your specific project.
+**Industry**: Digital Entertainment / Content Delivery
+- Family-friendly humor and entertainment content
+- Interactive web applications with content (jokes, riddles, puns)
+- User-generated content platforms with moderation (PG-13 rating)
+- Content categorization and discovery systems
+- Community features (rating, sharing, user submissions)
+- Search and filtering capabilities for large content databases
+- Responsive web design for cross-device access
+- Content management systems for joke/humor databases
 
-Replace this section with your project's domain context. Examples:
-
-### Example: E-commerce Platform
-```
-**Industry**: Retail Technology
-- Online shopping systems
-- Payment processing and checkout flows
-- Inventory management and fulfillment
-- Customer experience and personalization
-```
-
-### Example: Healthcare Application
-```
-**Industry**: Healthcare IT
-- Patient data management
-- HIPAA compliance requirements
-- Clinical workflow integration
-- Electronic health records (EHR)
-```
-
-### Example: Financial Services
-```
-**Industry**: FinTech
-- Transaction processing
-- Regulatory compliance (SOX, PCI-DSS)
-- Real-time data processing
-- Risk management and fraud detection
-```
+**Technical Context**:
+- Frontend-focused web applications (HTML, CSS, JavaScript)
+- RESTful APIs for content delivery
+- Database design for content categorization and user interactions
+- Content moderation and family-safe filtering systems
+- User experience design for browsing and discovery
+- Performance optimization for content-heavy pages
 
 **Agent Domain Expertise**:
-All agents should understand your project's domain to make informed decisions. Update the agent files in `ai-assistants/agents/` to include relevant domain expertise.
+All agents understand joke website development, family-friendly content requirements, and web application best practices for content discovery platforms.
 
 ---
 

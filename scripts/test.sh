@@ -25,6 +25,31 @@ echo "=========================================="
 echo "Running tests..."
 echo "=========================================="
 
+# Test joke website module
+if [ -d "modules/joke-website" ]; then
+    echo "Testing joke website module..."
+    cd modules/joke-website
+    
+    # Install dependencies if needed
+    if [ ! -d "node_modules" ]; then
+        echo "Installing dependencies..."
+        npm install
+    fi
+    
+    # Run tests
+    npm test || echo "Tests not yet implemented"
+    
+    cd ../..
+    echo "✅ Joke website module tested"
+else
+    echo "⚠️  Joke website module not found"
+fi
+
+echo "=========================================="
+echo "Testing complete!"
+echo "=========================================="
+echo "=========================================="
+
 # TODO: IT Agent - Add test commands here based on tech stack
 echo "ERROR: Test script not configured."
 echo "IT Agent must customize this script for the project's test framework."

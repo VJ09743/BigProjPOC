@@ -17,12 +17,39 @@
 # - Java:       mvn clean OR gradle clean
 # - C/C++:      make clean
 #
-# Common directories to clean:
-# - output/release/*
-# - output/debug/*
-# - modules/*/release/*
-# - modules/*/debug/*
-#
+echo "=========================================="
+echo "Cleaning build artifacts..."
+echo "=========================================="
+
+# Clean global artifacts
+echo "Cleaning global output directories..."
+rm -rf output/debug/* output/release/*
+
+# Clean joke website module
+if [ -d "modules/joke-website" ]; then
+    echo "Cleaning joke website module..."
+    cd modules/joke-website
+    
+    # Clean build artifacts
+    rm -rf build/
+    rm -rf node_modules/.cache/
+    rm -rf src/data/jokes.db*  # Remove database files (will be recreated)
+    
+    # Clean logs if they exist
+    rm -rf logs/
+    
+    cd ../..
+    echo "✅ Joke website artifacts cleaned"
+fi
+
+# Clean any temporary files
+echo "Cleaning temporary files..."
+find . -name "*.tmp" -delete 2>/dev/null || true
+find . -name ".DS_Store" -delete 2>/dev/null || true
+
+echo "=========================================="
+echo "Clean complete!"
+echo "=========================================="
 # =============================================================================
 
 echo "=========================================="

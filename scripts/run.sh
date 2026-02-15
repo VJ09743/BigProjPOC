@@ -18,6 +18,17 @@ if [ -x "$RELEASE_RUN" ]; then
 	exec "$RELEASE_RUN"
 fi
 
-echo "ERROR: Latest release run script not found."
-echo "Please build a release first (e.g., ./scripts/release-sudoku.sh <version>)."
-exit 1
+echo "Release not found. Running development version..."
+
+# Check for joke website module
+if [ -d "modules/joke-website" ]; then
+    echo "Starting joke website development server..."
+    cd modules/joke-website
+    npm run dev
+else
+    echo "ERROR: No runnable modules found."
+    echo "Available options:"
+    echo "  1. Build a release first: ./scripts/build.sh"
+    echo "  2. Run development server: cd modules/joke-website && npm run dev"
+    exit 1
+fi
